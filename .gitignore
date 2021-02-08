@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+
+# Distribution / packaging
+venv/
+
+
+*.log
+
+# DotEnv configuration
+.env
+
+# VS Code
+#.vscode/
+
+
+# exclude data from source control by default (not versioning binary/base files)
+/data/*/*.json
+/data/*/*.csv
+/models/*.h5
+/notebooks/
+
+/mlruns
+/models/*/*/*/*.yaml
+/models/*/*/*/MLmodel
+*.pkl
+
+

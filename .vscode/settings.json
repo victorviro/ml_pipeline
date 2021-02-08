@@ -1,0 +1,22 @@
+{
+    "python.pythonPath": "src/venv/bin/python3",
+    "python.linting.pylintPath": "src/venv/bin/pylint",
+    "python.envFile": "venv",
+    "explorer.autoReveal": false,
+    "workbench.editor.enablePreview": false,
+    "autoDocstring.docstringFormat": "sphinx",
+    "editor.rulers": [90],
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#f7e8ed"
+    },
+    "python.autoComplete.addBrackets": true, // autocomplete brakets
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true, 
+    "python.languageServer": "Microsoft",
+    "python.autoComplete.extraPaths": ["src"], // to pylint read src imports,
+    "python.linting.pylintArgs": [
+        "--load-plugins",
+    ],
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.pycodestyleArgs": ["--max-line-length=90"],
+}
