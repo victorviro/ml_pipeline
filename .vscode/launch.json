@@ -10,7 +10,7 @@
             "request": "launch",
             
             //"program": "${file}",
-            "program": "${workspaceFolder}/src/controller.py",
+            "program": "${workspaceFolder}/controller.py",
             "console": "integratedTerminal"
         }
     ]

@@ -13,7 +13,7 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true, 
     "python.languageServer": "Microsoft",
-    "python.autoComplete.extraPaths": ["src"], // to pylint read src imports,
+    ///"python.autoComplete.extraPaths": ["src"], // to pylint read src imports,
     "python.linting.pylintArgs": [
         "--load-plugins",
     ],
