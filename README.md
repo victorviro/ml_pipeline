@@ -33,28 +33,19 @@ pip install -r requirements.txt
 backend/venv/bin/python3.7 backend/manage.py runserver
 ```
 
-Run script 
+Debug/run via `controller.py`. The file to download the dataset is `src/data/download_raw_data.py`.
 
-```
-python src/data/download_raw_data.py --data_name MCPL --version 1
-```
+Stored json data in `data/01_raw/`.
 
-Stored json data in `data/raw`.
-
-**NOTE**: In order to run this step of the pipeline in a airflow DAG we use a python functions instead to run the script as we saw previously. If we want to run this step via line command descomment the code `#@click.command()` inside the script before.
-
-TODO: add execution to the makefile.
+**NOTE**: In order to run this step of the pipeline in a airflow DAG we use python functions.
 
 ### Data validation
 
-Check the schema of the dataset downloaded using pandera since data must be validated before versioning it and go to the next step in the pipeline (building features)
+Check the schema of the dataset downloaded using pandera since data must be validated before versioning it and go to the next step in the pipeline (building features).
 
-```
-source venv/bin/activate
-python src/data_validation/data_validation.py --data_name MCPL --version 1
-```
+Debug/run via `controller.py`. The file to validate the schema of the dataset the dataset is `src/data_validation/schema_validation.py`.
 
-**NOTE**: In order to run this step of the pipeline in a airflow DAG we use a python functions instead to run the script as we saw previously. If we want to run this step via line command descomment the code `#@click.command()` inside the script before.
+**NOTE**: In order to run this step of the pipeline in a airflow DAG we use a python function.
 
 TODO: Validate distribution of target variable, statistics of the dataset variables (like do TFX).
 
@@ -72,22 +63,23 @@ dvc remote add -d local_storage /tmp/dvc-storage
 ```
 This command creates a remote section in the DVC project's config file with name `local_storage` and url `/tmp/dvc-storage`. We commit and push this directory.
 
-Let's capture the current state of this dataset adding it to DVC tracking:
+Let's capture the current state of the dataset adding it to DVC tracking:
 ```
 dvc add data/raw/MCPL_data_v1.json
 ```
 
-A metadata file `data/raw/MCPL_data_v1.json.dvc` is added in the directory (this file is not the dataset itself, it's a metadata file that contains the hash (md5) of the dataset and the path). Later we can convert this file to the dataset.
+A metadata file `data/raw/MCPL_data_v1.json.dvc` is added in the directory of the dataset (this file is not the dataset itself, it's a metadata file that contains the hash (md5) of the dataset and the path). Later we can convert this file to the dataset.
 
-Let's commit this file to the git repo:
+Let's commit this file to the git repository (with vscode or with the command line):
 
-```
+```bash
+# using the command line
 git add data/raw/MCPL_data_v1.json.dvc
-git commit -m "Added raw data (max_char_per_line training raw data)"
-#push
+git commit -m "Added raw data (max_char_per_line raw data)"
+# push
 ```
 
-Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to get the data in the local_storage directory (`tmp/dvc-storage`)
+Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to push the data in the `local_storage` directory (`tmp/dvc-storage`)
 
 ```
 dvc push
@@ -95,8 +87,8 @@ dvc push
 
 Let's remove the dataset (and clear cache) in our directory to show how we can pull it.
 
-```
-# removed datasets tracked bu dvc
+```bash
+# removed datasets tracked by dvc
 rm -rf .dvc/cache
 ```
 
@@ -112,10 +104,13 @@ Info links:
 
 ### Notebooks (EDA dataset)
 
-`pip install jupyter`
-
-launch jupyter in other window:
+Install jupyter
+```bash
+pip install jupyter
 ```
+
+Launch jupyter in other window:
+```bash
 cd Documents/projects/MCPL_prediction
 source venv/bin/activate
 jupyter notebook
