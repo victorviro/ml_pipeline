@@ -9,7 +9,7 @@ RAW_DATA_PATH = f'{DATA_PATH}/01_raw'
 ENDPOINT_URL = 'http://127.0.0.1:8000/api/v1/'
 MCPL_ENDPOINT_NAME = 'max_char_per_line_train_data'
 
-# Get trainins data
+# Get training data
 MCPL_TEST_SPLIT = 0.33
 MCPL_DATASET_NAME = 'Data_test'
-MCPL_training_processed_data_name = 'max_char_per_line_preprocessed_data'
+EXPERIMENT_ID = 0
