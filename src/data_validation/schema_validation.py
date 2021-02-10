@@ -4,7 +4,6 @@ import logging
 import pandas as pd
 import pandera
 
-from src.data_validation.schemas.MCPL import MCPL_schema
 from src.config_variables import RAW_DATA_PATH
 from src.utils.files import get_json_from_file_path
 

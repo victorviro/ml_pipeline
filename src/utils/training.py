@@ -8,7 +8,7 @@ from sklearn.metrics import (mean_squared_error, mean_absolute_error, r2_score)
 
 
 # Function to compute regression metrics
-def get_regression_metrics(actual:ndarray, predictions:ndarray) -> tuple:
+def get_regression_metrics(actual: ndarray, predictions: ndarray) -> tuple:
     """
     Compute metrics for a regression model evaluation.
 
