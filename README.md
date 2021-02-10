@@ -50,79 +50,20 @@ Debug/run via `controller.py`. The file to validate the schema of the dataset th
 TODO: Validate distribution of target variable, statistics of the dataset variables (like do TFX).
 
 ### DVC versioning the data
-Let's explain the steps as this is the first time we run the project:
-
-`dvc init`
-
-A new `.dvc/` directory is created for internal configuration. This directory is automatically staged with `git add`, so it can be easily committed with Git.
-
-We add a new local [data remote](https://dvc.org/doc/command-reference/remote/add):
-
-```
-dvc remote add -d local_storage /tmp/dvc-storage
-```
-This command creates a remote section in the DVC project's config file with name `local_storage` and url `/tmp/dvc-storage`. We commit and push this directory.
-
-Let's capture the current state of the dataset adding it to DVC tracking:
-```
-dvc add data/raw/MCPL_data_v1.json
-```
-
-A metadata file `data/raw/MCPL_data_v1.json.dvc` is added in the directory of the dataset (this file is not the dataset itself, it's a metadata file that contains the hash (md5) of the dataset and the path). Later we can convert this file to the dataset.
-
-Let's commit this file to the git repository (with vscode or with the command line):
-
-```bash
-# using the command line
-git add data/raw/MCPL_data_v1.json.dvc
-git commit -m "Added raw data (max_char_per_line raw data)"
-# push
-```
-
-Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to push the data in the `local_storage` directory (`tmp/dvc-storage`)
-
-```
-dvc push
-```
-
-Let's remove the dataset (and clear cache) in our directory to show how we can pull it.
-
-```bash
-# removed datasets tracked by dvc
-rm -rf .dvc/cache
-```
-
-We can use `dvc pull` and that is going to download a new copy of the dataset into our directory (`data/raw/MCPL_data_v1.json`).
-
-Info links:
-
-- [`dvc list <url>`](https://dvc.org/doc/command-reference/list)
-
-- [dvc status](https://dvc.org/doc/command-reference/status)
+To see the steps as in the first time we run the project in the reference documentation in `references/DVC_data_versioning.md`.
 
 
 
 ### Notebooks (EDA dataset)
 
-Install jupyter
-```bash
-pip install jupyter
-```
+Open notebook in `src/notebooks/EDA_MCPL_data.ipynb`. To see how use jupyter notebooks with VScode in this project see the reference documentation in `references/jupyter_notebooks.md`.
 
-Launch jupyter in other window:
-```bash
-cd Documents/projects/MCPL_prediction
-source venv/bin/activate
-jupyter notebook
-```
-select interpreter
-create a notebook via command pallete in vscode (Create new blank jupyter notebook) save it where we want (we have already saved a notebook for EDA in `notebooks/EDA_MCPL_data.ipynb`).
+**Note**: Recommended to clear outputs of the notebook before save it (to don't commit them).
 
-[Docu jupyter notebook in VScode](https://code.visualstudio.com/docs/python/jupyter-support#_save-your-jupyter-notebook) 
 
 ### Preprocessing the data
 
-- Added custom transformation for sklearn to use in pipeline (ratio_cols_rows).
+- Added custom transformation for sklearn to use in pipeline (feture engineered `ratio_cols_rows`).
 - Normalized features in pipeline when training the model
 
 

@@ -46,7 +46,7 @@ Let's commit this file to the git repository (with vscode or with the command li
 # Using the command line
 git add data/01_raw/Data_test.json.dvc
 git commit -m "Added raw data (max_char_per_line raw data)"
-# push
+# git push
 ```
 
 Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to push the data in the `local_storage` directory (`tmp/dvc-storage`)
@@ -67,6 +67,34 @@ rm -f data/01_raw/Data_test.json
 ```
 
 We can use `dvc pull` and that is going to download a new copy of the dataset into our directory (`data/01_raw/Data_test.json`).
+
+### Making changes
+
+When we make a change to a file (or directory), run `dvc add` again to track the latest version.
+
+```bash
+dvc add data/01_raw/Data_test.json
+```
+
+Usually we would also run `git commit` and `dvc push` to save the changes:
+
+```bash
+# Using the command line
+git add data/01_raw/Data_test.json.dvc
+git commit -m "Updated raw data (max_char_per_line raw data)"
+# git push
+```
+
+
+```bash
+dvc push
+```
+
+### Switching between versions
+
+
+
+## References
 
 Info links:
 
