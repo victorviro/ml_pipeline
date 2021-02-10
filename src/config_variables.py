@@ -11,5 +11,5 @@ MCPL_ENDPOINT_NAME = 'max_char_per_line_train_data'
 
 # Get trainins data
 MCPL_TEST_SPLIT = 0.33
-MCPL_data_name = 'MCPL_data'
+MCPL_DATASET_NAME = 'Data_test'
 MCPL_training_processed_data_name = 'max_char_per_line_preprocessed_data'
