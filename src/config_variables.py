@@ -13,3 +13,5 @@ MCPL_ENDPOINT_NAME = 'max_char_per_line_train_data'
 MCPL_TEST_SPLIT = 0.33
 MCPL_DATASET_NAME = 'Data_test'
 EXPERIMENT_ID = 0
+MODEL_PATH = './mlruns/0/cba6098fa7bc45bfb0f3eea60fa15a98/artifacts/pipeline/model.pkl'
+RMSE_THRESOLD = 20
