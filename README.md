@@ -101,7 +101,23 @@ Debug/run via `controller.py`. The file to validate the model is `src/models/mod
 
 #### Comparing the models
 
-`mlflow ui`
+To see how configure a backend database store in MLflow see the reference documentation in `references/mlflow_backend_db.md`.
+
+Launch the mlflow ui
+```bash
+mlflow server --backend-store-uri postgresql://mlflow_user:mlflow@localhost/mcpl_mlflow_db \
+        --default-artifact-root file:/home/lenovo/viro/artifact_root \
+        --host 0.0.0.0 \
+        --port 1213
+```
+
+Now the Tracking server should be available at the following URL: http://0.0.0.0:1213.
+
+We can set the tracking URI at the beginning of our program, with the same host:port as we used to configure the mlflow server (`mlflow.set_tracking_uri('http://0.0.0.0:1213')`) or we can do it with the CLI setting the following environmental variable:
+
+```bash
+export MLFLOW_TRACKING_URI='http://0.0.0.0:1213'
+```
 
 ### Model versioning
 
@@ -150,3 +166,5 @@ curl -X POST -H "Content-Type:application/json; format=pandas-split" --data '{"c
 ```
 
 ### TODO create tag of version v1
+
+
