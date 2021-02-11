@@ -12,7 +12,7 @@ import mlflow.sklearn
 
 from src.features.custom_transformations_sklearn import VariableRatioColsRowsAdder
 from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, TRAIN_MODEL_EXP_NAME,
-                                  PROJECT_PATH, VERSION)
+                                  PROJECT_PATH, VERSION, ARTIFACT_LOCAL_PATH)
 from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics
 
@@ -89,7 +89,7 @@ def data_transformation_and_training(data_name: str, alpha: float,
         mlflow.set_tag("version", VERSION)
 
         # Serialize the model in a format that MLflow knows how to deploy it
-        mlflow.sklearn.log_model(pipe, "pipeline")
+        mlflow.sklearn.log_model(pipe, ARTIFACT_LOCAL_PATH)
         # Get the relative path of the artifact (./models/123../artifacts)
         artifact_uri = mlflow.get_artifact_uri()
-        return artifact_uri
+        return artifact_uri[7:]

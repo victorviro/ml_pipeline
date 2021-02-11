@@ -13,6 +13,17 @@ logger = logging.getLogger(__name__)
 
 
 def validate_model(data_name: str, model_path: str):
+    """
+    Validate the model trained. It was load the model trained and get evaluation
+    metrics in the same evaluation dataset. The model is validated if the square
+    root of mean squared error smaller that the thresold fixed.
+
+    :param data_name: The name of the dataset
+    :type data_name: str
+    :param model_path: The path of the model trained
+    :type model_path: str
+    :raises Exception: When the model is not validated
+    """
 
     logger.info('======'*7)
     logger.info(f'Validating the model for MCPL prediction. Dataset name: {data_name}')

@@ -8,8 +8,7 @@ Initialize DVC (after installing it):
 dvc init
 ```
 
-A new `.dvc/` directory is created for internal configuration. This directory is automatically staged with `git add`, so it can be easily committed with Git. It constains a specific `.gitignore` file for DVC, and a `config` file
-for configuration.
+A new `.dvc/` directory is created for internal configuration. This directory is automatically staged with `git add`, so it can be easily committed with Git. It constains a specific `.gitignore` file for DVC, a `config` file for configuration (empty for now), and other files.
 
 
 In order to upload DVC-tracked data or models later with `dvc push`, we need to setup a storage. In this example, we add a new local [data remote](https://dvc.org/doc/command-reference/remote/add) (storage and remote are interchambiable terms in DVC):
@@ -17,7 +16,7 @@ In order to upload DVC-tracked data or models later with `dvc push`, we need to 
 ```bash
 dvc remote add -d local_storage /tmp/dvc-storage
 ```
-This command creates a remote section in the DVC project's config file with name `local_storage` and url `/tmp/dvc-storage`. DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service (local storage in our case).
+This command creates a remote section in the DVC project's `config` file with name `local_storage` and url `/tmp/dvc-storage`. DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service (local storage in our case).
 
 We can list the remotes we have: 
 
@@ -103,3 +102,10 @@ Info links:
 - [`dvc list <url>`](https://dvc.org/doc/command-reference/list)
 
 - [dvc status](https://dvc.org/doc/command-reference/status)
+
+
+## Utils
+
+- Run `dvc diff` to see the files tracked/staged currently.
+
+- Run `dev remove dir_or_file.dvc` to unstage/untrack a file from the dvc repo (and `dvc gc -w` to clear cache).
