@@ -6,12 +6,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import ElasticNet
 from sklearn.preprocessing import StandardScaler
-
+import dvc.api
 import mlflow
 import mlflow.sklearn
 
 from src.features.custom_transformations_sklearn import VariableRatioColsRowsAdder
-from src.config_variables import RAW_DATA_PATH, MCPL_TEST_SPLIT, EXPERIMENT_ID
+from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, TRAIN_MODEL_EXP_NAME,
+                                  PROJECT_PATH, VERSION)
 from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics
 
@@ -55,8 +56,9 @@ def data_transformation_and_training(data_name: str, alpha: float,
     logger.info(f'X_train shape: {X_train.shape}')
     logger.info(f'X_test shape: {X_test.shape}')
 
-    # Start a MLflow experiment
-    with mlflow.start_run(experiment_id=EXPERIMENT_ID):
+    # Start a MLflow run
+    mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXP_NAME)
+    with mlflow.start_run():
 
         # Define the pipeline (feature engineering, scaler, and model)
         pipe = Pipeline([('add_ratio_cols_rows', VariableRatioColsRowsAdder()),
@@ -82,6 +84,9 @@ def data_transformation_and_training(data_name: str, alpha: float,
         mlflow.log_metric("rmse", rmse)
         mlflow.log_metric("r2", r2)
         mlflow.log_metric("mae", mae)
+        data_path = dvc.api.get_url(path=data_file_path, repo=PROJECT_PATH)
+        mlflow.set_tag("data path", data_path)
+        mlflow.set_tag("version", VERSION)
 
         # Serialize the model in a format that MLflow knows how to deploy it
         mlflow.sklearn.log_model(pipe, "pipeline")

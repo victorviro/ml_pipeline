@@ -10,10 +10,12 @@ from hpsklearn import any_preprocessing
 import hpsklearn
 from hyperopt import tpe, hp
 import mlflow
+import dvc.api
 
 from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics, get_class_parameters
-from src.config_variables import RAW_DATA_PATH, MCPL_TEST_SPLIT
+from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, VERSION, PROJECT_PATH,
+                                  HYPER_PARAMETER_EXP_NAME, HYPEROPT_MAX_EVALS)
 
 
 logger = logging.getLogger(__name__)
@@ -48,8 +50,8 @@ def hyper_parameter_search(data_name: str):
     logger.info(f'X_train shape: {X_train.shape}')
     logger.info(f'X_test shape: {X_test.shape}')
 
-    # Start a MLflow experiment
-    mlflow.set_experiment(experiment_name='Hyperparameter Search')
+    # Start a MLflow run
+    mlflow.set_experiment(experiment_name=HYPER_PARAMETER_EXP_NAME)
     with mlflow.start_run():
         # Define the type of regressor algorithms to do the the search
         regressors = hp.choice('MCPL_prediction',
@@ -72,7 +74,8 @@ def hyper_parameter_search(data_name: str):
                                 preprocessing=any_preprocessing('pre'),
                                 # preprocessing=[hpsklearn.standard_scaler('standard_scaler')]
                                 loss_fn=mean_squared_error,
-                                algo=tpe.suggest, max_evals=50, trial_timeout=30)
+                                algo=tpe.suggest, max_evals=HYPEROPT_MAX_EVALS,
+                                trial_timeout=30)
 
         hyperopt_estimator.fit(X_train, y_train)
 
@@ -119,3 +122,7 @@ def hyper_parameter_search(data_name: str):
             param_value = getattr(best_preprocessing, preprocessing_param_name)
             param_name = f'preprocessing_{preprocessing_param_name}'
             mlflow.log_param(param_name, param_value)
+
+        mlflow.set_tag("version", VERSION)
+        data_path = dvc.api.get_url(path=data_file_path, repo=PROJECT_PATH)
+        mlflow.set_tag("data path", data_path)
