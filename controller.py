@@ -18,5 +18,6 @@ logger = logging.getLogger("controller")
 # validate_data_schema(data_name=MCPL_DATASET_NAME)
 # artifact_uri = data_transformation_and_training(data_name=MCPL_DATASET_NAME,
 #                                                 alpha=0.1, l1_ratio=0.1)
+# print(artifact_uri)
 # validate_model(data_name=MCPL_DATASET_NAME, model_path=MODEL_PATH)
 hyper_parameter_search(data_name=MCPL_DATASET_NAME)

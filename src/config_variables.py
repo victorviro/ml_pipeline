@@ -25,4 +25,4 @@ ARTIFACTS_URI = ('/home/lenovo/Documents/projects/MCPL_prediction/mlruns/2/ca63e
                  f'5ea1f0426c835d94c8f29334e2/artifacts')
 
 MODEL_PATH = f'{ARTIFACTS_URI}/{ARTIFACT_LOCAL_PATH}/model.pkl'
-#MODEL_PATH = './mlruns/0/cba6098fa7bc45bfb0f3eea60fa15a98/artifacts/pipeline/model.pkl'
+# MODEL_PATH = './mlruns/0/cba6098fa7bc45bfb0f3eea60fa15a98/artifacts/pipeline/model.pkl'
