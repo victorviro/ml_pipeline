@@ -57,6 +57,7 @@ def data_transformation_and_training(data_name: str, alpha: float,
     logger.info(f'X_test shape: {X_test.shape}')
 
     # Start a MLflow run
+    mlflow.set_tracking_uri('http://0.0.0.0:1212')
     mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXP_NAME)
     with mlflow.start_run():
 

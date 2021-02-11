@@ -108,12 +108,12 @@ Launch the mlflow ui
 mlflow server --backend-store-uri postgresql://mlflow_user:mlflow@localhost/mcpl_mlflow_db \
         --default-artifact-root file:/home/lenovo/viro/artifact_root \
         --host 0.0.0.0 \
-        --port 1213
+        --port 1214
 ```
 
 Now the Tracking server should be available at the following URL: http://0.0.0.0:1213.
 
-We can set the tracking URI at the beginning of our program, with the same host:port as we used to configure the mlflow server (`mlflow.set_tracking_uri('http://0.0.0.0:1213')`) or we can do it with the CLI setting the following environmental variable:
+We can set the tracking URI at the beginning of our program, with the same `host:port` as we used to configure the mlflow server (`mlflow.set_tracking_uri('http://0.0.0.0:1213')`) or we can do it with the CLI setting the following environmental variable:
 
 ```bash
 export MLFLOW_TRACKING_URI='http://0.0.0.0:1213'
@@ -121,10 +121,10 @@ export MLFLOW_TRACKING_URI='http://0.0.0.0:1213'
 
 ### Model versioning
 
-The file to train the model outputs the artifact uri (`./mlruns/0/1c.../artifacts`). Once the model is validated, we track this directory with DVC. We first copy the artifact dir to `models/`:
+The file to train the model outputs the artifact uri (`.../artifacts`). Once the model is validated, we track this directory with DVC. We first copy the artifact dir to `models/`:
 
 ```bash
-cp -R /home/lenovo/Documents/projects/MCPL_prediction/mlruns/2/ca63e95ea1f0426c835d94c8f29334e2/artifacts /home/lenovo/Documents/projects/MCPL_prediction/models/
+cp -R /home/lenovo/viro/artifact_root/1/5ff27d579438492e9a5bfa59bb5d0a61/artifacts /home/lenovo/Documents/projects/MCPL_prediction/models/
 dvc add /home/lenovo/Documents/projects/MCPL_prediction/models/artifacts
 ```
 
@@ -133,36 +133,22 @@ Usually we would also run `git commit` and `dvc push`.
 
 ### Model deployment
 
-The `mlflow.sklearn.log_model(pipe, "pipeline")` produced two files in `./mlruns/0/1c.../artifacts/pipeline/` (the full path in the view of that artifact in the UI) (the directory `1c...` depicts the run_id, it will be different for you):
+A description of how to deploy a model tracked by MLflow is available in the reference documentation (`references/mlflow_deployment.md`).
 
-- `MLmodel`, is a metadata file that tells MLflow how to load the model.
-- `model.pkl`, is a serialized version of the linear regression model that we trained.
+Open a new window command line and run:
 
-In this example, we can use this MLmodel format with MLflow to deploy a local REST server that can serve predictions. To deploy the server, run (replace the path with your model’s actual path):
-
-open in a new window command:
-```
-cd Documents/projects/ml_quotes_image
+``` bash
+cd Documents/projects/MCPL_prediction
 source venv/bin/activate
-```
-```
-mlflow models serve -m file:///home/lenovo/Documents/projects/ml_quotes_image/mlruns/0/02fa5dfe2f474ab48f7c9a5c57c0468c/artifacts/pipeline -p 1236
-```
-or
-```
-mlflow models serve -m /home/lenovo/Documents/projects/ml_quotes_image/mlruns/0/02fa5dfe2f474ab48f7c9a5c57c0468c/artifacts/pipeline -p 1236
+# mlflow models serve -m /home/lenovo/viro/artifact_root/1/5ff27d579438492e9a5bfa59bb5d0a61/artifacts/pipeline -p 1336
+#mlflow models serve -m /home/lenovo/Documents/projects/MCPL_prediction/models/artifacts/pipeline -p 1336
+mlflow models serve -m ./models/artifacts/pipeline -p 1336
 ```
 
+Once we have deployed the server (it's running), we can get predictions though a request 
 
-or
-```
-mlflow models serve -m ./mlruns/0/02fa5dfe2f474ab48f7c9a5c57c0468c/artifacts/pipeline -p 1236
-```
-Once we have deployed the server (it's running), we can get predictions though a request passing some sample data. The following example uses curl to send a JSON-serialized pandas DataFrame with the split orientation to the model server. More information about the input data formats accepted by the model server, see the [MLflow deployment tools documentation](https://www.mlflow.org/docs/latest/models.html#local-model-deployment).
-
-```
-curl -X POST -H "Content-Type:application/json; format=pandas-split" --data '{"columns":["font_size", "rows_number","cols_number", "char_number_text"],"data":[[109, 1291, 730, 46]]}' http://127.0.0.1:1236/invocations
-
+```bash
+curl -X POST -H "Content-Type:application/json; format=pandas-split" --data '{"columns":["font_size", "rows_number","cols_number", "char_number_text"],"data":[[109, 1291, 730, 46]]}' http://127.0.0.1:1336/invocations
 ```
 
 ### TODO create tag of version v1
