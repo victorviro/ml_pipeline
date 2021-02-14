@@ -6,6 +6,9 @@ __pycache__/
 # Distribution / packaging
 venv/
 
+artifact_store/*
+!artifact_store/*.gitkeep
+
 
 *.log
 
