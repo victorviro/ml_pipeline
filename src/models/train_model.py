@@ -12,7 +12,8 @@ import mlflow.sklearn
 
 from src.features.custom_transformations_sklearn import VariableRatioColsRowsAdder
 from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, TRAIN_MODEL_EXP_NAME,
-                                  PROJECT_PATH, VERSION, ARTIFACT_LOCAL_PATH)
+                                  PROJECT_PATH, VERSION, ARTIFACT_LOCAL_PATH,
+                                  MLFLOW_TRACKING_URI)
 from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics
 
@@ -57,7 +58,7 @@ def data_transformation_and_training(data_name: str, alpha: float,
     logger.info(f'X_test shape: {X_test.shape}')
 
     # Start a MLflow run
-    mlflow.set_tracking_uri('http://0.0.0.0:1212')
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXP_NAME)
     with mlflow.start_run():
 

@@ -15,7 +15,8 @@ import dvc.api
 from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics, get_class_parameters
 from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, VERSION, PROJECT_PATH,
-                                  HYPER_PARAMETER_EXP_NAME, HYPEROPT_MAX_EVALS)
+                                  HYPER_PARAMETER_EXP_NAME, HYPEROPT_MAX_EVALS,
+                                  MLFLOW_TRACKING_URI)
 
 
 logger = logging.getLogger(__name__)
@@ -51,6 +52,7 @@ def hyper_parameter_search(data_name: str):
     logger.info(f'X_test shape: {X_test.shape}')
 
     # Start a MLflow run
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment(experiment_name=HYPER_PARAMETER_EXP_NAME)
     with mlflow.start_run():
         # Define the type of regressor algorithms to do the the search
