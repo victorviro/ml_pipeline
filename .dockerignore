@@ -1,0 +1,26 @@
+## dockerignore ##
+# vcs
+.git
+
+**/.git/*
+**/.git
+
+# Other
+**/.DS_Store
+
+.vscode/*.json
+
+# Ignore generated files
+
+
+# Backend
+**/*.pyc
+**/__pycache__
+/venv/
+**/venv/*
+**/venv
+**/pytest_cache
+# **/logs
+*.log
+**/logs
+

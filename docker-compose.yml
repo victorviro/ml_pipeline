@@ -1,0 +1,60 @@
+version: "2.2"
+
+
+services:
+
+  mlflow:
+    container_name: mlflow
+    build:
+      context: .
+      dockerfile: ./docker/mlflow/Dockerfile
+      args:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        ARTIFACT_STORE_PATH: ${ARTIFACT_STORE_PATH}
+        MLFLOW_PORT: ${MLFLOW_PORT}
+        PROJECT_NAME: ${PROJECT_NAME}
+        PROJECT_SRC: ${PROJECT_SRC}
+        MLFLOW_HOST: ${MLFLOW_HOST}
+    restart: always
+    ports:
+      - '5000:5000'
+
+    volumes:
+      - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
+      - ./${CONTROLLER_PATH}:/${PROJECT_NAME}/${CONTROLLER_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH} # TOdo Add anonym volume 
+      - ./${PROJECT_SRC}/:/${PROJECT_NAME}/${PROJECT_SRC}
+      
+    env_file:
+      - .env
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+
+  postgres:
+    container_name: postgres
+    #image: postgres:13.2
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+      #args:
+        #POSTGRES_DB: ${POSTGRES_DB}
+        #POSTGRES_USER: ${POSTGRES_USER}
+        #POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        #POSTGRES_PORT: ${POSTGRES_PORT}
+    restart: always
+    # ports:
+    #   - "${POSTGRES_PORT}:5432"
+    volumes:
+      - vol_postres:/var/lib/postgresql
+    env_file:
+      - .env
+volumes:
+  vol_postres:
+    driver: local
