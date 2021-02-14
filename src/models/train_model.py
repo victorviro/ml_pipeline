@@ -86,8 +86,8 @@ def data_transformation_and_training(data_name: str, alpha: float,
         mlflow.log_metric("rmse", rmse)
         mlflow.log_metric("r2", r2)
         mlflow.log_metric("mae", mae)
-        data_path = dvc.api.get_url(path=data_file_path, repo=PROJECT_PATH)
-        mlflow.set_tag("data path", data_path)
+        # data_path = dvc.api.get_url(path=data_file_path, repo=PROJECT_PATH)
+        # mlflow.set_tag("data path", data_path)
         mlflow.set_tag("version", VERSION)
 
         # Serialize the model in a format that MLflow knows how to deploy it
