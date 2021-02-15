@@ -3,17 +3,15 @@
 import logging
 import requests
 from requests.exceptions import ConnectionError
-import click
 
-from src.config_variables import (ENDPOINT_URL, RAW_DATA_PATH, MCPL_ENDPOINT_NAME)
+
+from src.config_variables import (RAW_DATA_PATH, ENDPOINT_PATH)
 from src.utils.files import save_json_file
 
 
 logger = logging.getLogger(__name__)
 
 
-@click.option("--data_name", type=click.Choice(['MCPL']),
-              help="The dataset to download")
 def download_raw_data(data_name: str):
     """
     Get raw data for max char per line prediction. It sends a request to the
@@ -28,12 +26,9 @@ def download_raw_data(data_name: str):
     logger.info('======'*7)
     logger.info(f'Getting raw data. Name: {data_name}')
 
-    # Get endpoint request path to fetch the dataset
-    endpoint_path = f'{ENDPOINT_URL}{MCPL_ENDPOINT_NAME}/'
-
     try:
         # Request to get dataset
-        request = requests.get(endpoint_path)
+        request = requests.get(ENDPOINT_PATH)
         logger.info(f'Request done. Storing dataset in {RAW_DATA_PATH}')
     except ConnectionError:
         msg = ('\nConnection error. Check that the quotes image backend is running or'

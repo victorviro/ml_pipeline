@@ -3,24 +3,28 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+MCPL_DATASET_NAME = 'data'
+VERSION = 'v1'
+
 PROJECT_PATH = os.getcwd()
 DATA_PATH = f'{PROJECT_PATH}/data'
 RAW_DATA_PATH = f'{DATA_PATH}/01_raw'
 
-# Endpoints
-ENDPOINT_URL = 'http://127.0.0.1:8000/api/v1/'
-MCPL_ENDPOINT_NAME = 'max_char_per_line_train_data'
+# Get endpoint request path to fetch the dataset
+ENDPOINT_PATH = f'{os.getenv("ENDPOINT_URL")}{os.getenv("MCPL_ENDPOINT_NAME")}/'
 
-# Get training data
+# Model training
 MCPL_TEST_SPLIT = 0.33
-MCPL_DATASET_NAME = 'Data_test'
-EXPERIMENT_ID = 0
+TRAIN_MODEL_EXP_NAME = 'Model training'
+MLFLOW_TRACKING_URI = f'http://{os.getenv("MLFLOW_HOST")}:{os.getenv("MLFLOW_PORT")}'
 
+# Model validation
 RMSE_THRESOLD = 20
+
+# Hyper-parameter optimization
 HYPER_PARAMETER_EXP_NAME = 'Hyperparameter Search'
 HYPEROPT_MAX_EVALS = 50
-TRAIN_MODEL_EXP_NAME = 'Model training'
-VERSION = 'v1'
+
 
 ARTIFACT_LOCAL_PATH = 'pipeline'
 ARTIFACTS_URI = ('/home/lenovo/Documents/projects/MCPL_prediction/mlruns/2/ca63e9'
@@ -28,4 +32,3 @@ ARTIFACTS_URI = ('/home/lenovo/Documents/projects/MCPL_prediction/mlruns/2/ca63e
 
 MODEL_PATH = f'{ARTIFACTS_URI}/{ARTIFACT_LOCAL_PATH}/model.pkl'
 # MODEL_PATH = './mlruns/0/cba6098fa7bc45bfb0f3eea60fa15a98/artifacts/pipeline/model.pkl'
-MLFLOW_TRACKING_URI = f'http://{os.getenv("MLFLOW_HOST")}:{os.getenv("MLFLOW_PORT")}'
