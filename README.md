@@ -58,14 +58,14 @@ Debug via `controller.py` or run directly with `python controller.py`. The pytho
 
 Check the schema of the dataset downloaded using pandera since data must be validated before versioning it and go to the next step in the pipeline (building features).
 
-Debug/run via `controller.py`. The file to validate the schema of the dataset is `src/data_validation/schema_validation.py`.
+Debug/run via `controller.py` or run directly with `python controller.py`. The file to validate the schema of the dataset is `src/data_validation/schema_validation.py`.
 
 
 TODO: Validate distribution of target variable, statistics of the dataset variables (like do TFX).
 
 ### DVC versioning the data
 
-To see the steps as in the first time we run the project, in the reference documentation in `references/DVC_data_versioning.md`.
+To see the steps as in the first time we run the project, check the reference documentation in `references/DVC_data_versioning.md`.
 
 Run `dvc add` again to track the latest version.
 
@@ -88,10 +88,17 @@ dvc push
 
 ### Notebooks (EDA dataset)
 
-Open notebook in `src/notebooks/EDA_MCPL_data.ipynb`. To see how use jupyter notebooks with VScode in this project see the reference documentation in `references/jupyter_notebooks.md`.
+Open notebook in `src/notebooks/EDA_MCPL_data.ipynb` (after launch jupyter notbook). To see how use jupyter notebooks with VScode in this project see the reference documentation in `references/jupyter_notebooks.md`.
+
+```bash
+cd Documents/projects/mcpl_prediction
+source venv/bin/activate
+jupyter notebook
+```
 
 **Note**: Recommended to clear outputs of the notebook before save it (to don't commit them).
 
+TODO: up jupyter notebook in the mlflow container
 
 ### Preprocessing the data
 
@@ -101,11 +108,8 @@ Open notebook in `src/notebooks/EDA_MCPL_data.ipynb`. To see how use jupyter not
 
 ### Train the model
 
-Debug/run via `controller.py`. The file to train the model is `src/models/train_model.py`.
+Debug/run via `controller.py` or run directly with `python controller.py`. The file to train the model is `src/models/train_model.py`.
 
-```
-python src/models/train_model.py
-```
 
 ### Model validation
 
@@ -139,8 +143,8 @@ export MLFLOW_TRACKING_URI='http://0.0.0.0:1213'
 The file to train the model outputs the artifact uri (`.../artifacts`). Once the model is validated, we track this directory with DVC. We first copy the artifact dir to `models/`:
 
 ```bash
-cp -R /home/lenovo/viro/artifact_root/1/5ff27d579438492e9a5bfa59bb5d0a61/artifacts /home/lenovo/Documents/projects/MCPL_prediction/models/
-dvc add /home/lenovo/Documents/projects/MCPL_prediction/models/artifacts
+cp -R /home/lenovo/viro/artifact_root/1/5ff27d579438492e9a5bfa59bb5d0a61/artifacts /home/lenovo/Documents/projects/mcpl_prediction/models/
+dvc add /home/lenovo/Documents/projects/mcpl_prediction/models/artifacts
 ```
 
 Usually we would also run `git commit` and `dvc push`.
@@ -153,10 +157,10 @@ A description of how to deploy a model tracked by MLflow is available in the ref
 Open a new window command line and run:
 
 ``` bash
-cd Documents/projects/MCPL_prediction
+cd Documents/projects/mcpl_prediction
 source venv/bin/activate
 # mlflow models serve -m /home/lenovo/viro/artifact_root/1/5ff27d579438492e9a5bfa59bb5d0a61/artifacts/pipeline -p 1336
-#mlflow models serve -m /home/lenovo/Documents/projects/MCPL_prediction/models/artifacts/pipeline -p 1336
+#mlflow models serve -m /home/lenovo/Documents/projects/mcpl_prediction/models/artifacts/pipeline -p 1336
 mlflow models serve -m ./models/artifacts/pipeline -p 1336
 ```
 

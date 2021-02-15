@@ -11,7 +11,7 @@ pip install jupyter`.
 ## Set up
 Launch jupyter in other window:
 ```bash
-cd Documents/projects/MCPL_prediction/src
+cd Documents/projects/mcpl_prediction/src
 source venv/bin/activate
 jupyter notebook
 ```
