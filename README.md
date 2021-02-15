@@ -52,7 +52,7 @@ Get the dataset through a request to the REST API of the quotes image project.
 backend/venv/bin/python3.7 backend/manage.py runserver
 ```
 
-Debug/run via `controller.py`. The file to download the dataset is `src/data/download_raw_data.py`. Stored json data in `data/01_raw/`.
+Debug via `controller.py` or run directly with `python controller.py`. The python file to download the dataset is `src/data/download_raw_data.py`. Json data is stored in `data/01_raw/`. The name of the dataset is defined in `src/config_variables.py`
 
 ### Data validation
 

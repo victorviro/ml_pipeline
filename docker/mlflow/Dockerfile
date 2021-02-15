@@ -31,7 +31,7 @@ ARG MLFLOW_PORT
 ARG ARTIFACT_STORE_PATH
 ARG MLFLOW_HOST
 
-CMD mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB \
+CMD mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$MLFLOW_HOST/$POSTGRES_DB \
         --default-artifact-root $ARTIFACT_STORE_PATH \
         --host $MLFLOW_HOST \
         --port $MLFLOW_PORT 
