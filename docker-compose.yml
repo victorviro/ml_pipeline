@@ -27,6 +27,8 @@ services:
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
       - ./${CONTROLLER_PATH}:/${PROJECT_NAME}/${CONTROLLER_PATH}
+      - ./${DVC_PATH}:/${PROJECT_NAME}/${DVC_PATH}
+      - ./${GIT_PATH}:/${PROJECT_NAME}/${GIT_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH} # TOdo Add anonym volume 
       - ./${PROJECT_SRC}/:/${PROJECT_NAME}/${PROJECT_SRC}
       

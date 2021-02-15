@@ -126,7 +126,7 @@ def hyper_parameter_search(data_name: str):
             mlflow.log_param(param_name, param_value)
 
         mlflow.set_tag("version", VERSION)
-        # data_path = dvc.api.get_url(path=data_file_path, repo=PROJECT_PATH)
-        # mlflow.set_tag("data path", data_path)
+        data_path = dvc.api.get_url(path=data_file_path, repo=PROJECT_PATH)
+        mlflow.set_tag("data path", data_path)
         mlflow.log_param("test_split_percent", MCPL_TEST_SPLIT)
         mlflow.log_param("test_split_seed", TEST_SPLIT_SEED)
