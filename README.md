@@ -16,11 +16,11 @@ Project to train a model for predicting the max char per line. It includes the f
 
 ## Set up
 
+### Via venv
 ```
-cd src
 python3 -m virtualenv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 
@@ -55,14 +55,14 @@ To see the steps as in the first time we run the project, in the reference docum
 Run `dvc add` again to track the latest version.
 
 ```bash
-dvc add data/01_raw/Data_test.json
+dvc add data/01_raw/data.json
 ```
 
 Usually we would also run `git commit` and `dvc push` to save the changes:
 
 ```bash
 # Using the command line
-git add data/01_raw/Data_test.json.dvc
+git add data/01_raw/data.json.dvc
 git commit -m "Updated raw data (max_char_per_line raw data version X)"
 # git push
 ```

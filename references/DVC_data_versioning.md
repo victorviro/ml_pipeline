@@ -11,12 +11,13 @@ dvc init
 A new `.dvc/` directory is created for internal configuration. This directory is automatically staged with `git add`, so it can be easily committed with Git. It constains a specific `.gitignore` file for DVC, a `config` file for configuration (empty for now), and other files.
 
 
-In order to upload DVC-tracked data or models later with `dvc push`, we need to setup a storage. In this example, we add a new local [data remote](https://dvc.org/doc/command-reference/remote/add) (storage and remote are interchambiable terms in DVC):
+In order to upload DVC-tracked data or models later with `dvc push`, we need to setup a storage. In this example, we add a new local [data remote](https://dvc.org/doc/command-reference/remote/add) (or a [google drive storage](https://youtu.be/kLKBcPonMYw?t=205) of imageneratext gmail account, see in drive `ml_data/mcpl/data` ) (storage and remote are interchambiable terms in DVC):
 
 ```bash
 dvc remote add -d local_storage /tmp/dvc-storage
+dvc remote add -d storage gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn
 ```
-This command creates a remote section in the DVC project's `config` file with name `local_storage` and url `/tmp/dvc-storage`. DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service (local storage in our case).
+This command creates a remote section in the DVC project's `config` file with name `local_storage` (or `stotage`) and url `/tmp/dvc-storage` (or `gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn`). DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service (local storage in our case).
 
 We can list the remotes we have: 
 
@@ -33,17 +34,17 @@ git commit -m "Configure remote storage"
 
 Let's capture the current state of the dataset adding it to DVC tracking (it can be a directory):
 ```bash
-dvc add data/01_raw/Data_test.json
+dvc add data/01_raw/data.json
 ```
 
 DVC stores information about the added file (or directory) in a special `.dvc` metadata file named
-`data/01_raw/Data_test.json.dvc`, which is added in the directory of the file (this file is not the dataset itself, it's a metadata file that contains the hash (md5) of the dataset and the path). Later we can convert this file to the dataset. `dvc add` also moved the data to the project's cache `.dvc/cache`, and linked it back to the workspace (the hash or md5 of the file `Data_test.json.dvc` is used to determine the cache path).
+`data/01_raw/data.json.dvc`, which is added in the directory of the file (this file is not the dataset itself, it's a metadata file that contains the hash (md5) of the dataset and the path). Later we can convert this file to the dataset. `dvc add` also moved the data to the project's cache `.dvc/cache`, and linked it back to the workspace (the hash or md5 of the file `data.json.dvc` is used to determine the cache path).
 
 Let's commit this file to the git repository (with vscode or with the command line):
 
 ```bash
 # Using the command line
-git add data/01_raw/Data_test.json.dvc
+git add data/01_raw/data.json.dvc
 git commit -m "Added raw data (max_char_per_line raw data)"
 # git push
 ```
@@ -53,7 +54,7 @@ Now we have the dataset which has been tracked by dvc but the dataset is in our 
 ```bash
 dvc push
 ```
-`dvc push` copied the data cached locally (in `.dvc/cache`) to the remote storage we set up earlier (`tmp/dvc-storage`).
+`dvc push` copied the data cached locally (in `.dvc/cache`) to the remote storage we set up earlier (`tmp/dvc-storage` or gdrive).
 
 ### Retrieving
 
@@ -62,24 +63,24 @@ For learning purpose, let's remove the dataset (and clear DVC cache) in our dire
 
 ```bash
 rm -rf .dvc/cache
-rm -f data/01_raw/Data_test.json
+rm -f data/01_raw/data.json
 ```
 
-We can use `dvc pull` and that is going to download a new copy of the dataset into our directory (`data/01_raw/Data_test.json`).
+We can use `dvc pull` and that is going to download a new copy of the dataset into our directory (`data/01_raw/data.json`).
 
 ### Making changes
 
 When we make a change to a file (or directory), run `dvc add` again to track the latest version.
 
 ```bash
-dvc add data/01_raw/Data_test.json
+dvc add data/01_raw/data.json
 ```
 
 Usually we would also run `git commit` and `dvc push` to save the changes:
 
 ```bash
 # Using the command line
-git add data/01_raw/Data_test.json.dvc
+git add data/01_raw/data.json.dvc
 git commit -m "Updated raw data (max_char_per_line raw data)"
 # git push
 ```
