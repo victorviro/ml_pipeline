@@ -2,7 +2,7 @@
 
 At the moment, two containers are up (todo: add a container for airflow).
 
-- `mlflow` container. It contains the projects and serves the mlflow ui
+- `mlflow` container. It contains the project and serves the mlflow ui
 
 - `postgres` container. It store the experiments info of mlflow (in the future it will store info of airflow pipelines)
 
