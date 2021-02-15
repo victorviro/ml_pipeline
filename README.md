@@ -23,6 +23,21 @@ source venv/bin/activate
 pip install -r src/requirements.txt
 ```
 
+### Via docker
+
+See the refrence documentation in `docker_README.md`.
+```bash
+# Build images and up containers
+docker-compose up --build -d
+# List containers
+docker ps
+# Stops containers and removes containers
+docker-compose down
+# See the logs of the container
+docker logs mlflow
+# Enter into a container
+docker exec -it mlflow bash
+```
 
 ## Steps
 
