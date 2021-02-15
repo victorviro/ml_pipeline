@@ -5,8 +5,9 @@ import pickle
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.config_variables import RAW_DATA_PATH, MCPL_TEST_SPLIT, RMSE_THRESOLD
-from src.utils.files import get_json_from_file_path
+from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, RMSE_THRESOLD, 
+                                  TEST_SPLIT_SEED)
+from src.utils.files import get_json_from_file_path, load_pickle_file
 from src.utils.training import get_regression_metrics
 
 logger = logging.getLogger(__name__)
@@ -39,13 +40,12 @@ def validate_model(data_name: str, model_path: str):
 
     # Split the data into training and test sets. (0.75, 0.25) split.
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=MCPL_TEST_SPLIT,
-                                                        random_state=1)
+                                                        random_state=TEST_SPLIT_SEED)
     logger.info(f'X_train shape: {X_train.shape}')
     logger.info(f'X_test shape: {X_test.shape}')
 
     # Load the trained model back from file
-    with open(model_path, 'rb') as file:
-        pipe = pickle.load(file)
+    pipe = load_pickle_file(model_path)
 
     # Get performance in validation data
     # Predictions in the test set

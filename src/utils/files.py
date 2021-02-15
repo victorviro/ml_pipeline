@@ -1,5 +1,8 @@
 import logging
 import json
+import pickle
+
+from sklearn.pipeline import Pipeline
 
 logger = logging.getLogger(__name__)
 
@@ -29,3 +32,16 @@ def save_json_file(file_path: str, content: dict):
         msg = f'Error saving the json in path {file_path}.\nMessage: {err}'
         logger.error(msg)
         raise Exception(msg)
+
+def load_pickle_file(file_path: str) -> Pipeline:
+
+    try:
+        with open(file_path, 'rb') as f:
+            file = pickle.load(f)
+
+    except Exception as err:
+        msg = f'Error loading the pickle file in path: {file_path}.\nMessage: {err}'
+        logger.error(msg)
+        raise Exception(msg)
+
+    return file
