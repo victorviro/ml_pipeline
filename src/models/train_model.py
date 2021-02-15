@@ -13,7 +13,7 @@ import mlflow.sklearn
 from src.features.custom_transformations_sklearn import VariableRatioColsRowsAdder
 from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, TRAIN_MODEL_EXP_NAME,
                                   PROJECT_PATH, VERSION, ARTIFACT_LOCAL_PATH,
-                                  MLFLOW_TRACKING_URI)
+                                  MLFLOW_TRACKING_URI, TEST_SPLIT_SEED, MODEL_SEED)
 from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics
 
@@ -53,7 +53,7 @@ def data_transformation_and_training(data_name: str, alpha: float,
 
     # Split the data into training and test sets.
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=MCPL_TEST_SPLIT,
-                                                        random_state=1)
+                                                        random_state=TEST_SPLIT_SEED)
     logger.info(f'X_train shape: {X_train.shape}')
     logger.info(f'X_test shape: {X_test.shape}')
 
@@ -67,7 +67,7 @@ def data_transformation_and_training(data_name: str, alpha: float,
                          ('scaler', StandardScaler()),
                          ('elasticnet', ElasticNet(alpha=alpha,
                                                    l1_ratio=l1_ratio,
-                                                   random_state=42))])
+                                                   random_state=MODEL_SEED))])
         # Train the model
         fit_elasticnet = pipe.fit(X_train, y_train)
 
@@ -83,6 +83,9 @@ def data_transformation_and_training(data_name: str, alpha: float,
         # Track information in MLflow (hyperparameters, metrics...)
         mlflow.log_param("alpha", alpha)
         mlflow.log_param("l1_ratio", l1_ratio)
+        mlflow.log_param("test_split_seed", TEST_SPLIT_SEED)
+        mlflow.log_param("model_seed", MODEL_SEED)
+        mlflow.log_param("test_split_percent", MCPL_TEST_SPLIT)
         mlflow.log_metric("rmse", rmse)
         mlflow.log_metric("r2", r2)
         mlflow.log_metric("mae", mae)
@@ -92,6 +95,6 @@ def data_transformation_and_training(data_name: str, alpha: float,
 
         # Serialize the model in a format that MLflow knows how to deploy it
         mlflow.sklearn.log_model(pipe, ARTIFACT_LOCAL_PATH)
-        # Get the relative path of the artifact (./models/123../artifacts)
+        # Get the relative path of the artifact (artifact_store/123../artifacts)
         artifact_uri = mlflow.get_artifact_uri()
-        return artifact_uri[7:]
+        return artifact_uri

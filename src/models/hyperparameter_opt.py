@@ -16,7 +16,7 @@ from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics, get_class_parameters
 from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, VERSION, PROJECT_PATH,
                                   HYPER_PARAMETER_EXP_NAME, HYPEROPT_MAX_EVALS,
-                                  MLFLOW_TRACKING_URI)
+                                  MLFLOW_TRACKING_URI, TEST_SPLIT_SEED)
 
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ def hyper_parameter_search(data_name: str):
 
     # Split the data into training and test sets.
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=MCPL_TEST_SPLIT,
-                                                        random_state=1)
+                                                        random_state=TEST_SPLIT_SEED)
     logger.info(f'X_train shape: {X_train.shape}')
     logger.info(f'X_test shape: {X_test.shape}')
 
@@ -56,17 +56,17 @@ def hyper_parameter_search(data_name: str):
     mlflow.set_experiment(experiment_name=HYPER_PARAMETER_EXP_NAME)
     with mlflow.start_run():
         # Define the type of regressor algorithms to do the the search
-        regressors = hp.choice('MCPL_prediction',
-                               [hpsklearn.elasticnet('MCPL_prediction.elasticnet'),
-                                # hpsklearn.random_forest_regression('MCPL_prediction.random_forest'),
-                                # hpsklearn.svc('MCPL_prediction.svc'),
-                                # hpsklearn.sgd_regression('MCPL_prediction.sgd_regression'),
+        regressors = hp.choice('mcpl_prediction',
+                               [hpsklearn.elasticnet('mcpl_prediction.elasticnet'),
+                                # hpsklearn.random_forest_regression('mcpl_prediction.random_forest'),
+                                # hpsklearn.svc('mcpl_prediction.svc'),
+                                # hpsklearn.sgd_regression('mcpl_prediction.sgd_regression'),
 
-                                # hpsklearn.lightgbm_regression('MCPL_prediction.lightgbm_regression'),
+                                # hpsklearn.lightgbm_regression('mcpl_prediction.lightgbm_regression'),
                                 # hpsklearn.knn_regression
-                                # hpsklearn.linear_discriminant_analysis('MCPL_prediction.linear_discriminant_analysis'),
-                                # hpsklearn.quadratic_discriminant_analysis('MCPL_prediction.quadratic_discriminant_analysis'),
-                                # hpsklearn.xgboost_regression('MCPL_prediction.xgboost_regression')
+                                # hpsklearn.linear_discriminant_analysis('mcpl_prediction.linear_discriminant_analysis'),
+                                # hpsklearn.quadratic_discriminant_analysis('mcpl_prediction.quadratic_discriminant_analysis'),
+                                # hpsklearn.xgboost_regression('mcpl_prediction.xgboost_regression')
                                 ])
 
         # We define the search procedure.
@@ -128,3 +128,5 @@ def hyper_parameter_search(data_name: str):
         mlflow.set_tag("version", VERSION)
         # data_path = dvc.api.get_url(path=data_file_path, repo=PROJECT_PATH)
         # mlflow.set_tag("data path", data_path)
+        mlflow.log_param("test_split_percent", MCPL_TEST_SPLIT)
+        mlflow.log_param("test_split_seed", TEST_SPLIT_SEED)

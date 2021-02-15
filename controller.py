@@ -2,7 +2,7 @@
 import logging.config
 from src.logging_config import LOGGING_CONFIG
 
-from src.config_variables import MCPL_DATASET_NAME, MODEL_PATH
+from src.config_variables import MCPL_DATASET_NAME, MODEL_PATH, ARTIFACT_LOCAL_PATH
 from src.data.download_raw_data import download_raw_data
 from src.data_validation.schema_validation import validate_data_schema
 from src.models.train_model import data_transformation_and_training
@@ -16,8 +16,9 @@ logger = logging.getLogger("controller")
 
 # download_raw_data(data_name=MCPL_DATASET_NAME)
 # validate_data_schema(data_name=MCPL_DATASET_NAME)
-# artifact_uri = data_transformation_and_training(data_name=MCPL_DATASET_NAME,
-#                                                 alpha=0.1, l1_ratio=0.1)
-# print(artifact_uri)
-# validate_model(data_name=MCPL_DATASET_NAME, model_path=MODEL_PATH)
-hyper_parameter_search(data_name=MCPL_DATASET_NAME)
+artifact_uri = data_transformation_and_training(data_name=MCPL_DATASET_NAME,
+                                                alpha=0.1, l1_ratio=0.1)
+print(artifact_uri)
+model_path = f'{artifact_uri}/{ARTIFACT_LOCAL_PATH}/model.pkl'
+validate_model(data_name=MCPL_DATASET_NAME, model_path=model_path)
+# hyper_parameter_search(data_name=MCPL_DATASET_NAME)

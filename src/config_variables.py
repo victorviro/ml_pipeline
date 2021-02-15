@@ -15,19 +15,21 @@ ENDPOINT_PATH = f'{os.getenv("ENDPOINT_URL")}{os.getenv("MCPL_ENDPOINT_NAME")}/'
 
 # Model training
 MCPL_TEST_SPLIT = 0.33
-TRAIN_MODEL_EXP_NAME = 'Model training'
+TEST_SPLIT_SEED = 1
+TRAIN_MODEL_EXP_NAME = 'Model Training'
 MLFLOW_TRACKING_URI = f'http://{os.getenv("MLFLOW_HOST")}:{os.getenv("MLFLOW_PORT")}'
+MODEL_SEED = 42
 
 # Model validation
 RMSE_THRESOLD = 20
 
 # Hyper-parameter optimization
-HYPER_PARAMETER_EXP_NAME = 'Hyperparameter Search'
+HYPER_PARAMETER_EXP_NAME = 'Hyperparameter search'
 HYPEROPT_MAX_EVALS = 50
 
 
 ARTIFACT_LOCAL_PATH = 'pipeline'
-ARTIFACTS_URI = ('/home/lenovo/Documents/projects/MCPL_prediction/mlruns/2/ca63e9'
+ARTIFACTS_URI = ('/home/lenovo/Documents/projects/mcpl_prediction/mlruns/2/ca63e9'
                  f'5ea1f0426c835d94c8f29334e2/artifacts')
 
 MODEL_PATH = f'{ARTIFACTS_URI}/{ARTIFACT_LOCAL_PATH}/model.pkl'
