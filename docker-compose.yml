@@ -9,7 +9,8 @@ services:
       context: .
       dockerfile: ./docker/mlflow/Dockerfile
       args:
-        POSTGRES_DB: ${POSTGRES_DB}
+        #POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_MLFLOW_DB: ${POSTGRES_MLFLOW_DB}
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         ARTIFACT_STORE_PATH: ${ARTIFACT_STORE_PATH}
@@ -42,22 +43,20 @@ services:
 
   postgres:
     container_name: postgres
-    #image: postgres:13.2
     build:
       context: .
       dockerfile: ./docker/postgres/Dockerfile
-      #args:
-        #POSTGRES_DB: ${POSTGRES_DB}
-        #POSTGRES_USER: ${POSTGRES_USER}
-        #POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        #POSTGRES_PORT: ${POSTGRES_PORT}
+      args:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
-    # ports:
-    #   - "${POSTGRES_PORT}:5432"
+    ports:
+      - "${POSTGRES_PORT}:5432"
     volumes:
-      - vol_postres:/var/lib/postgresql
+      - vol_postres1:/var/lib/postgresql
     env_file:
       - .env
 volumes:
-  vol_postres:
+  vol_postres1:
     driver: local

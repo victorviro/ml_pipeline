@@ -24,14 +24,15 @@ RUN pip3.6 install --upgrade pip && pip3.6 install -r requirements.txt
 # ENTRYPOINT ["/entrypoint.sh"]
 
 #CMD ["rails", "server", "-b", "0.0.0.0"]
-ARG POSTGRES_DB
+ARG POSTGRES_MLFLOW_DB
 ARG POSTGRES_USER
 ARG POSTGRES_PASSWORD
 ARG MLFLOW_PORT
 ARG ARTIFACT_STORE_PATH
 ARG MLFLOW_HOST
+# RUN file="list dir media: $(echo $POSTGRES_USER)" && echo $file
 
-CMD mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$MLFLOW_HOST/$POSTGRES_DB \
+CMD mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$MLFLOW_HOST/$POSTGRES_MLFLOW_DB \
         --default-artifact-root $ARTIFACT_STORE_PATH \
         --host $MLFLOW_HOST \
         --port $MLFLOW_PORT 
