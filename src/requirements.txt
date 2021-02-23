@@ -16,4 +16,5 @@ pandera==0.5.0
 psycopg2==2.8.6
 python-dotenv==0.15.0
 pydrive2==1.7.2
+airflow==2.0.1
 git+https://github.com/hyperopt/hyperopt-sklearn.git
