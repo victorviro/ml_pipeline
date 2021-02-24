@@ -11,7 +11,7 @@ export AIRFLOW_HOME=~/airflow
 echo $AIRFLOW_HOME
 ```
 
-We can create a user, run `airflow db init` and up the airflow web server and scheduler, but first we setup the postgres backend db (instead of sqlite by default). We can follow these [intructions](https://stackoverflow.com/questions/58380835/implementing-postgres-sql-in-apache-airflow). 
+We can create a user, run `airflow db init` and up the airflow web server and scheduler, but first we setup the postgres backend db (instead of sqlite by default). We can follow these [intructions](https://stackoverflow.com/questions/58380835/implementing-postgres-sql-in-apache-airflow) or the [airflow documentation](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-up-database.html#set-up-a-database-backend). 
 
 For example, to create a database `airflow` with password `airflow` and a db `airflow` in postgre console (more info in sublime docs postgres):
 
@@ -32,6 +32,15 @@ dags_folder = /home/lenovo/Documents/projects/mcpl_prediction/airflow/dags
 #sql_alchemy_conn = postgresql+psycopg2://user:pass@hostadress:port/database
 sql_alchemy_conn = postgresql+psycopg2://airflow:airflow@localhost:5432/airflow
 ```
+
+Alternatively we can set env variables ([reference](https://airflow.apache.org/docs/apache-airflow/stable/howto/set-config.html#setting-configuration-options)):
+```bash
+export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@localhost:5432/airflow
+export AIRFLOW__CORE__DAGS_FOLDER=...
+```
+
+We can check the current configuration with the `airflow config list` command.
+
 
 We need to initialize the database again to apply the changes:
 
