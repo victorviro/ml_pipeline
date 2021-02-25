@@ -22,3 +22,26 @@ class IDataDownloander(metaclass=abc.ABCMeta):
         """
         This method must save the data in some way
         """
+
+
+class IDataValidator(metaclass=abc.ABCMeta):
+    def __init__(self):
+        self.data = self.get_data()
+
+    @classmethod
+    def __subclasshook__(cls, subclass):
+        return (hasattr(subclass, 'validate_data') and
+                callable(subclass.validate_data) and
+                hasattr(subclass, 'get_data') and
+                callable(subclass.get_data))
+
+    @abc.abstractmethod
+    def validate_data(self):
+        """
+        This method must validate the data in some way
+        """
+    @abc.abstractmethod
+    def get_data(self):
+        """
+        This method must get the data in some way
+        """

@@ -1,9 +1,10 @@
 import os
 from dotenv import load_dotenv
+import pandera
 load_dotenv()
 
 
-MCPL_DATASET_NAME = 'data'
+MCPL_DATASET_NAME = 'data2'
 VERSION = 'v1'
 
 PROJECT_PATH = os.getcwd()
@@ -34,3 +35,13 @@ ARTIFACTS_URI = ('/home/lenovo/Documents/projects/mcpl_prediction/mlruns/2/ca63e
 
 MODEL_PATH = f'{ARTIFACTS_URI}/{ARTIFACT_LOCAL_PATH}/model.pkl'
 # MODEL_PATH = './mlruns/0/cba6098fa7bc45bfb0f3eea60fa15a98/artifacts/pipeline/model.pkl'
+
+# Define the schema of the dataset
+MCPL_SCHEMA = pandera.DataFrameSchema({
+    "max_char_per_line": pandera.Column(int,
+                                        checks=pandera.Check.less_than_or_equal_to(100)),
+    "font_size": pandera.Column(int, checks=pandera.Check.less_than(1000)),
+    "rows_number": pandera.Column(int),
+    "cols_number": pandera.Column(int),
+    "char_number_text": pandera.Column(int)
+})
