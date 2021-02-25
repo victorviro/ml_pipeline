@@ -1,4 +1,4 @@
-from src.core import IDataDownloander, IDataValidator
+from src.core import IDataDownloander, IDataValidator, IDataTransformer
 
 
 def download_data(data_downloander: IDataDownloander):
@@ -9,3 +9,8 @@ def download_data(data_downloander: IDataDownloander):
 def validate_schema(data_validator: IDataValidator):
     if isinstance(data_validator, IDataValidator):
         data_validator.validate_data()
+
+
+def transform_data(data_transformer: IDataTransformer):
+    if isinstance(data_transformer, IDataTransformer):
+        data_transformer.transform_data()

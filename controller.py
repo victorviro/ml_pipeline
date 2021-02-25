@@ -3,15 +3,17 @@ import logging.config
 from src.logging_config import LOGGING_CONFIG
 
 from src.config_variables import (MCPL_DATASET_NAME, MODEL_PATH, ARTIFACT_LOCAL_PATH,
-                                  ENDPOINT_PATH, RAW_DATA_PATH, MCPL_SCHEMA)
+                                  ENDPOINT_PATH, RAW_DATA_PATH, MCPL_SCHEMA,
+                                  TRANSFORMED_DATA_PATH)
 from src.data.download_raw_data import download_raw_data
 from src.data.request_data_downloander import RequestDataDownloander
 from src.data_validation.schema_validation import validate_data_schema
 from src.data_validation.pandera_schema_validator import PanderaSchemaValidator
 from src.models.train_model import data_transformation_and_training
+from src.features.sklearn_data_transformer import SklearnDataTransformer
 from src.models.model_validation import validate_model
 from src.models.hyperparameter_opt import hyper_parameter_search
-from src.services import download_data, validate_schema
+from src.services import download_data, validate_schema, transform_data
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -33,7 +35,13 @@ logger = logging.getLogger("controller")
 # )
 # download_data(data_downloander=request_data_downloander)
 
-pandera_schema_validator = PanderaSchemaValidator(
-    schema=MCPL_SCHEMA, data_path=RAW_DATA_PATH, data_name=MCPL_DATASET_NAME
+# pandera_schema_validator = PanderaSchemaValidator(
+#     schema=MCPL_SCHEMA, data_path=RAW_DATA_PATH, data_name=MCPL_DATASET_NAME
+# )
+# validate_schema(pandera_schema_validator)
+
+sklearn_data_transformer = SklearnDataTransformer(
+    data_path=RAW_DATA_PATH, data_name=MCPL_DATASET_NAME,
+    data_output_path=TRANSFORMED_DATA_PATH
 )
-validate_schema(pandera_schema_validator)
+transform_data(data_transformer=sklearn_data_transformer)

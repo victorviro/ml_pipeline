@@ -10,6 +10,7 @@ VERSION = 'v1'
 PROJECT_PATH = os.getcwd()
 DATA_PATH = f'{PROJECT_PATH}/data'
 RAW_DATA_PATH = f'{DATA_PATH}/01_raw'
+TRANSFORMED_DATA_PATH = f'{DATA_PATH}/04_model_input'
 
 # Get endpoint request path to fetch the dataset
 ENDPOINT_PATH = f'{os.getenv("ENDPOINT_URL")}{os.getenv("MCPL_ENDPOINT_NAME")}/'

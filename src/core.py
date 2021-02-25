@@ -2,8 +2,7 @@ import abc
 
 
 class IDataDownloander(metaclass=abc.ABCMeta):
-    def __init__(self):
-        self.data = self.get_data()
+    # def __init__(self):
 
     @classmethod
     def __subclasshook__(cls, subclass):
@@ -44,4 +43,34 @@ class IDataValidator(metaclass=abc.ABCMeta):
     def get_data(self):
         """
         This method must get the data in some way
+        """
+
+
+class IDataTransformer(metaclass=abc.ABCMeta):
+    def __init__(self):
+        self.data = self.get_data()
+
+    @classmethod
+    def __subclasshook__(cls, subclass):
+        return (hasattr(subclass, 'transform_data') and
+                callable(subclass.transform_data) and
+                hasattr(subclass, 'get_data') and
+                callable(subclass.get_data) and
+                hasattr(subclass, 'save_data') and
+                callable(subclass.save_data))
+
+    @abc.abstractmethod
+    def transform_data(self):
+        """
+        This method must transform the data in some way
+        """
+    @abc.abstractmethod
+    def get_data(self):
+        """
+        This method must get the data in some way
+        """
+    @abc.abstractmethod
+    def save_data(self):
+        """
+        This method must save the data in some way
         """
