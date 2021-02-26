@@ -9,8 +9,8 @@
             "type": "python",
             "request": "launch",
             
-            //"program": "${file}",
-            "program": "${workspaceFolder}/controller.py",
+            "program": "${file}",
+            //"program": "${workspaceFolder}/controller.py",
             "console": "integratedTerminal"
         }
     ]
