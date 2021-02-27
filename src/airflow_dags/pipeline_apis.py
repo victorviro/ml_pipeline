@@ -1,4 +1,4 @@
-# # region Imports
+# region Imports
 import datetime as dt
 import os
 import sys
@@ -25,6 +25,33 @@ default_args = {
     'retry_delay': dt.timedelta(minutes=10),
 }
 
+
+def launch_and_manage_api_request(url_api: str, body: dict, description: str):
+    try:
+        request = requests.post(url_api, data=json.dumps(body))
+    except Exception as err:
+        if isinstance(err, requests.exceptions.ConnectionError):
+            msg = (f'Connection error. Check that the api to {description} is'
+                   ' running or that the host and port are specified correctly.'
+                   f'\nTraceback of error: {str(err)}')
+            raise Exception(msg)
+        msg = f'Error request the api to {description}.\nTraceback: {err}'
+        raise Exception(msg)
+
+    request_content = request.content
+    content = json.loads(request_content.decode('utf-8'))
+    content['status_code'] = request.status_code
+    if request.status_code == 200:
+        return content
+    elif request.status_code == 500:
+        raise Exception(content)
+    elif request.status_code == 404:
+        message = 'Endpoint not found. Check that the path of the endpoint is correct'
+        content['message'] = message
+        raise Exception(content)
+    raise Exception(content)
+
+
 # Define the DAG as context manager
 with DAG('max_char_per_line_apis',
          default_args=default_args,
@@ -47,29 +74,8 @@ with DAG('max_char_per_line_apis',
             'data_path': op_args[1],
             'data_name': op_args[2]
         }
-        try:
-            request = requests.post(URL_DOWNLOAD_DATA_API, data=json.dumps(body))
-        except Exception as err:
-            if isinstance(err, requests.exceptions.ConnectionError):
-                msg = ('Connection error. Check that the api for downloading the data is'
-                       ' running or that the host and port are specified correctly.'
-                       f'\nTraceback of error: {str(err)}')
-                raise Exception(msg)
-            msg = f'Error request the api for downloading the data.\nTraceback: {err}'
-            raise Exception(msg)
-
-        request_content = request.content
-        content = json.loads(request_content.decode('utf-8'))
-        content['status_code'] = request.status_code
-        if request.status_code == 200:
-            return content
-        elif request.status_code == 500:
-            raise Exception(content)
-        elif request.status_code == 404:
-            message = 'Endpoint not found. Check that the path of the endpoint is correct'
-            content['message'] = message
-            raise Exception(content)
-        raise Exception(content)
+        return launch_and_manage_api_request(url_api=URL_DOWNLOAD_DATA_API, body=body,
+                                             description='download the data')
 
     data_ingestion = PythonOperator(task_id='data_ingestion',
                                     python_callable=download_data,
@@ -83,28 +89,8 @@ with DAG('max_char_per_line_apis',
             'data_path': op_args[0],
             'data_name': op_args[1]
         }
-        try:
-            request = requests.post(URL_VALIDATE_DATA_API, data=json.dumps(body))
-        except Exception as err:
-            if isinstance(err, requests.exceptions.ConnectionError):
-                msg = ('Connection error. Check that the api to validate the data schema'
-                       ' is running or that the host and port are specified correctly.'
-                       f'\nTraceback of error: {str(err)}')
-                raise Exception(msg)
-            msg = f'Error request the api to validate the data schema.\nTraceback: {err}'
-            raise Exception(msg)
-        request_content = request.content
-        content = json.loads(request_content.decode('utf-8'))
-        content['status_code'] = request.status_code
-        if request.status_code == 200:
-            return content
-        elif request.status_code == 500:
-            raise Exception(content)
-        elif request.status_code == 404:
-            message = 'Endpoint not found. Check that the path of the endpoint is correct'
-            content['message'] = message
-            raise Exception(content)
-        raise Exception(content)
+        return launch_and_manage_api_request(url_api=URL_VALIDATE_DATA_API, body=body,
+                                             description='validate the data schema')
 
     data_validation = PythonOperator(task_id='data_validation',
                                      python_callable=validate_data,
