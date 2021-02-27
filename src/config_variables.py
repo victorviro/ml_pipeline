@@ -4,7 +4,7 @@ import pandera
 load_dotenv()
 
 
-MCPL_DATASET_NAME = 'data2'
+MCPL_DATASET_NAME = 'data'
 VERSION = 'v1'
 
 PROJECT_PATH = os.getcwd()
@@ -30,7 +30,7 @@ HYPER_PARAMETER_EXP_NAME = 'Hyperparameter search'
 HYPEROPT_MAX_EVALS = 50
 
 
-ARTIFACT_LOCAL_PATH = 'pipeline'
+ARTIFACT_LOCAL_PATH = 'model'
 ARTIFACTS_URI = ('/home/lenovo/Documents/projects/mcpl_prediction/mlruns/2/ca63e9'
                  f'5ea1f0426c835d94c8f29334e2/artifacts')
 

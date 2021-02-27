@@ -33,13 +33,26 @@ logger = logging.getLogger("controller")
 # request = requests.post(url_api, data=json.dumps(body))
 # print(request.content)
 
-# Tranform data
+# # Tranform data
+# body = {
+#     'data_path': RAW_DATA_PATH,
+#     'data_name': MCPL_DATASET_NAME,
+#     'data_output_path': TRANSFORMED_DATA_PATH
+# }
+# # Request to Fast API to transform the data
+# url_api = 'http://127.0.0.1:1215/api/transform_data'
+# request = requests.post(url_api, data=json.dumps(body))
+# print(request.content)
+
+# Train model
 body = {
-    'data_path': RAW_DATA_PATH,
+    'raw_data_path': RAW_DATA_PATH,
+    'transformed_data_path': TRANSFORMED_DATA_PATH,
     'data_name': MCPL_DATASET_NAME,
-    'data_output_path': TRANSFORMED_DATA_PATH
+    'alpha': 0.1,
+    'l1_ratio': 0.1
 }
-# Request to Fast API to validate the shema of the dataset
-url_api = 'http://127.0.0.1:1215/api/transform_data'
+# Request to Fast API to train the model
+url_api = 'http://127.0.0.1:1216/api/train_model'
 request = requests.post(url_api, data=json.dumps(body))
 print(request.content)

@@ -30,7 +30,7 @@ select * from metrics;
 
 ## Create artifact store
 
-We create a local folder to store the artifacts: `home/viro/artifact_root`
+We create a local folder to store the artifacts: `/home/lenovo/Documents/projects/mcpl_prediction/artifact_store`.
 
 In this case we have two store locations: `--backend-store-uri` for everything except artifacts (the db) and `--default-artifact-root` for artifacts only (the location we just defined/created). 
 
@@ -41,15 +41,17 @@ We need install psycopg2 with `pip install psycopg2`.
 The database needs to be encoded as `dialect+driver://username:password@host:port/database`.
 
 ```bash
+cd /home/lenovo/Documents/projects/mcpl_prediction
+source venv/bin/activate
 mlflow server --backend-store-uri postgresql://mlflow_user:mlflow@localhost/mcpl_mlflow_db \
-        --default-artifact-root file:/home/lenovo/viro/artifact_root \
+        --default-artifact-root file:/home/lenovo/Documents/projects/mcpl_prediction/artifact_store \
         --host 0.0.0.0 \
         --port 5000 
 ```
 
 Now the Tracking server should be available at the following URL: http://0.0.0.0:5000.
 
-We can set the tracking URI at the beginning of our program, with the same host:port as we used to configure the mlflow server (`mlflow.set_tracking_uri('http://0.0.0.0:5000')`) or we can do it with the CLI setting the following environmental variable:
+We can set the tracking URI at the beginning of our program, with the same `host:port` as we used to configure the mlflow server (`mlflow.set_tracking_uri('http://0.0.0.0:5000')`) or we can do it with the CLI setting the following environmental variable:
 
 ```bash
 export MLFLOW_TRACKING_URI='http://0.0.0.0:5000'
