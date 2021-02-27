@@ -1,6 +1,8 @@
 import logging
 
 from fastapi import FastAPI
+from fastapi import status  # starlette statuses
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.download_data.application.download_data_use_case import download_data
@@ -30,9 +32,14 @@ async def root(item: Item):
 
     try:
         download_data(request_data_downloander)
-        return {'message': 'succes'}  # 200
+        message = 'Data stored and saved succesfully'
+        return JSONResponse(status_code=status.HTTP_200_OK,
+                            content={'message': message})
+
     except Exception as err:
-        return {'message': str(err)}  # 400
+        message = f'Error downloading or storing the dataset: {str(err)}'
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            content={'message': message})
 
 # cd /home/lenovo/Documents/projects/mcpl_prediction
 # source venv/bin/activate

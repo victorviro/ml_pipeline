@@ -1,6 +1,8 @@
 import logging
 
 from fastapi import FastAPI
+from fastapi import status  # starlette statuses
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.validate_data_schema.application.validate_data_schema_use_case import (
@@ -28,9 +30,13 @@ async def root(item: Item):
 
     try:
         validate_schema(pandera_schema_validator)
-        return {'message': 'succes'}  # 200
+        message = 'Data schema validated succesfully'
+        return JSONResponse(status_code=status.HTTP_200_OK,
+                            content={'message': message})
     except Exception as err:
-        return {'message': str(err)}  # 400
+        message = f'Error validating the schema of the dataset: {str(err)}'
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            content={'message': message})
 
 # cd /home/lenovo/Documents/projects/mcpl_prediction
 # source venv/bin/activate
