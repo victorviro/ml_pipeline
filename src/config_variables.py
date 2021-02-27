@@ -36,3 +36,8 @@ ARTIFACTS_URI = ('/home/lenovo/Documents/projects/mcpl_prediction/mlruns/2/ca63e
 
 MODEL_PATH = f'{ARTIFACTS_URI}/{ARTIFACT_LOCAL_PATH}/model.pkl'
 # MODEL_PATH = './mlruns/0/cba6098fa7bc45bfb0f3eea60fa15a98/artifacts/pipeline/model.pkl'
+
+URL_DOWNLOAD_DATA_API = 'http://127.0.0.1:1213/api/download_data_endpoint'
+URL_VALIDATE_DATA_API = 'http://127.0.0.1:1214/api/validate_data_schema_endpoint'
+URL_TRANSFORM_DATA_API = ''
+URL_TRAIN_MODEL_API = ''
