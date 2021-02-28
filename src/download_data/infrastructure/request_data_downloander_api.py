@@ -21,8 +21,8 @@ class Item(BaseModel):
 rest_api = FastAPI()
 
 
-@rest_api.post("/api/download_data_endpoint")
-async def root(item: Item):
+@rest_api.post("/api/download_data")
+async def download_data_endpoint(item: Item):
 
     request_data_downloander = RequestDataDownloander(
         endpoint_path=item.endpoint_path,

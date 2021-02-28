@@ -21,8 +21,8 @@ class Item(BaseModel):
 rest_api = FastAPI()
 
 
-@rest_api.post("/api/validate_data_schema_endpoint")
-async def root(item: Item):
+@rest_api.post("/api/validate_data_schema")
+async def validate_data_schema_endpoint(item: Item):
     pandera_schema_validator = PanderaSchemaValidator(
         data_path=item.data_path,
         data_name=item.data_name

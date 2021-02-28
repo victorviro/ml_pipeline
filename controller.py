@@ -19,7 +19,7 @@ logger = logging.getLogger("controller")
 #     'data_name': MCPL_DATASET_NAME
 # }
 # # Request to Fast API to get dataset
-# url_api = 'http://127.0.0.1:1213/api/download_data_endpoint'
+# url_api = 'http://127.0.0.1:1213/api/download_data'
 # request = requests.post(url_api, data=json.dumps(body))
 # request_content = request.content
 # # json.loads(request_content.decode('utf-8'))
@@ -31,7 +31,7 @@ logger = logging.getLogger("controller")
 #     'data_name': MCPL_DATASET_NAME
 # }
 # # Request to Fast API to validate the shema of the dataset
-# url_api = 'http://127.0.0.1:1214/api/validate_data_schema_endpoint'
+# url_api = 'http://127.0.0.1:1214/api/validate_data_schema'
 # request = requests.post(url_api, data=json.dumps(body))
 # print(request.content)
 
