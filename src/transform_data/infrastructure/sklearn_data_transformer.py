@@ -5,8 +5,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 from src.utils.files import get_json_from_file_path, save_json_file
-from src.features.custom_transformations_sklearn import VariableRatioColsRowsAdder
-
+from .custom_transformation_sklearn import VariableRatioColsRowsAdder
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +35,7 @@ class SklearnDataTransformer:
             data_columns = data_df.columns.to_list()
             # Define the pipeline (feature engineering, scaler, and model)
             pipe = Pipeline([('add_ratio_cols_rows', VariableRatioColsRowsAdder()),
-                            ('scaler', StandardScaler())])
+                             ('scaler', StandardScaler())])
             data_columns.append('ratio_cols_rows')
             data_tranformed_array = pipe.fit_transform(data_df)
             data_transformed_df = pd.DataFrame(data_tranformed_array,
