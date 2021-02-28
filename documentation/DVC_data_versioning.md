@@ -46,7 +46,7 @@ Let's commit this file to the git repository (with vscode or with the command li
 # Using the command line
 git add data/01_raw/data.json.dvc
 git commit -m "Added raw data (max_char_per_line raw data)"
-# git push
+# git push origin master
 ```
 
 Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to push the data in the `local_storage` directory (`tmp/dvc-storage`)

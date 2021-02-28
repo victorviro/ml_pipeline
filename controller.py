@@ -21,6 +21,8 @@ logger = logging.getLogger("controller")
 # # Request to Fast API to get dataset
 # url_api = 'http://127.0.0.1:1213/api/download_data_endpoint'
 # request = requests.post(url_api, data=json.dumps(body))
+# request_content = request.content
+# # json.loads(request_content.decode('utf-8'))
 # print(request.content)
 
 # Validate data schema
@@ -45,14 +47,27 @@ logger = logging.getLogger("controller")
 # print(request.content)
 
 # Train model
+# body = {
+#     'raw_data_path': RAW_DATA_PATH,
+#     'transformed_data_path': TRANSFORMED_DATA_PATH,
+#     'data_name': MCPL_DATASET_NAME,
+#     'alpha': 0.1,
+#     'l1_ratio': 0.1
+# }
+# # Request to Fast API to train the model
+# url_api = 'http://127.0.0.1:1216/api/train_model'
+# request = requests.post(url_api, data=json.dumps(body))
+# print(request.content)
+
+# Version data
 body = {
-    'raw_data_path': RAW_DATA_PATH,
-    'transformed_data_path': TRANSFORMED_DATA_PATH,
-    'data_name': MCPL_DATASET_NAME,
-    'alpha': 0.1,
-    'l1_ratio': 0.1
+    'relative_data_path': 'data/01_raw',
+    'data_name': 'data',
+    'data_version': 1,
+    'git_remote_name': 'origin',
+    'git_branch_name': 'master'
 }
 # Request to Fast API to train the model
-url_api = 'http://127.0.0.1:1216/api/train_model'
+url_api = 'http://127.0.0.1:1217/api/version_data'
 request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
