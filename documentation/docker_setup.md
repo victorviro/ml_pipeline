@@ -21,4 +21,10 @@ docker logs mlflow
 docker logs postgres
 # Enter into a container
 docker exec -it mlflow bash
+# List volumes
+docker volume ls
+# Remove a specific volume
+docker volume rm mcpl_prediction_vol_postres1
+# Stop postgresql service
+sudo service postgresql stop
 ```
