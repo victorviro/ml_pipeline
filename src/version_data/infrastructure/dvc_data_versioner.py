@@ -49,3 +49,6 @@ class DVCDataVersioner():
                        f'\nTraceback of error: {str(err)}')
             logger.error(message)
             raise Exception(message)
+
+        # TODO add command to push data versioned in dvc storage (`push dvc`)
+        #  see documentation dvc
