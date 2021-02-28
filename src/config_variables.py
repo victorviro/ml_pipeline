@@ -12,6 +12,7 @@ DATA_PATH = f'{PROJECT_PATH}/data'
 RAW_DATA_PATH = f'{DATA_PATH}/01_raw'
 TRANSFORMED_DATA_PATH = f'{DATA_PATH}/04_model_input'
 MODELS_PATH = f'{PROJECT_PATH}/models'
+MODEL_NAME = 'model'
 
 # Get endpoint request path to fetch the dataset
 ENDPOINT_PATH = f'{os.getenv("ENDPOINT_URL")}{os.getenv("MCPL_ENDPOINT_NAME")}/'
@@ -35,7 +36,7 @@ ARTIFACT_LOCAL_PATH = 'model'
 ARTIFACTS_URI = ('/home/lenovo/Documents/projects/mcpl_prediction/mlruns/2/ca63e9'
                  f'5ea1f0426c835d94c8f29334e2/artifacts')
 
-MODEL_PATH = f'{ARTIFACTS_URI}/{ARTIFACT_LOCAL_PATH}/model.pkl'
+# MODEL_PATH = f'{ARTIFACTS_URI}/{ARTIFACT_LOCAL_PATH}/model.pkl'
 # MODEL_PATH = './mlruns/0/cba6098fa7bc45bfb0f3eea60fa15a98/artifacts/pipeline/model.pkl'
 
 URL_DOWNLOAD_DATA_API = 'http://127.0.0.1:1213/api/download_data'

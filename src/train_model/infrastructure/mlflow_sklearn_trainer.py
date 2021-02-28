@@ -10,7 +10,7 @@ import mlflow.sklearn
 from src.config_variables import (RAW_DATA_PATH, MCPL_TEST_SPLIT, TRAIN_MODEL_EXP_NAME,
                                   PROJECT_PATH, VERSION, ARTIFACT_LOCAL_PATH,
                                   MLFLOW_TRACKING_URI, TEST_SPLIT_SEED, MODEL_SEED)
-from src.utils.files import get_json_from_file_path
+from src.utils.files import get_json_from_file_path, save_pickle_file
 from src.utils.training import get_regression_metrics
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 
 class MlflowSklearnTrainer:
     def __init__(self, raw_data_path: str, transformed_data_path: str, data_name: str,
-                 alpha: float, l1_ratio: float):
+                 alpha: float, l1_ratio: float, version: int, model_path: str,
+                 model_name: str):
         self.raw_data_path = raw_data_path
         self.transformed_data_path = transformed_data_path
         self.data_name = data_name
@@ -27,6 +28,8 @@ class MlflowSklearnTrainer:
         self.full_raw_data_path = f'{raw_data_path}/{data_name}.json'
         self.alpha = alpha
         self.l1_ratio = l1_ratio
+        self.version = version
+        self.full_model_path = f'{model_path}/{model_name}.pkl'
 
     def train_model(self):
 
@@ -108,16 +111,18 @@ class MlflowSklearnTrainer:
                 mlflow.log_metric("rmse", rmse)
                 mlflow.log_metric("r2", r2)
                 mlflow.log_metric("mae", mae)
+                # Get and track the path of the dataset in the DVC repository
                 dvc_raw_data_path = dvc.api.get_url(path=self.full_raw_data_path,
                                                     repo=PROJECT_PATH)
                 mlflow.set_tag("dvc_raw_data_path", dvc_raw_data_path)
-                mlflow.set_tag("version", VERSION)
+                mlflow.set_tag("version", self.version)
+                mlflow.set_tag("model_path", self.full_model_path)
+                mlflow.set_tag("raw_data_path", self.full_raw_data_path)
 
                 # Serialize the model in a format that MLflow knows how to deploy it
                 mlflow.sklearn.log_model(model, ARTIFACT_LOCAL_PATH)
-                # Get the relative path of the artifact (artifact_store/123../artifacts)
-                artifact_uri = mlflow.get_artifact_uri()
-                return artifact_uri
+                # Save the model in /models/
+                save_pickle_file(file_path=self.full_model_path, file=model)
 
         except Exception as err:
             msg = (f'Error starting MLflow experiment or withing the experiment. '

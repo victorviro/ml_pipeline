@@ -3,9 +3,8 @@ import logging.config
 import requests
 import json
 from src.logging_config import LOGGING_CONFIG
-
-from src.config_variables import (MCPL_DATASET_NAME, MODEL_PATH, ARTIFACT_LOCAL_PATH,
-                                  ENDPOINT_PATH, RAW_DATA_PATH,
+from src.config_variables import (MCPL_DATASET_NAME, ARTIFACT_LOCAL_PATH,
+                                  ENDPOINT_PATH, RAW_DATA_PATH, MODELS_PATH, MODEL_NAME,
                                   TRANSFORMED_DATA_PATH)
 
 
@@ -47,27 +46,30 @@ logger = logging.getLogger("controller")
 # print(request.content)
 
 # Train model
-# body = {
-#     'raw_data_path': RAW_DATA_PATH,
-#     'transformed_data_path': TRANSFORMED_DATA_PATH,
-#     'data_name': MCPL_DATASET_NAME,
-#     'alpha': 0.1,
-#     'l1_ratio': 0.1
-# }
-# # Request to Fast API to train the model
-# url_api = 'http://127.0.0.1:1216/api/train_model'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
-
-# Version data
 body = {
-    'relative_data_path': 'data/01_raw',
-    'data_name': 'data',
-    'data_version': 1,
-    'git_remote_name': 'origin',
-    'git_branch_name': 'master'
+    'raw_data_path': RAW_DATA_PATH,
+    'transformed_data_path': TRANSFORMED_DATA_PATH,
+    'data_name': MCPL_DATASET_NAME,
+    'alpha': 0.1,
+    'l1_ratio': 0.1,
+    'version': 1,
+    'model_path': MODELS_PATH,
+    'model_name': MODEL_NAME
 }
 # Request to Fast API to train the model
-url_api = 'http://127.0.0.1:1217/api/version_data'
+url_api = 'http://127.0.0.1:1216/api/train_model'
 request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
+
+# Version data
+# body = {
+#     'relative_data_path': 'data/01_raw',
+#     'data_name': 'data',
+#     'data_version': 1,
+#     'git_remote_name': 'origin',
+#     'git_branch_name': 'master'
+# }
+# # Request to Fast API to train the model
+# url_api = 'http://127.0.0.1:1217/api/version_data'
+# request = requests.post(url_api, data=json.dumps(body))
+# print(request.content)
