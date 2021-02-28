@@ -29,9 +29,13 @@ async def transform_data_endpoint(item: Item):
 
     try:
         transform_data(sklearn_data_transformer)
-        return {'message': 'succes'}  # 200
+        message = 'Data preprocessed succesfully'
+        return JSONResponse(status_code=status.HTTP_200_OK,
+                            content={'message': message})
     except Exception as err:
-        return {'message': str(err)}  # 400
+        message = f'Error preprocessing the data: {str(err)}'
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            content={'message': message})
 
 # cd /home/lenovo/Documents/projects/mcpl_prediction
 # source venv/bin/activate
