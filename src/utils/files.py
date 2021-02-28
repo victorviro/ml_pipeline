@@ -33,6 +33,7 @@ def save_json_file(file_path: str, content: dict):
         logger.error(msg)
         raise Exception(msg)
 
+
 def load_pickle_file(file_path: str) -> Pipeline:
 
     try:
@@ -45,3 +46,15 @@ def load_pickle_file(file_path: str) -> Pipeline:
         raise Exception(msg)
 
     return file
+
+
+def save_pickle_file(file_path: str, file):
+
+    try:
+        with open(file_path, 'wb') as f:
+            pickle.dump(file, f)
+
+    except Exception as err:
+        msg = f'Error saving the pickle file in path: {file_path}.\nMessage: {err}'
+        logger.error(msg)
+        raise Exception(msg)
