@@ -54,7 +54,10 @@ body = {
     'l1_ratio': 0.1,
     'version': 1,
     'model_path': MODELS_PATH,
-    'model_name': MODEL_NAME
+    'model_name': MODEL_NAME,
+    'size_test_split': 0.33,
+    'test_split_seed': 1,
+    'model_seed': 42
 }
 # Request to Fast API to train the model
 url_api = 'http://127.0.0.1:1216/api/train_model'

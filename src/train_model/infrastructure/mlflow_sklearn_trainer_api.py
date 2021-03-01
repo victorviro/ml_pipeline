@@ -1,6 +1,8 @@
 import logging
 
 from fastapi import FastAPI
+from fastapi import status  # starlette statuses
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.train_model.application.train_model_use_case import train_model
@@ -19,6 +21,9 @@ class Item(BaseModel):
     version: int
     model_path: str
     model_name: str
+    size_test_split: float
+    test_split_seed: int
+    model_seed: int
 
 
 rest_api = FastAPI()
@@ -34,7 +39,10 @@ async def train_model_endpoint(item: Item):
         l1_ratio=item.l1_ratio,
         version=item.version,
         model_path=item.model_path,
-        model_name=item.model_name
+        model_name=item.model_name,
+        size_test_split=item.size_test_split,
+        test_split_seed=item.test_split_seed,
+        model_seed=item.model_seed
     )
 
     try:
