@@ -8,7 +8,7 @@ import dvc.api
 import mlflow
 import mlflow.sklearn
 
-from src.config_variables import (TRAIN_MODEL_EXP_NAME, MLFLOW_TRACKING_URI)
+from src.config_variables import (TRAIN_MODEL_EXPERIMENT_NAME, MLFLOW_TRACKING_URI)
 from src.utils.files import get_json_from_file_path, save_pickle_file
 from src.utils.training import get_regression_metrics
 
@@ -70,10 +70,10 @@ class MlflowSklearnTrainer:
             raise Exception(msg)
         # Set MLflow experiment (todo env variable)
         try:
-            mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXP_NAME)
+            mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXPERIMENT_NAME)
         except Exception as err:
-            msg = (f'Error setting MLflow experiment with name: {TRAIN_MODEL_EXP_NAME}. '
-                   f'Error traceback: {err}')
+            msg = ('Error setting MLflow experiment with name: '
+                   f'{TRAIN_MODEL_EXPERIMENT_NAME}. Error traceback: {err}')
             logger.error(msg)
             raise Exception(msg)
         # Start a MLflow run

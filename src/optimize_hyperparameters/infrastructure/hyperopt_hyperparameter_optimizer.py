@@ -14,7 +14,7 @@ import dvc.api
 
 from src.utils.files import get_json_from_file_path
 from src.utils.training import get_regression_metrics, get_class_parameters
-from src.config_variables import MLFLOW_TRACKING_URI, HYPER_PARAMETER_EXP_NAME
+from src.config_variables import MLFLOW_TRACKING_URI, HYPERPARAM_EXPERIMENT_NAME
 
 
 logger = logging.getLogger(__name__)
@@ -74,10 +74,10 @@ class HyperoptHyperparameterOptimizer:
             raise Exception(msg)
         # Set MLflow experiment (todo env variable)
         try:
-            mlflow.set_experiment(experiment_name=HYPER_PARAMETER_EXP_NAME)
+            mlflow.set_experiment(experiment_name=HYPERPARAM_EXPERIMENT_NAME)
         except Exception as err:
-            msg = (f'Error setting MLflow experiment with name: {TRAIN_MODEL_EXP_NAME}. '
-                   f'Error traceback: {err}')
+            msg = (f'Error setting MLflow experiment with name: '
+                   f'{HYPERPARAM_EXPERIMENT_NAME}. Error traceback: {err}')
             logger.error(msg)
             raise Exception(msg)
         # Start a MLflow run

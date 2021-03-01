@@ -11,9 +11,12 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
 
 sys.path.append(os.getcwd())
-from src.config_variables import (MCPL_DATASET_NAME, ENDPOINT_PATH, RAW_DATA_PATH,
-                                  TRANSFORMED_DATA_PATH, URL_DOWNLOAD_DATA_API,
-                                  URL_VALIDATE_DATA_API)
+from src.config_variables import (DATASET_NAME, URL_DATA_MCPL_QUOTES_IMAGE_API,
+                                  RAW_DATA_PATH, TRANSFORMED_DATA_PATH,
+                                  URL_VALIDATE_DATA_API, RELATIVE_RAW_DATA_PATH,
+                                  VERSION, GIT_REMOTE_NAME, GIT_BRANCH_NAME,
+                                  URL_VERSION_DATA, TRANSFORMED_DATA_PATH,
+                                  URL_DOWNLOAD_DATA_API)
 # endregion
 
 
@@ -79,8 +82,8 @@ with DAG('max_char_per_line_apis',
 
     data_ingestion = PythonOperator(task_id='data_ingestion',
                                     python_callable=download_data,
-                                    op_args=[ENDPOINT_PATH, RAW_DATA_PATH,
-                                             MCPL_DATASET_NAME])
+                                    op_args=[URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
+                                             DATASET_NAME])
     # endregion
 
     # region Step 2: Data validation
@@ -94,7 +97,7 @@ with DAG('max_char_per_line_apis',
 
     data_validation = PythonOperator(task_id='data_validation',
                                      python_callable=validate_data,
-                                     op_args=[RAW_DATA_PATH, MCPL_DATASET_NAME])
+                                     op_args=[RAW_DATA_PATH, DATASET_NAME])
     # endregion
 
 return_project_path >> data_ingestion >> data_validation

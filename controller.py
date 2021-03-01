@@ -3,9 +3,9 @@ import logging.config
 import requests
 import json
 from src.logging_config import LOGGING_CONFIG
-from src.config_variables import (MCPL_DATASET_NAME, ARTIFACT_LOCAL_PATH,
-                                  ENDPOINT_PATH, RAW_DATA_PATH, MODELS_PATH, MODEL_NAME,
-                                  TRANSFORMED_DATA_PATH, RMSE_THRESOLD)
+from src.config_variables import (DATASET_NAME, MODEL_NAME
+                                  URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
+                                  TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH)
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -13,9 +13,9 @@ logger = logging.getLogger("controller")
 
 # # Download data
 # body = {
-#     'endpoint_path': ENDPOINT_PATH,
+#     'endpoint_path': URL_DATA_MCPL_QUOTES_IMAGE_API,
 #     'data_path': RAW_DATA_PATH,
-#     'data_name': MCPL_DATASET_NAME
+#     'data_name': DATASET_NAME
 # }
 # # Request to Fast API to get dataset
 # url_api = 'http://127.0.0.1:1213/api/download_data'
@@ -27,7 +27,7 @@ logger = logging.getLogger("controller")
 # Validate data schema
 # body = {
 #     'data_path': RAW_DATA_PATH,
-#     'data_name': MCPL_DATASET_NAME
+#     'data_name': DATASET_NAME
 # }
 # # Request to Fast API to validate the shema of the dataset
 # url_api = 'http://127.0.0.1:1214/api/validate_data_schema'
@@ -37,7 +37,7 @@ logger = logging.getLogger("controller")
 # # Tranform data
 # body = {
 #     'data_path': RAW_DATA_PATH,
-#     'data_name': MCPL_DATASET_NAME,
+#     'data_name': DATASET_NAME,
 #     'data_output_path': TRANSFORMED_DATA_PATH
 # }
 # # Request to Fast API to transform the data
@@ -49,7 +49,7 @@ logger = logging.getLogger("controller")
 # body = {
 #     'raw_data_path': RAW_DATA_PATH,
 #     'transformed_data_path': TRANSFORMED_DATA_PATH,
-#     'data_name': MCPL_DATASET_NAME,
+#     'data_name': DATASET_NAME,
 #     'alpha': 0.1,
 #     'l1_ratio': 0.1,
 #     'version': 1,
@@ -81,7 +81,7 @@ logger = logging.getLogger("controller")
 # Validate model
 body = {
     'transformed_data_path': TRANSFORMED_DATA_PATH,
-    'data_name': MCPL_DATASET_NAME,
+    'data_name': DATASET_NAME,
     'model_path': MODELS_PATH,
     'model_name': MODEL_NAME,
     'size_test_split': 0.33,
