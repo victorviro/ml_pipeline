@@ -34,7 +34,7 @@ def save_json_file(file_path: str, content: dict):
         raise Exception(msg)
 
 
-def load_pickle_file(file_path: str) -> Pipeline:
+def load_pickle_file(file_path: str):
 
     try:
         with open(file_path, 'rb') as f:
