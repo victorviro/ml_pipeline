@@ -4,6 +4,7 @@ Max char per line prediction
 ## Description
 
 Project to train a model for predicting the max char per line. It includes the full pipeline.
+
 - Data ingestion
 - Data validation
 - Data versioning
@@ -119,7 +120,7 @@ uvicorn src.transform_data.infrastructure.sklearn_data_transformer_api:rest_api 
 
 ### 6. Model training
 
-Train the model using Scikit-learn (regression model) tracking the experiment (metrics, hyperparameters,...) with MLflow. A pickle file (the model trained) is stored in `data/04_model_input/`.
+Train the model using Scikit-learn (regression model) tracking the experiment (metrics, hyperparameters,...) with MLflow (to see how configure a backend db store in MLflow see the reference documentation in `documentation/mlflow_backend_db.md`.). A pickle file (the model trained) is stored in `data/04_model_input/`.
 
 Debug via `controller.py`. The code is in `src/train_model/`.
 
@@ -127,3 +128,30 @@ Run the api:
 ```bash
 uvicorn src.train_model.infrastructure.mlflow_sklearn_trainer_api:rest_api --port 1216
 ```
+
+- *Note*: The MLflow ui is available here: http://0.0.0.0:5000 
+
+### 7. Hyperparameter optimization
+
+Optimize hyperparameters using Scikit-learn and hyperopt tracking the experiment (metrics, hyperparameters,...) with MLflow.
+
+Debug via `controller.py`. The code is in `src/optimize_hyperparameters/`.
+
+Run the api: 
+```bash
+
+```
+TODO: create the api and test it in `controller.py`.
+
+### 8. Model validation
+
+The model is validated if the square root of mean squared error smaller that the thresold fixed (defined in the file `src/config_variables.py`).
+
+Debug/run via `controller.py`. The file to validate the model is `src/models/model_validation.py`.
+Debug via `controller.py`. The code is in `src/validate_model/`.
+
+TODO: add some ways to validate the model (for example, if the performace of the new model trained in better than the model currently in production).
+
+### 9. Model versioning
+
+For now, we don't version the model in DVC (it keeps tracked in MLFlow).
