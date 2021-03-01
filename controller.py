@@ -13,7 +13,7 @@ logger = logging.getLogger("controller")
 
 # # Download data
 # body = {
-#     'endpoint_path': URL_DATA_MCPL_QUOTES_IMAGE_API,
+#     'url_quotes_image_api_mcpl_data': URL_DATA_MCPL_QUOTES_IMAGE_API,
 #     'data_path': RAW_DATA_PATH,
 #     'data_name': DATASET_NAME
 # }

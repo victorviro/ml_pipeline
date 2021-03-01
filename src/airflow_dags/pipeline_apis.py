@@ -73,7 +73,7 @@ with DAG('max_char_per_line_apis',
     # region Step 1: Data ingestion
     def download_data(*op_args):
         body = {
-            'endpoint_path': op_args[0],
+            'url_quotes_image_api_mcpl_data': op_args[0],
             'data_path': op_args[1],
             'data_name': op_args[2]
         }

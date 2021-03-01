@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class Item(BaseModel):
-    endpoint_path: str
+    url_quotes_image_api_mcpl_data: str
     data_path: str
     data_name: str
 
@@ -25,7 +25,7 @@ rest_api = FastAPI()
 async def download_data_endpoint(item: Item):
 
     request_data_downloander = RequestDataDownloander(
-        endpoint_path=item.endpoint_path,
+        url_quotes_image_api_mcpl_data=item.URL_DATA_MCPL_QUOTES_IMAGE_API,
         data_path=item.data_path,
         data_name=item.data_name
     )

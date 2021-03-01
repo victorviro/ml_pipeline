@@ -8,11 +8,12 @@ logger = logging.getLogger(__name__)
 
 
 class RequestDataDownloander():
-    def __init__(self, endpoint_path: str, data_path: str, data_name: str):
+    def __init__(self, url_quotes_image_api_mcpl_data: str, data_path: str, 
+                 data_name: str):
 
         self.data_path = data_path
         self.data_name = data_name
-        self.endpoint_path = endpoint_path
+        self.url_quotes_image_api_mcpl_data = url_quotes_image_api_mcpl_data
         self.full_data_path = f'{data_path}/{data_name}.json'
 
     def download_data(self):
@@ -20,7 +21,7 @@ class RequestDataDownloander():
         logger.info(f'Getting raw data. Name: {self.data_name}')
         # Launch the request to get the data
         try:
-            request_response = requests.get(self.endpoint_path)
+            request_response = requests.get(self.url_quotes_image_api_mcpl_data)
             msg = f'Request done succesfully.'
             logger.info(msg)
         except Exception as err:
