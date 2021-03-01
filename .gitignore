@@ -30,4 +30,6 @@ artifact_store/*
 /models/*/*/*/MLmodel
 *.pkl
 
+/airflow/*
+
 
