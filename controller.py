@@ -5,7 +5,7 @@ import json
 from src.logging_config import LOGGING_CONFIG
 from src.config_variables import (MCPL_DATASET_NAME, ARTIFACT_LOCAL_PATH,
                                   ENDPOINT_PATH, RAW_DATA_PATH, MODELS_PATH, MODEL_NAME,
-                                  TRANSFORMED_DATA_PATH)
+                                  TRANSFORMED_DATA_PATH, RMSE_THRESOLD)
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -46,23 +46,23 @@ logger = logging.getLogger("controller")
 # print(request.content)
 
 # Train model
-body = {
-    'raw_data_path': RAW_DATA_PATH,
-    'transformed_data_path': TRANSFORMED_DATA_PATH,
-    'data_name': MCPL_DATASET_NAME,
-    'alpha': 0.1,
-    'l1_ratio': 0.1,
-    'version': 1,
-    'model_path': MODELS_PATH,
-    'model_name': MODEL_NAME,
-    'size_test_split': 0.33,
-    'test_split_seed': 1,
-    'model_seed': 42
-}
-# Request to Fast API to train the model
-url_api = 'http://127.0.0.1:1216/api/train_model'
-request = requests.post(url_api, data=json.dumps(body))
-print(request.content)
+# body = {
+#     'raw_data_path': RAW_DATA_PATH,
+#     'transformed_data_path': TRANSFORMED_DATA_PATH,
+#     'data_name': MCPL_DATASET_NAME,
+#     'alpha': 0.1,
+#     'l1_ratio': 0.1,
+#     'version': 1,
+#     'model_path': MODELS_PATH,
+#     'model_name': MODEL_NAME,
+#     'size_test_split': 0.33,
+#     'test_split_seed': 1,
+#     'model_seed': 42
+# }
+# # Request to Fast API to train the model
+# url_api = 'http://127.0.0.1:1216/api/train_model'
+# request = requests.post(url_api, data=json.dumps(body))
+# print(request.content)
 
 # Version data
 # body = {
@@ -76,3 +76,19 @@ print(request.content)
 # url_api = 'http://127.0.0.1:1217/api/version_data'
 # request = requests.post(url_api, data=json.dumps(body))
 # print(request.content)
+
+
+# Validate model
+body = {
+    'transformed_data_path': TRANSFORMED_DATA_PATH,
+    'data_name': MCPL_DATASET_NAME,
+    'model_path': MODELS_PATH,
+    'model_name': MODEL_NAME,
+    'size_test_split': 0.33,
+    'test_split_seed': 1,
+    'rmse_threshold': RMSE_THRESOLD
+}
+# Request to Fast API to train the model
+url_api = 'http://127.0.0.1:1218/api/validate_model'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)
