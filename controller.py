@@ -3,7 +3,7 @@ import logging.config
 import requests
 import json
 from src.logging_config import LOGGING_CONFIG
-from src.config_variables import (DATASET_NAME, MODEL_NAME
+from src.config_variables import (DATASET_NAME, MODEL_NAME,
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
                                   TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH)
 
