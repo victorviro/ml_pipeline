@@ -39,7 +39,7 @@ export AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@loc
 export AIRFLOW__CORE__DAGS_FOLDER=...
 ```
 
-We can check the current configuration with the `airflow config list` command.
+We can check the current configuration with the `airflow config list` command or `airflow config get-value core sql_alchemy_conn` to check the value for a specific configuration variable.
 
 
 We need to initialize the database again to apply the changes:
