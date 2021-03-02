@@ -1,0 +1,4 @@
+requests==2.24.0
+python-dotenv==0.15.0
+fastapi[all]==0.63.0
+packaging==20.9
