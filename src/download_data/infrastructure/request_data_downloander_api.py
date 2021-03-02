@@ -1,14 +1,16 @@
-import logging
+import logging.config
 
 from fastapi import FastAPI
 from fastapi import status  # starlette statuses
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from src.logging_config import LOGGING_CONFIG
 from src.download_data.application.download_data_use_case import download_data
 from .request_data_downloander import RequestDataDownloander
 
 
+logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 

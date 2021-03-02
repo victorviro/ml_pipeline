@@ -1,15 +1,17 @@
-import logging
+import logging.config
 
 from fastapi import FastAPI
 from fastapi import status  # starlette statuses
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from src.logging_config import LOGGING_CONFIG
 from src.validate_data_schema.application.validate_data_schema_use_case import (
     validate_schema)
 from .pandera_schema_validator import PanderaSchemaValidator
 
 
+logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 

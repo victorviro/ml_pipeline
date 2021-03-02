@@ -1,14 +1,16 @@
-import logging
+import logging.config
 
 from fastapi import FastAPI
 from fastapi import status  # starlette statuses
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from src.logging_config import LOGGING_CONFIG
 from src.validate_model.application.validate_model_use_case import validate_model
 from.sklearn_model_validator import SklearnModelValidator
 
 
+logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
 
