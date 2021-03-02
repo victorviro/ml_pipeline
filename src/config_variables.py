@@ -66,3 +66,7 @@ URL_TRAIN_MODEL_API = (f'http://{HOST_USE_CASES_APIS}:'
 URL_VERSION_DATA_API = (f'http://{HOST_USE_CASES_APIS}:'
                         f'{os.getenv("PORT_VERSION_DATA")}/'
                         f'{os.getenv("ENDPOINT_VERSION_DATA")}')
+
+URL_VALIDATE_MODEL_API = (f'http://{HOST_USE_CASES_APIS}:'
+                         f'{os.getenv("PORT_VALIDATE_DATA")}/'
+                         f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')
