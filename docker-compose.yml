@@ -81,6 +81,27 @@ services:
     env_file:
       - .env
 
+  validate_data:
+    container_name: validate_data
+    build:
+      context: .
+      dockerfile: ./docker/use_cases/validate_data/Dockerfile
+      args:
+        PROJECT_NAME: ${PROJECT_NAME}
+        PROJECT_SRC: ${PROJECT_SRC}
+        PORT_VALIDATE_DATA: ${PORT_VALIDATE_DATA}
+    restart: always
+    volumes:
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/validate_data_schema/:/${PROJECT_NAME}/${PROJECT_SRC}/validate_data_schema/
+      - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
+      - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
+      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
+    #network_mode: host
+    env_file:
+      - .env
+
 
 
 volumes:
