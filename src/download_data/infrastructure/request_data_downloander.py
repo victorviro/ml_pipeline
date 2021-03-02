@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class RequestDataDownloander():
-    def __init__(self, url_quotes_image_api_mcpl_data: str, data_path: str, 
+    def __init__(self, url_quotes_image_api_mcpl_data: str, data_path: str,
                  data_name: str):
 
         self.data_path = data_path

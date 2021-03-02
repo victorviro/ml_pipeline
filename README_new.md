@@ -44,6 +44,10 @@ docker volume ls
 docker volume rm mcpl_prediction_vol_postres1
 # Stop postgresql service
 sudo service postgresql stop
+# Up the container for a service
+docker-compose up service
+# List images
+docker images
 ```
 
 ## Steps
