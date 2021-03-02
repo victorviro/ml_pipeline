@@ -147,8 +147,13 @@ TODO: create the api and test it in `controller.py`.
 
 The model is validated if the square root of mean squared error smaller that the thresold fixed (defined in the file `src/config_variables.py`).
 
-Debug/run via `controller.py`. The file to validate the model is `src/models/model_validation.py`.
+
 Debug via `controller.py`. The code is in `src/validate_model/`.
+
+Run the api: 
+```bash
+uvicorn src.validate_model.infrastructure.sklearn_model_validator_api:rest_api --port 1218
+```
 
 TODO: add some ways to validate the model (for example, if the performace of the new model trained in better than the model currently in production).
 
