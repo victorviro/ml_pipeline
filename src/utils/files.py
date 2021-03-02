@@ -2,7 +2,6 @@ import logging
 import json
 import pickle
 
-from sklearn.pipeline import Pipeline
 
 logger = logging.getLogger(__name__)
 
