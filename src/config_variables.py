@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-import pandera
 load_dotenv()
 
 
@@ -68,5 +67,5 @@ URL_VERSION_DATA_API = (f'http://{HOST_USE_CASES_APIS}:'
                         f'{os.getenv("ENDPOINT_VERSION_DATA")}')
 
 URL_VALIDATE_MODEL_API = (f'http://{HOST_USE_CASES_APIS}:'
-                         f'{os.getenv("PORT_VALIDATE_DATA")}/'
-                         f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')
+                          f'{os.getenv("PORT_VALIDATE_DATA")}/'
+                          f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')

@@ -30,14 +30,18 @@ See the reference documentation in `docker_README.md`.
 ```bash
 # Build images and up containers
 docker-compose up --build -d
-# List containers
+# List containers 
 docker ps
+docker container ls
 # Stops containers and removes containers
 docker-compose down
+docker rm -f <container-name>
 # See the logs of the container
 docker logs mlflow
 # Enter into a container
 docker exec -it mlflow bash
+docker exec -it airflow bash
+docker exec -it mcpl_prediction_airflow-webserver_1 bash
 # List volumes
 docker volume ls
 # Remove a specific volume
@@ -48,6 +52,8 @@ sudo service postgresql stop
 docker-compose up service
 # List images
 docker images
+# Remove dangling images
+docker image prune
 ```
 
 ## Steps

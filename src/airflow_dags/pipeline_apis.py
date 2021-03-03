@@ -102,7 +102,7 @@ with DAG('max_char_per_line_apis',
     data_validation = PythonOperator(task_id='data_validation',
                                      python_callable=validate_data,
                                      op_args=DATA_VALIDATION_ARGS)
-    endregion
+    # endregion
 
     # region Step 3: Data versioning
     def version_data(*op_args):
