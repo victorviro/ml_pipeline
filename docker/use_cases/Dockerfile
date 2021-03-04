@@ -21,3 +21,4 @@ RUN python3.6 -m pip install --upgrade pip
 RUN pip3.6 install --upgrade pip && pip3.6 install -r requirements.txt
 
 # COPY ${PROJECT_SRC}/${USE_CASE}/ ${PROJECT_SRC}/${USE_CASE}/
+#CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
