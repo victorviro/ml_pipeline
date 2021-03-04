@@ -41,7 +41,7 @@ docker logs mlflow
 # Enter into a container
 docker exec -it mlflow bash
 docker exec -it airflow bash
-docker exec -it mcpl_prediction_airflow-webserver_1 bash
+docker exec -it transform_data bash
 # List volumes
 docker volume ls
 # Remove a specific volume
