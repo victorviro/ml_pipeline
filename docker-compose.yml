@@ -106,6 +106,12 @@ services:
         PROJECT_NAME: ${PROJECT_NAME}
         PROJECT_SRC: ${PROJECT_SRC}
         PORT_VALIDATE_DATA: ${PORT_VALIDATE_DATA}
+        HOST_USE_CASES_APIS: ${HOST_USE_CASES_APIS}
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME}
+      PROJECT_SRC: ${PROJECT_SRC}
+      PORT_VALIDATE_DATA: ${PORT_VALIDATE_DATA}
+      HOST_USE_CASES_APIS: ${HOST_USE_CASES_APIS}
     ports:
       - ${PORT_VALIDATE_DATA}:${PORT_VALIDATE_DATA}
     restart: always
@@ -116,8 +122,8 @@ services:
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
       - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
 
 
 
