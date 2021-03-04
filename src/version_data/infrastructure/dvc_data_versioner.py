@@ -31,9 +31,10 @@ class DVCDataVersioner():
 
         # Add and commit the DVC metadata of the data to the git repository
         relative_full_metadata_path = f'{self.relative_full_data_path}.dvc'
-        commit_message = f'Added max_char_per_line raw data, version: {self.version_data}'
+        commit_message = f'Added max_char_per_line raw data, version: {self.data_version}'
         try:
             subprocess.run(["git", "add", relative_full_metadata_path])
+            subprocess.run(["git", "add", f'{self.relative_data_path}/.gitignore'])
             subprocess.run(["git", "commit", "-m", commit_message])
         except Exception as err:
             message = ('Error trying to track and commit the metadata (dvc) in the git '
