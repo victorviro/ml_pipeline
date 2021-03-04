@@ -4,7 +4,7 @@ load_dotenv()
 
 
 DATASET_NAME = 'data'
-VERSION = '1'
+VERSION = 1.2
 
 
 PROJECT_PATH = os.getcwd()

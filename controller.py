@@ -3,7 +3,7 @@ import logging.config
 import requests
 import json
 from src.logging_config import LOGGING_CONFIG
-from src.config_variables import (DATASET_NAME, MODEL_NAME,
+from src.config_variables import (DATASET_NAME, MODEL_NAME, VERSION,
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
                                   TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH)
 
@@ -46,15 +46,15 @@ TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
 # print(request.content)
 
 # # Tranform data
-body = {
-    'data_path': RAW_DATA_PATH,
-    'data_name': DATASET_NAME,
-    'data_output_path': TRANSFORMED_DATA_PATH
-}
-# Request to Fast API to transform the data
-url_api = 'http://0.0.0.0:1215/api/transform_data'
-request = requests.post(url_api, data=json.dumps(body))
-print(request.content)
+# body = {
+#     'data_path': RAW_DATA_PATH,
+#     'data_name': DATASET_NAME,
+#     'data_output_path': TRANSFORMED_DATA_PATH
+# }
+# # Request to Fast API to transform the data
+# url_api = 'http://0.0.0.0:1215/api/transform_data'
+# request = requests.post(url_api, data=json.dumps(body))
+# print(request.content)
 
 # Train model
 # body = {
@@ -76,17 +76,17 @@ print(request.content)
 # print(request.content)
 
 # Version data
-# body = {
-#     'relative_data_path': 'data/01_raw',
-#     'data_name': 'data',
-#     'data_version': 1,
-#     'git_remote_name': 'origin',
-#     'git_branch_name': 'master'
-# }
-# # Request to Fast API to train the model
-# url_api = 'http://0.0.0.0:1217/api/version_data'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
+body = {
+    'relative_data_path': 'data/01_raw',
+    'data_name': 'data',
+    'data_version': VERSION,
+    'git_remote_name': 'origin',
+    'git_branch_name': 'master'
+}
+# Request to Fast API to train the model
+url_api = 'http://0.0.0.0:1217/api/version_data'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)
 
 
 # Validate model

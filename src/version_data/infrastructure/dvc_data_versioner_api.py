@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Item(BaseModel):
     relative_data_path: str
     data_name: str
-    data_version: int
+    data_version: float
     git_remote_name: str
     git_branch_name: str
 

@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class DVCDataVersioner():
-    def __init__(self, relative_data_path: str, data_name: str, data_version: int,
+    def __init__(self, relative_data_path: str, data_name: str, data_version: float,
                  git_remote_name: str, git_branch_name: str):
         self.relative_data_path = relative_data_path  # 'data/01_raw'
         self.data_name = data_name
