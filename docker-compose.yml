@@ -112,7 +112,7 @@ services:
     env_file:
       - .env
 
-
+  # region Use cases
   validate_data:
     <<: *use_cases-common
     container_name: validate_data
@@ -135,6 +135,72 @@ services:
       uvicorn src.${USE_CASE_VALIDATE_DATA}.infrastructure.${API_FILE_VALIDATE_DATA}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_DATA}
 
+  download_data:
+    <<: *use_cases-common
+    container_name: download_data
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_DOWNLOAD_DATA}
+    volumes: 
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
+      - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
+      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
+      - ./${PROJECT_SRC}/${USE_CASE_DOWNLOAD_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_DOWNLOAD_DATA}/
+    ports:
+      - ${PORT_DOWNLOAD_DATA}:${PORT_DOWNLOAD_DATA}
+    command: >
+      uvicorn src.${USE_CASE_DOWNLOAD_DATA}.infrastructure.${API_FILE_DOWNLOAD_DATA}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_DOWNLOAD_DATA}
+#uvicorn src.download_data.infrastructure.request_data_downloander_api:rest_api --host 0.0.0.0 --port 1213
+
+  version_data:
+    <<: *use_cases-common
+    container_name: version_data
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_VERSION_DATA}
+    volumes: 
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
+      - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
+      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
+      - ./${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/
+      - ./.dvc/:/${PROJECT_NAME}/.dvc/
+      - ./.git/:/${PROJECT_NAME}/.git/
+    ports:
+      - ${PORT_VERSION_DATA}:${PORT_VERSION_DATA}
+    command: >
+      uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}
+
+  transform_data:
+    <<: *use_cases-common
+    container_name: transform_data
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_TRANSFORM_DATA}
+    volumes: 
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
+      - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
+      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
+      - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
+    ports:
+      - ${PORT_TRANSFORM_DATA}:${PORT_TRANSFORM_DATA}
+    command: >
+      uvicorn src.${USE_CASE_TRANSFORM_DATA}.infrastructure.${API_FILE_TRANSFORM_DATA}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_TRANSFORM_DATA}
+  # endregion
 
 
 volumes:
