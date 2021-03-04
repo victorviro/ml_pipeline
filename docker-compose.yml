@@ -174,11 +174,15 @@ services:
       - ./${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/
       - ./.dvc/:/${PROJECT_NAME}/.dvc/
       - ./.git/:/${PROJECT_NAME}/.git/
+      - /home/lenovo/.ssh/:/root/.ssh/
     ports:
       - ${PORT_VERSION_DATA}:${PORT_VERSION_DATA}
     command: >
-      uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api 
-        --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}
+      bash -c "git config user.name victorviro &&
+      git config user.email victor_sanchez91@hotmail.es &&
+      uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api \
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}"
+# /bin/sh -c "./docker/use_cases/version_data/entrypoint_init_git.sh" &
 
   transform_data:
     <<: *use_cases-common
