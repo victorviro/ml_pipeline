@@ -1,4 +1,4 @@
-version: "2.2"
+version: "3.5"
 
 x-airflow-common:
   &airflow-common
@@ -19,8 +19,21 @@ x-airflow-common:
   depends_on:
     - postgres
 
-services:
+x-use_cases-common:
+  &use_cases-common
+  build:
+    &use_cases-common-build
+    context: .
+    dockerfile: ./docker/use_cases/Dockerfile
+    args:
+      &use_cases-common-args
+      PROJECT_NAME: ${PROJECT_NAME}
+      PROJECT_SRC: ${PROJECT_SRC}
+  restart: always
 
+
+services:
+  # region Airflow containers
   airflow-init: 
     <<: *airflow-common
     container_name: airflow-init
@@ -40,8 +53,9 @@ services:
     <<: *airflow-common
     container_name: airflow-scheduler
     command: airflow scheduler
+  # endregion
     
-
+  # region MLflow container
   mlflow:
     container_name: mlflow
     build:
@@ -78,6 +92,7 @@ services:
     #   - postgres
     depends_on:
       - postgres
+  # endregion
 
 
   postgres:
@@ -97,33 +112,28 @@ services:
     env_file:
       - .env
 
+
   validate_data:
+    <<: *use_cases-common
     container_name: validate_data
     build:
-      context: .
-      dockerfile: ./docker/use_cases/validate_data/Dockerfile
+      <<: *use_cases-common-build
       args:
-        PROJECT_NAME: ${PROJECT_NAME}
-        PROJECT_SRC: ${PROJECT_SRC}
-        PORT_VALIDATE_DATA: ${PORT_VALIDATE_DATA}
-        HOST_USE_CASES_APIS: ${HOST_USE_CASES_APIS}
-    environment:
-      PROJECT_NAME: ${PROJECT_NAME}
-      PROJECT_SRC: ${PROJECT_SRC}
-      PORT_VALIDATE_DATA: ${PORT_VALIDATE_DATA}
-      HOST_USE_CASES_APIS: ${HOST_USE_CASES_APIS}
-    ports:
-      - ${PORT_VALIDATE_DATA}:${PORT_VALIDATE_DATA}
-    restart: always
-    volumes:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_VALIDATE_DATA}
+    volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-      - ./${PROJECT_SRC}/validate_data_schema/:/${PROJECT_NAME}/${PROJECT_SRC}/validate_data_schema/
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
       - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
-    # env_file:
-    #   - .env
+      - ./${PROJECT_SRC}/${USE_CASE_VALIDATE_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VALIDATE_DATA}/
+    ports:
+      - ${PORT_VALIDATE_DATA}:${PORT_VALIDATE_DATA}
+    command: >
+      uvicorn src.${USE_CASE_VALIDATE_DATA}.infrastructure.${API_FILE_VALIDATE_DATA}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_DATA}
 
 
 
