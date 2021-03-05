@@ -62,34 +62,17 @@ services:
       context: .
       dockerfile: ./docker/mlflow/Dockerfile
       args:
-        #POSTGRES_DB: ${POSTGRES_DB}
-        POSTGRES_MLFLOW_DB: ${POSTGRES_MLFLOW_DB}
-        POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        ARTIFACT_STORE_PATH: ${ARTIFACT_STORE_PATH}
-        MLFLOW_PORT: ${MLFLOW_PORT}
         PROJECT_NAME: ${PROJECT_NAME}
-        PROJECT_SRC: ${PROJECT_SRC}
-        MLFLOW_HOST: ${MLFLOW_HOST}
     restart: always
     ports:
-      - '5000:5000'
-    network_mode: host
-
+      - ${MLFLOW_PORT}:${MLFLOW_PORT}
+    command: >
+      mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:$POSTGRES_PORT/$POSTGRES_MLFLOW_DB 
+        --default-artifact-root $ARTIFACT_STORE_PATH
+        --host $MLFLOW_HOST 
+        --port $MLFLOW_PORT 
     volumes:
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
-      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
-      - ./${CONTROLLER_PATH}:/${PROJECT_NAME}/${CONTROLLER_PATH}
-      - ./${DVC_PATH}:/${PROJECT_NAME}/${DVC_PATH}
-      - ./${GIT_PATH}:/${PROJECT_NAME}/${GIT_PATH}
-      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH} # TOdo Add anonym volume 
-      - ./${PROJECT_SRC}/:/${PROJECT_NAME}/${PROJECT_SRC}
-      
-    env_file:
-      - .env
-    # links:
-    #   - postgres
     depends_on:
       - postgres
   # endregion
@@ -106,7 +89,7 @@ services:
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
       - vol_postres1:/var/lib/postgresql
     env_file:
@@ -123,7 +106,6 @@ services:
         USE_CASE: ${USE_CASE_VALIDATE_DATA}
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
@@ -204,6 +186,33 @@ services:
     command: >
       uvicorn src.${USE_CASE_TRANSFORM_DATA}.infrastructure.${API_FILE_TRANSFORM_DATA}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_TRANSFORM_DATA}
+  
+  train_model:
+    <<: *use_cases-common
+    container_name: train_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_TRAIN_MODEL}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+    volumes: 
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
+      - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
+      - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
+      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
+      - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/
+      - ./.dvc/:/${PROJECT_NAME}/.dvc/
+      - ./.git/:/${PROJECT_NAME}/.git/
+    ports:
+      - ${PORT_TRAIN_MODEL}:${PORT_TRAIN_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_TRAIN_MODEL}.infrastructure.${API_FILE_TRAIN_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_TRAIN_MODEL}
   # endregion
 
 
