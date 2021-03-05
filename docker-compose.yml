@@ -91,7 +91,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
-      - vol_postres1:/var/lib/postgresql
+      - vol_postres:/var/lib/postgresql/data
     env_file:
       - .env
 
@@ -217,5 +217,5 @@ services:
 
 
 volumes:
-  vol_postres1:
+  vol_postres:
     driver: local
