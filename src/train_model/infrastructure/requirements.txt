@@ -5,3 +5,5 @@ mlflow==1.12.1
 python-dotenv==0.15.0
 fastapi[all]==0.63.0
 packaging==20.9
+psycopg2==2.8.6
+pydrive2==1.7.2

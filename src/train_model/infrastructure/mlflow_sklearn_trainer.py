@@ -61,13 +61,13 @@ class MlflowSklearnTrainer:
             raise Exception(msg)
 
         # Set MLflow URI (todo env variable)
-        try:
-            mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-        except Exception as err:
-            msg = (f'Error setting MLflow URI: {MLFLOW_TRACKING_URI}. '
-                   f'Error traceback: {err}')
-            logger.error(msg)
-            raise Exception(msg)
+        # try:
+        #     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+        # except Exception as err:
+        #     msg = (f'Error setting MLflow URI: {MLFLOW_TRACKING_URI}. '
+        #            f'Error traceback: {err}')
+        #     logger.error(msg)
+        #     raise Exception(msg)
         # Set MLflow experiment (todo env variable)
         try:
             mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXPERIMENT_NAME)
@@ -115,6 +115,10 @@ class MlflowSklearnTrainer:
 
                 # Serialize the model in a format that MLflow knows how to deploy it
                 mlflow.sklearn.log_model(model, self.model_name)
+                artifact_uri = mlflow.get_artifact_uri()
+                logger.info("Artifact uri: {}".format(artifact_uri))
+                tracking_uri = mlflow.get_tracking_uri()
+                logger.info("Current tracking uri: {}".format(tracking_uri))
                 # Save the model in /models/
                 save_pickle_file(file_path=self.full_model_path, file=model)
 
