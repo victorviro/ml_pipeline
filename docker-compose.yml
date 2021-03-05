@@ -213,6 +213,28 @@ services:
     command: >
       uvicorn src.${USE_CASE_TRAIN_MODEL}.infrastructure.${API_FILE_TRAIN_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_TRAIN_MODEL}
+
+  validate_model:
+    <<: *use_cases-common
+    container_name: validate_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_VALIDATE_MODEL}
+    volumes: 
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
+      - ./${PROJECT_SRC}/logging_config.py:/${PROJECT_NAME}/${PROJECT_SRC}/logging_config.py
+      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
+      - ./${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/
+    ports:
+      - ${PORT_VALIDATE_MODEL}:${PORT_VALIDATE_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_VALIDATE_MODEL}.infrastructure.${API_FILE_VALIDATE_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_MODEL}
   # endregion
 
 
