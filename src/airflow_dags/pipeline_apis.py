@@ -10,7 +10,7 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
 
-sys.path.append(os.getcwd())
+# sys.path.append(os.getcwd())
 from src.config_variables import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_PATH,
                                   RELATIVE_RAW_DATA_PATH, VERSION,
                                   GIT_REMOTE_NAME, GIT_BRANCH_NAME,
@@ -26,7 +26,7 @@ from src.config_variables import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_
 # Define the general arguments for the DAG (will apply to any of its operators)
 default_args = {
     'owner': 'me',
-    'start_date': dt.datetime(2021, 3, 1),  # Y, M, D
+    'start_date': dt.datetime(2021, 3, 4),  # Y, M, D
     'retries': 0,
     'retry_delay': dt.timedelta(minutes=10),
 }
@@ -69,8 +69,8 @@ with DAG('max_char_per_line_apis',
     # Define a python operator that returns the path of the project
     def get_project_path():
         return os.getcwd()
-    return_project_path = PythonOperator(task_id='return_project_path',
-                                         python_callable=get_project_path)
+    # return_project_path = PythonOperator(task_id='return_project_path',
+    #                                      python_callable=get_project_path)
     # endregion
 
     # region Step 1: Data ingestion
@@ -84,9 +84,9 @@ with DAG('max_char_per_line_apis',
                                              description='download the data')
 
     DATA_INGESTION_ARGS = [URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH, DATASET_NAME]
-    data_ingestion = PythonOperator(task_id='data_ingestion',
-                                    python_callable=download_data,
-                                    op_args=DATA_INGESTION_ARGS)
+    # data_ingestion = PythonOperator(task_id='data_ingestion',
+    #                                 python_callable=download_data,
+    #                                 op_args=DATA_INGESTION_ARGS)
     # endregion
 
     # region Step 2: Data validation
@@ -95,6 +95,7 @@ with DAG('max_char_per_line_apis',
             'data_path': op_args[0],
             'data_name': op_args[1]
         }
+        URL_VALIDATE_DATA_API = 'http://validate_data:1214/api/validate_data_schema'
         return launch_and_manage_api_request(url_api=URL_VALIDATE_DATA_API, body=body,
                                              description='validate the data schema')
 
@@ -119,9 +120,9 @@ with DAG('max_char_per_line_apis',
         RELATIVE_RAW_DATA_PATH, DATASET_NAME, VERSION, GIT_REMOTE_NAME,
         GIT_BRANCH_NAME
     ]
-    data_versioning = PythonOperator(task_id='data_versioning',
-                                     python_callable=version_data,
-                                     op_args=DATA_VERSIONING_ARGS)
+    # data_versioning = PythonOperator(task_id='data_versioning',
+    #                                  python_callable=version_data,
+    #                                  op_args=DATA_VERSIONING_ARGS)
     # endregion
 
     # region Step 4: Data preprocessing
@@ -136,9 +137,9 @@ with DAG('max_char_per_line_apis',
     DATA_PREPROCESSING_ARGS = [
         RAW_DATA_PATH, DATASET_NAME, TRANSFORMED_DATA_PATH
     ]
-    data_preprocessing = PythonOperator(task_id='data_preprocessing',
-                                        python_callable=transform_data,
-                                        op_args=DATA_PREPROCESSING_ARGS)
+    # data_preprocessing = PythonOperator(task_id='data_preprocessing',
+    #                                     python_callable=transform_data,
+    #                                     op_args=DATA_PREPROCESSING_ARGS)
     # endregion
 
     # region Step 5: Model training
@@ -163,9 +164,9 @@ with DAG('max_char_per_line_apis',
         MODELS_PATH, MODEL_NAME, SIZE_TEST_SPLIT, TEST_SPLIT_SEED, MODEL_SEED,
         RAW_DATA_PATH
     ]
-    model_training = PythonOperator(task_id='model_training',
-                                    python_callable=train_model,
-                                    op_args=MODEL_TRAINING_ARGS)
+    # model_training = PythonOperator(task_id='model_training',
+    #                                 python_callable=train_model,
+    #                                 op_args=MODEL_TRAINING_ARGS)
     # endregion
 
     # region Step 5: Model validation
@@ -185,7 +186,9 @@ with DAG('max_char_per_line_apis',
         TRANSFORMED_DATA_PATH, DATASET_NAME, MODELS_PATH, MODEL_NAME, SIZE_TEST_SPLIT,
         TEST_SPLIT_SEED, RMSE_THRESOLD
     ]
-    model_validation = PythonOperator(task_id='model_validation',
-                                      python_callable=validate_model,
-                                      op_args=MODEL_VALIDATION_ARGS)
+    # model_validation = PythonOperator(task_id='model_validation',
+    #                                   python_callable=validate_model,
+    #                                   op_args=MODEL_VALIDATION_ARGS)
     # endregion
+
+data_validation

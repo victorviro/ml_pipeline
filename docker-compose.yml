@@ -12,9 +12,11 @@ x-airflow-common:
         ${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_AIRFLOW_DB}"
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
       AIRFLOW__CORE__DAGS_FOLDER: /${PROJECT_NAME}/${PROJECT_SRC}/airflow_dags
+      PYTHONPATH: /${PROJECT_NAME}
   volumes:
     - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
-    - ./${PROJECT_SRC}/airflow_dags:/${PROJECT_NAME}/${PROJECT_SRC}/airflow_dags
+    - ./${PROJECT_SRC}/airflow_dags/pipeline_apis.py:/${PROJECT_NAME}/${PROJECT_SRC}/airflow_dags/pipeline_apis.py
+    - ./${PROJECT_SRC}/airflow_dags/logs:/root/airflow/logs
   restart: always
   depends_on:
     - postgres
