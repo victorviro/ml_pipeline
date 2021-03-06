@@ -45,27 +45,27 @@ HYPEROPT_MAX_EVALS = 50
 
 
 # Urls of use cases APIs
-HOST_USE_CASES_APIS = os.getenv("HOST_USE_CASES_APIS")
-URL_DOWNLOAD_DATA_API = (f'http://{HOST_USE_CASES_APIS}:'
+# HOST_USE_CASES_APIS = os.getenv("HOST_USE_CASES_APIS")
+URL_DOWNLOAD_DATA_API = (f'http://{os.getenv("HOST_DOWNLOAD_DATA")}:'
                          f'{os.getenv("PORT_DOWNLOAD_DATA")}/'
                          f'{os.getenv("ENDPOINT_DOWNLOAD_DATA")}')
 
-URL_VALIDATE_DATA_API = (f'http://{HOST_USE_CASES_APIS}:'
+URL_VALIDATE_DATA_API = (f'http://{os.getenv("HOST_VALIDATE_DATA")}:'
                          f'{os.getenv("PORT_VALIDATE_DATA")}/'
                          f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')
 
-URL_TRANSFORM_DATA_API = (f'http://{HOST_USE_CASES_APIS}:'
+URL_TRANSFORM_DATA_API = (f'http://{os.getenv("HOST_TRANSFORM_DATA")}:'
                           f'{os.getenv("PORT_TRANSFORM_DATA")}/'
                           f'{os.getenv("ENDPOINT_TRANSFORM_DATA")}')
 
-URL_TRAIN_MODEL_API = (f'http://{HOST_USE_CASES_APIS}:'
+URL_TRAIN_MODEL_API = (f'http://{os.getenv("HOST_TRAIN_MODEL")}:'
                        f'{os.getenv("PORT_TRAIN_MODEL")}/'
                        f'{os.getenv("ENDPOINT_TRAIN_MODEL")}')
 
-URL_VERSION_DATA_API = (f'http://{HOST_USE_CASES_APIS}:'
+URL_VERSION_DATA_API = (f'http://{os.getenv("HOST_VERSION_DATA")}:'
                         f'{os.getenv("PORT_VERSION_DATA")}/'
                         f'{os.getenv("ENDPOINT_VERSION_DATA")}')
 
-URL_VALIDATE_MODEL_API = (f'http://{HOST_USE_CASES_APIS}:'
+URL_VALIDATE_MODEL_API = (f'http://{os.getenv("HOST_VALIDATE_MODEL")}:'
                           f'{os.getenv("PORT_VALIDATE_DATA")}/'
                           f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')

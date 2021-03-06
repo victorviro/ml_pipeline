@@ -10,7 +10,6 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
 
-# sys.path.append(os.getcwd())
 from src.shared.constants import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_PATH,
                                   RELATIVE_RAW_DATA_PATH, VERSION,
                                   GIT_REMOTE_NAME, GIT_BRANCH_NAME,
@@ -95,7 +94,6 @@ with DAG('max_char_per_line_apis',
             'data_path': op_args[0],
             'data_name': op_args[1]
         }
-        URL_VALIDATE_DATA_API = 'http://validate_data:1214/api/validate_data_schema'
         return launch_and_manage_api_request(url_api=URL_VALIDATE_DATA_API, body=body,
                                              description='validate the data schema')
 

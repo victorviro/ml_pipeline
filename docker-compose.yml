@@ -20,6 +20,8 @@ x-airflow-common:
   restart: always
   depends_on:
     - postgres
+  env_file: 
+    .env
 
 x-use_cases-common:
   &use_cases-common
@@ -150,9 +152,9 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
       - ./${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/
-      - ./.dvc/:/${PROJECT_NAME}/.dvc/
-      - ./.git/:/${PROJECT_NAME}/.git/
-      - /home/lenovo/.ssh/:/root/.ssh/
+      - ./${DVC_PATH}/:/${PROJECT_NAME}/${DVC_PATH}/
+      - ./${GIT_PATH}/:/${PROJECT_NAME}/${GIT_PATH}/
+      - ${LOCAL_SSH_DIR}/.ssh/:/root/.ssh/
     ports:
       - ${PORT_VERSION_DATA}:${PORT_VERSION_DATA}
     command: >
@@ -198,8 +200,8 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
       - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/
-      - ./.dvc/:/${PROJECT_NAME}/.dvc/
-      - ./.git/:/${PROJECT_NAME}/.git/
+      - ./${DVC_PATH}/:/${PROJECT_NAME}/${DVC_PATH}/
+      - ./${GIT_PATH}/:/${PROJECT_NAME}/${GIT_PATH}/
     ports:
       - ${PORT_TRAIN_MODEL}:${PORT_TRAIN_MODEL}
     command: >
