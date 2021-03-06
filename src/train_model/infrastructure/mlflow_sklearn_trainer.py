@@ -8,7 +8,7 @@ import dvc.api
 import mlflow
 import mlflow.sklearn
 
-from src.config_variables import (TRAIN_MODEL_EXPERIMENT_NAME, MLFLOW_TRACKING_URI)
+from src.shared.constants import (TRAIN_MODEL_EXPERIMENT_NAME, MLFLOW_TRACKING_URI)
 from src.shared.files_helper import get_json_from_file_path, save_pickle_file
 from src.shared.training_helper import get_regression_metrics
 

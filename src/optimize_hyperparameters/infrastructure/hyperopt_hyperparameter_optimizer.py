@@ -14,7 +14,7 @@ import dvc.api
 
 from src.shared.files_helper import get_json_from_file_path
 from src.shared.training_helper import get_regression_metrics, get_class_parameters
-from src.config_variables import MLFLOW_TRACKING_URI, HYPERPARAM_EXPERIMENT_NAME
+from src.shared.constants import MLFLOW_TRACKING_URI, HYPERPARAM_EXPERIMENT_NAME
 
 
 logger = logging.getLogger(__name__)

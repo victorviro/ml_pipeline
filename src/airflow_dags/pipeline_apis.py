@@ -11,7 +11,7 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.models import Variable
 
 # sys.path.append(os.getcwd())
-from src.config_variables import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_PATH,
+from src.shared.constants import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_PATH,
                                   RELATIVE_RAW_DATA_PATH, VERSION,
                                   GIT_REMOTE_NAME, GIT_BRANCH_NAME,
                                   MODEL_NAME, MODELS_PATH, SIZE_TEST_SPLIT,
@@ -26,7 +26,7 @@ from src.config_variables import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_
 # Define the general arguments for the DAG (will apply to any of its operators)
 default_args = {
     'owner': 'me',
-    'start_date': dt.datetime(2021, 3, 4),  # Y, M, D
+    'start_date': dt.datetime(2021, 3, 5),  # Y, M, D
     'retries': 0,
     'retry_delay': dt.timedelta(minutes=10),
 }
