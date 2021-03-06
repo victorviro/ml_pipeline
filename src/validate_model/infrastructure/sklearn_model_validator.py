@@ -4,8 +4,8 @@ import pickle
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.utils.files import get_json_from_file_path, load_pickle_file
-from src.utils.training import get_regression_metrics
+from src.shared.files_helper import get_json_from_file_path, load_pickle_file
+from src.shared.training_helper import get_regression_metrics
 
 
 logger = logging.getLogger(__name__)

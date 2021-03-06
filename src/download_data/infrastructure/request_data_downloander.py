@@ -1,7 +1,7 @@
 import logging
 import requests
 
-from src.utils.files import save_json_file
+from src.shared.files_helper import save_json_file
 
 
 logger = logging.getLogger(__name__)

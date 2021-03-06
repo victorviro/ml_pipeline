@@ -1,7 +1,7 @@
 import logging
 import subprocess
 
-from src.utils.files import get_json_from_file_path
+from src.shared.files_helper import get_json_from_file_path
 
 
 logger = logging.getLogger(__name__)

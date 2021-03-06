@@ -111,7 +111,6 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
       - ./${PROJECT_SRC}/${USE_CASE_VALIDATE_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VALIDATE_DATA}/
     ports:
       - ${PORT_VALIDATE_DATA}:${PORT_VALIDATE_DATA}
@@ -132,7 +131,6 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
       - ./${PROJECT_SRC}/${USE_CASE_DOWNLOAD_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_DOWNLOAD_DATA}/
     ports:
       - ${PORT_DOWNLOAD_DATA}:${PORT_DOWNLOAD_DATA}
@@ -154,7 +152,6 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
       - ./${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/
       - ./.dvc/:/${PROJECT_NAME}/.dvc/
       - ./.git/:/${PROJECT_NAME}/.git/
@@ -181,7 +178,6 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
       - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
     ports:
       - ${PORT_TRANSFORM_DATA}:${PORT_TRANSFORM_DATA}
@@ -206,7 +202,6 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
       - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/
       - ./.dvc/:/${PROJECT_NAME}/.dvc/
       - ./.git/:/${PROJECT_NAME}/.git/
@@ -230,7 +225,6 @@ services:
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/config_variables.py:/${PROJECT_NAME}/${PROJECT_SRC}/config_variables.py
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/utils/:/${PROJECT_NAME}/${PROJECT_SRC}/utils/
       - ./${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/
     ports:
       - ${PORT_VALIDATE_MODEL}:${PORT_VALIDATE_MODEL}

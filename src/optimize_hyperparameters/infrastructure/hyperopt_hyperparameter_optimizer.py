@@ -12,8 +12,8 @@ from hyperopt import tpe, hp
 import mlflow
 import dvc.api
 
-from src.utils.files import get_json_from_file_path
-from src.utils.training import get_regression_metrics, get_class_parameters
+from src.shared.files_helper import get_json_from_file_path
+from src.shared.training_helper import get_regression_metrics, get_class_parameters
 from src.config_variables import MLFLOW_TRACKING_URI, HYPERPARAM_EXPERIMENT_NAME
 
 

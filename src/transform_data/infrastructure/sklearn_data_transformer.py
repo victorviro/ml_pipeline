@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from src.utils.files import get_json_from_file_path, save_json_file
+from src.shared.files_helper import get_json_from_file_path, save_json_file
 from .custom_transformation_sklearn import VariableRatioColsRowsAdder
 
 logger = logging.getLogger(__name__)
