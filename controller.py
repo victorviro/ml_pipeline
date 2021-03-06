@@ -2,13 +2,14 @@
 import logging.config
 import requests
 import json
-from src.logging_config import LOGGING_CONFIG
+from src.shared.logging_config import LOGGING_CONFIG
 from src.config_variables import (DATASET_NAME, MODEL_NAME, VERSION,
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
                                   TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH)
 
 RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'
 TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
+MODELS_PATH = '/mcpl_prediction/models'
 # logging.config.dictConfig(LOGGING_CONFIG)
 # logger = logging.getLogger("controller")
 
@@ -71,7 +72,7 @@ TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
 #     'model_seed': 42
 # }
 # # Request to Fast API to train the model
-# url_api = 'http://127.0.0.1:1216/api/train_model'
+# url_api = 'http://0.0.0.0:1216/api/train_model'
 # request = requests.post(url_api, data=json.dumps(body))
 # print(request.content)
 
@@ -100,6 +101,6 @@ print(request.content)
 #     'rmse_threshold': RMSE_THRESOLD
 # }
 # # Request to Fast API to train the model
-# url_api = 'http://127.0.0.1:1218/api/validate_model'
+# url_api = 'http://0.0.0.0:1218/api/validate_model'
 # request = requests.post(url_api, data=json.dumps(body))
 # print(request.content)

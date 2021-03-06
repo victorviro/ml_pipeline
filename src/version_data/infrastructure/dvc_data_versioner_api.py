@@ -5,7 +5,7 @@ from fastapi import status  # starlette statuses
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.logging_config import LOGGING_CONFIG
+from src.shared.logging_config import LOGGING_CONFIG
 from src.version_data.application.version_data_use_case import version_data
 from .dvc_data_versioner import DVCDataVersioner
 

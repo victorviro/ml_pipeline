@@ -5,7 +5,7 @@ from fastapi import status  # starlette statuses
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.logging_config import LOGGING_CONFIG
+from src.shared.logging_config import LOGGING_CONFIG
 from src.download_data.application.download_data_use_case import download_data
 from .request_data_downloander import RequestDataDownloander
 

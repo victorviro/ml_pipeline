@@ -5,7 +5,7 @@ from fastapi import status  # starlette statuses
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.logging_config import LOGGING_CONFIG
+from src.shared.logging_config import LOGGING_CONFIG
 from src.transform_data.application.transform_data_use_case import transform_data
 from.sklearn_data_transformer import SklearnDataTransformer
 
