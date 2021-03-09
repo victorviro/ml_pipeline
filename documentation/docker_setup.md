@@ -1,30 +1,37 @@
 # Run the project with docker
 
-At the moment, two containers are up (todo: add a container for airflow).
+At the moment, there are containers for airflow (scheduler, webserver and initialization), mlflow, postgres (with two databases for airflow and mlflow as backend stores), and containers for use cases (see the `docker-compose.yml` file). The dockerfiles used for some containers are in `docker/`.
 
-- `mlflow` container. It contains the project and serves the mlflow ui
 
-- `postgres` container. It store the experiments info of mlflow (in the future it will store info of airflow pipelines)
+## Set up and docker commands
 
-See the `mcpl_prediction/docker-compose.yml` file. The dockerfiles for both containers are in `docker/`.
+Install docker and docker-compose.
 
-## Set up
 ```bash
 # Build images and up containers
 docker-compose up --build -d
 # List containers
 docker ps
-# Stops containers and removes containers
+# Stop containers and remove containers
 docker-compose down
 # See the logs of the container
 docker logs mlflow
-docker logs postgres
 # Enter into a container
 docker exec -it mlflow bash
 # List volumes
 docker volume ls
 # Remove a specific volume
-docker volume rm mcpl_prediction_vol_postres1
+docker volume rm mcpl_prediction_vol_postres
 # Stop postgresql service
 sudo service postgresql stop
+# Up the container for a service
+docker-compose up service
+# List images
+docker images
+# Remove dangling images
+docker image prune
+
+docker volume inspect mcpl_prediction_vol_postres
+
+sudo rm -rf src/airflow_dags/logs/max_char_per_line_apis
 ```
