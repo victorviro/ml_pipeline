@@ -1,6 +1,6 @@
 # DVC steps
 
-We explain the steps to versioning data with DVC as this is the first time we run the project.
+We explain the steps to versioning data with DVC as it was the first time we run the project.
 
 Initialize DVC (after installing it):
 
@@ -11,13 +11,15 @@ dvc init
 A new `.dvc/` directory is created for internal configuration. This directory is automatically staged with `git add`, so it can be easily committed with Git. It constains a specific `.gitignore` file for DVC, a `config` file for configuration (empty for now), and other files.
 
 
-In order to upload DVC-tracked data or models later with `dvc push`, we need to setup a storage. In this example, we add a new local [data remote](https://dvc.org/doc/command-reference/remote/add) (or a [google drive storage](https://youtu.be/kLKBcPonMYw?t=205) of imageneratext gmail account, see in drive `ml_data/mcpl/data` ) (storage and remote are interchambiable terms in DVC):
+### Configure storage 
+
+In order to upload DVC-tracked data or models later with `dvc push`, we need to setup a storage. In this example, we add a new local [data remote](https://dvc.org/doc/command-reference/remote/add) (or a [google drive storage](https://youtu.be/kLKBcPonMYw?t=205)) (storage and remote are interchambiable terms in DVC):
 
 ```bash
 dvc remote add -d local_storage /tmp/dvc-storage
 dvc remote add -d storage gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn
 ```
-This command creates a remote section in the DVC project's `config` file with name `local_storage` (or `stotage`) and url `/tmp/dvc-storage` (or `gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn`). DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service (local storage in our case).
+This command creates a remote section in the DVC project's `config` file with name `local_storage` (or `stotage`) and url `/tmp/dvc-storage` (or `gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn`). DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service.
 
 We can list the remotes we have: 
 
@@ -25,12 +27,14 @@ We can list the remotes we have:
 dvc remote list
 ```
 
-We commit and push this directory in the git repository (via command line or vscode):
+We commit and push this directory in the git repository:
 ```bash
-# Using the command line
 git add .dvc/config
-git commit -m "Configure remote storage"
+git commit -m "Configured DVC remote storage"
+git push origin master
 ```
+
+### Track data
 
 Let's capture the current state of the dataset adding it to DVC tracking (it can be a directory):
 ```bash
@@ -40,13 +44,12 @@ dvc add data/01_raw/data.json
 DVC stores information about the added file (or directory) in a special `.dvc` metadata file named
 `data/01_raw/data.json.dvc`, which is added in the directory of the file (this file is not the dataset itself, it's a metadata file that contains the hash (md5) of the dataset and the path). Later we can convert this file to the dataset. `dvc add` also moved the data to the project's cache `.dvc/cache`, and linked it back to the workspace (the hash or md5 of the file `data.json.dvc` is used to determine the cache path).
 
-Let's commit this file to the git repository (with vscode or with the command line):
+Let's commit this file to the git repository:
 
 ```bash
-# Using the command line
 git add data/01_raw/data.json.dvc
-git commit -m "Added raw data (max_char_per_line raw data)"
-# git push origin master
+git commit -m "Added raw data version 1"
+git push origin master
 ```
 
 Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to push the data in the `local_storage` directory (`tmp/dvc-storage`)
@@ -58,8 +61,8 @@ dvc push
 
 ### Retrieving
 
-Having DVC-tracked data stored remotely, it can be downloaded when needed in other copies of this project with `dvc pull` (usually, we run it after clone the git repo with `git clone`, and pulling changes from the git repo with  `git pull`.
-For learning purpose, let's remove the dataset (and clear DVC cache) in our directory to show how we can pull it (from the remote storage).
+Having DVC-tracked data stored remotely, it can be downloaded when needed in other copies of this project with `dvc pull` (usually, we run it after clone the git repo with `git clone`, and pulling changes from the git repo with  `git pull`).
+For learning purposes, let's remove the dataset (and clear DVC cache) in our directory to show how we can pull it (from the remote storage).
 
 ```bash
 rm -rf .dvc/cache
@@ -81,10 +84,11 @@ Usually we would also run `git commit` and `dvc push` to save the changes:
 ```bash
 # Using the command line
 git add data/01_raw/data.json.dvc
-git commit -m "Updated raw data (max_char_per_line raw data)"
-# git push
+git commit -m "Updated raw data version 2"
+git push origin master
 ```
 
+Now we push the dvc repo to push the data in the `local_storage` directory.
 
 ```bash
 dvc push
@@ -94,19 +98,23 @@ dvc push
 
 
 
-## References
+### References
 
 Info links:
 
-- [dvc Get Started: Data Versioning](https://dvc.org/doc/start/data-versioning)
+- [DVC  Get Started: Data Versioning](https://dvc.org/doc/start/data-versioning)
 
-- [`dvc list <url>`](https://dvc.org/doc/command-reference/list)
+- [DVC Tutorial: Data and Model Versioning](https://dvc.org/doc/use-cases/versioning-data-and-model-files/tutorial)
+
+- [DVC user guide](https://dvc.org/doc/user-guide)
+
+
+### Utils
+
+- Run `dvc diff` to see the files tracked/staged currently
+
+- Run `dev remove dir_or_file.dvc` to unstage/untrack a file from the dvc repo (and `dvc gc -w` to clear cache)
+
+- [`dvc list <url>`](https://dvc.org/doc/command-reference/list) to list repository contents tracked by DVC and Git
 
 - [dvc status](https://dvc.org/doc/command-reference/status)
-
-
-## Utils
-
-- Run `dvc diff` to see the files tracked/staged currently.
-
-- Run `dev remove dir_or_file.dvc` to unstage/untrack a file from the dvc repo (and `dvc gc -w` to clear cache).
