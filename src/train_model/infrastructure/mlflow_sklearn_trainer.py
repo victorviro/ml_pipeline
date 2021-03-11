@@ -70,7 +70,7 @@ class MlflowSklearnTrainer:
             raise Exception(msg)
         # Start a MLflow run
         try:
-            with mlflow.start_run():
+            with mlflow.start_run() as run:
 
                 # Define the model
                 model = ElasticNet(alpha=self.alpha, l1_ratio=self.l1_ratio,
@@ -112,7 +112,8 @@ class MlflowSklearnTrainer:
                 tracking_uri = mlflow.get_tracking_uri()
                 logger.info("Current tracking uri: {}".format(tracking_uri))
                 # Register the model in MLflow registry
-                registered_model_info = mlflow.register_model(model_uri=artifact_uri,
+                model_uri = f'runs:/{run.info.run_id}/{self.model_name}'
+                registered_model_info = mlflow.register_model(model_uri=model_uri,
                                                               name=REGISTRY_MODEL_NAME)
                 # Get the version of the model registered in MLflow registry
                 version_model_registered = registered_model_info.version
