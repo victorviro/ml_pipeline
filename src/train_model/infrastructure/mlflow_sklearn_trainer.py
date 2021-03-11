@@ -7,8 +7,9 @@ from sklearn.linear_model import ElasticNet
 import dvc.api
 import mlflow
 import mlflow.sklearn
+from mlflow.tracking import MlflowClient
 
-from src.shared.constants import (TRAIN_MODEL_EXPERIMENT_NAME, MLFLOW_TRACKING_URI)
+from src.shared.constants import TRAIN_MODEL_EXPERIMENT_NAME, REGISTRY_MODEL_NAME
 from src.shared.files_helper import get_json_from_file_path, save_pickle_file
 from src.shared.training_helper import get_regression_metrics
 
@@ -60,15 +61,6 @@ class MlflowSklearnTrainer:
             logger.error(msg)
             raise Exception(msg)
 
-        # Set MLflow URI (todo env variable)
-        # try:
-        #     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-        # except Exception as err:
-        #     msg = (f'Error setting MLflow URI: {MLFLOW_TRACKING_URI}. '
-        #            f'Error traceback: {err}')
-        #     logger.error(msg)
-        #     raise Exception(msg)
-        # Set MLflow experiment (todo env variable)
         try:
             mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXPERIMENT_NAME)
         except Exception as err:
@@ -113,12 +105,25 @@ class MlflowSklearnTrainer:
                 mlflow.set_tag("model_path", self.full_model_path)
                 mlflow.set_tag("raw_data_path", self.full_raw_data_path)
 
-                # Serialize the model in a format that MLflow knows how to deploy it
-                mlflow.sklearn.log_model(model, self.model_name)
+                # Log the model in MLflow
+                mlflow.sklearn.log_model(sk_model=model, artifact_path=self.model_name)
                 artifact_uri = mlflow.get_artifact_uri()
                 logger.info("Artifact uri: {}".format(artifact_uri))
                 tracking_uri = mlflow.get_tracking_uri()
                 logger.info("Current tracking uri: {}".format(tracking_uri))
+                # Register the model in MLflow registry
+                registered_model_info = mlflow.register_model(model_uri=artifact_uri,
+                                                              name=REGISTRY_MODEL_NAME)
+                # Get the version of the model registered in MLflow registry
+                version_model_registered = registered_model_info.version
+                logger.info(f'Registered model version: {version_model_registered}')
+                # Change the stage of the model registered to "Staging"
+                client = MlflowClient()
+                client.transition_model_version_stage(
+                    name=REGISTRY_MODEL_NAME,
+                    version=version_model_registered,
+                    stage="Staging"
+                )
                 # Save the model in /models/
                 save_pickle_file(file_path=self.full_model_path, file=model)
 
