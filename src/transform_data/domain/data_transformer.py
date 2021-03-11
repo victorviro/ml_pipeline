@@ -2,8 +2,6 @@ import abc
 
 
 class IDataTransformer(metaclass=abc.ABCMeta):
-    def __init__(self):
-        self.data = self.get_data()
 
     @classmethod
     def __subclasshook__(cls, subclass):
