@@ -172,16 +172,14 @@ with DAG('max_char_per_line_apis',
         body = {
             'transformed_data_path': op_args[0],
             'data_name': op_args[1],
-            'model_path': op_args[2],
-            'model_name': op_args[3],
-            'size_test_split': op_args[4],
-            'test_split_seed': op_args[5],
-            'rmse_threshold': op_args[6]
+            'size_test_split': op_args[2],
+            'test_split_seed': op_args[3],
+            'rmse_threshold': op_args[4]
         }
         return launch_and_manage_api_request(url_api=URL_VALIDATE_MODEL_API, body=body,
                                              description='validate the model')
     MODEL_VALIDATION_ARGS = [
-        TRANSFORMED_DATA_PATH, DATASET_NAME, MODELS_PATH, MODEL_NAME, SIZE_TEST_SPLIT,
+        TRANSFORMED_DATA_PATH, DATASET_NAME, SIZE_TEST_SPLIT,
         TEST_SPLIT_SEED, RMSE_THRESOLD
     ]
     # model_validation = PythonOperator(task_id='model_validation',

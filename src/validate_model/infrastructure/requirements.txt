@@ -3,3 +3,4 @@ scikit-learn==0.23.2
 python-dotenv==0.15.0
 fastapi[all]==0.63.0
 packaging==20.9
+mlflow==1.12.1

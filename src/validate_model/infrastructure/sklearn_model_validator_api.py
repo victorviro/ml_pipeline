@@ -17,8 +17,6 @@ logger = logging.getLogger(__name__)
 class Item(BaseModel):
     transformed_data_path: str
     data_name: str
-    model_path: str
-    model_name: str
     size_test_split: float
     test_split_seed: int
     rmse_threshold: float
@@ -32,8 +30,6 @@ async def train_model_endpoint(item: Item):
     sklearn_model_validator = SklearnModelValidator(
         transformed_data_path=item.transformed_data_path,
         data_name=item.data_name,
-        model_path=item.model_path,
-        model_name=item.model_name,
         size_test_split=item.size_test_split,
         test_split_seed=item.test_split_seed,
         rmse_threshold=item.rmse_threshold

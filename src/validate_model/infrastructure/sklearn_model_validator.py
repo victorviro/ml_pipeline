@@ -3,25 +3,23 @@ import logging
 import pickle
 import pandas as pd
 from sklearn.model_selection import train_test_split
+import mlflow
 
 from src.shared.files_helper import get_json_from_file_path, load_pickle_file
 from src.shared.training_helper import get_regression_metrics
+from src.shared.constants import REGISTRY_MODEL_NAME
 
 
 logger = logging.getLogger(__name__)
 
 
 class SklearnModelValidator():
-    def __init__(self, transformed_data_path: str, data_name: str, model_path: str,
-                 model_name: str, rmse_threshold: float, size_test_split: float,
-                 test_split_seed: int):
+    def __init__(self, transformed_data_path: str, data_name: str, rmse_threshold: float,
+                 size_test_split: float, test_split_seed: int):
         self.transformed_data_path = transformed_data_path
         self.data_name = data_name
         self.full_transformed_data_path = (f'{transformed_data_path}/{data_name}'
                                            '_processed.json')
-        self.model_path = model_path
-        self.model_name = model_name
-        self.full_model_path = f'{model_path}/{model_name}.pkl'
         self.rmse_threshold = rmse_threshold
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
@@ -54,7 +52,9 @@ class SklearnModelValidator():
 
         # Load the trained model, make predictions and compute metrics on the test set
         try:
-            model = load_pickle_file(self.full_model_path)
+            # The last model registered in MLflow model registry stagged as Staging
+            model_uri = f'models:/{REGISTRY_MODEL_NAME}/Staging'
+            model = mlflow.sklearn.load_model(model_uri=model_uri)
             y_test_predicted = model.predict(X_test)
             (rmse, mae, r2) = get_regression_metrics(y_test, y_test_predicted)
         except Exception as err:
