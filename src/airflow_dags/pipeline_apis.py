@@ -17,7 +17,7 @@ from src.shared.constants import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_
                                   TEST_SPLIT_SEED, MODEL_SEED, RMSE_THRESOLD,
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, URL_DOWNLOAD_DATA_API,
                                   URL_VALIDATE_DATA_API, URL_VERSION_DATA_API,
-                                  URL_TRANSFORM_DATA_API, URL_TRAIN_MODEL_API,
+                                  URL_TRANSFORM_TRAIN_DATA_API, URL_TRAIN_MODEL_API,
                                   URL_VALIDATE_MODEL_API)
 # endregion
 
@@ -124,19 +124,19 @@ with DAG('max_char_per_line_apis',
     # endregion
 
     # region Step 4: Data preprocessing
-    def transform_data(*op_args):
+    def transform_train_data(*op_args):
         body = {
             'data_path': op_args[0],
             'data_name': op_args[1],
             'data_output_path': op_args[2]
         }
-        return launch_and_manage_api_request(url_api=URL_TRANSFORM_DATA_API, body=body,
-                                             description='transform the data')
+        return launch_and_manage_api_request(url_api=URL_TRANSFORM_TRAIN_DATA_API,
+                                             body=body, description='transform the data')
     DATA_PREPROCESSING_ARGS = [
         RAW_DATA_PATH, DATASET_NAME, TRANSFORMED_DATA_PATH
     ]
     # data_preprocessing = PythonOperator(task_id='data_preprocessing',
-    #                                     python_callable=transform_data,
+    #                                     python_callable=transform_train_data,
     #                                     op_args=DATA_PREPROCESSING_ARGS)
     # endregion
 
