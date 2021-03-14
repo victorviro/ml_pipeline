@@ -195,7 +195,6 @@ services:
       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/

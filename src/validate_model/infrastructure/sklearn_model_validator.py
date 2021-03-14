@@ -4,6 +4,7 @@ import pickle
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import mlflow
+from mlflow.tracking import MlflowClient
 
 from src.shared.files_helper import get_json_from_file_path, load_pickle_file
 from src.shared.training_helper import get_regression_metrics
@@ -52,8 +53,13 @@ class SklearnModelValidator():
 
         # Load the trained model, make predictions and compute metrics on the test set
         try:
-            # The last model registered in MLflow model registry stagged as Staging
-            model_uri = f'models:/{REGISTRY_MODEL_NAME}/Staging'
+            # Load the last model registered in MLflow model registry stagged as None
+            client = MlflowClient()
+            registered_models = client.get_latest_versions(REGISTRY_MODEL_NAME,
+                                                           stages=["None"])
+            version_model_registered = registered_models[0].version
+            logger.info(f'Registered model version: {version_model_registered}')
+            model_uri = f'models:/{REGISTRY_MODEL_NAME}/{version_model_registered}'
             model = mlflow.sklearn.load_model(model_uri=model_uri)
             y_test_predicted = model.predict(X_test)
             (rmse, mae, r2) = get_regression_metrics(y_test, y_test_predicted)
@@ -68,8 +74,17 @@ class SklearnModelValidator():
         if rmse > self.rmse_threshold:
             msg = ('Square root of mean squared error bigger that the thresold fixed:'
                    f' {rmse} > thresold fixed = {self.rmse_threshold}')
-            raise Exception(msg)
+            raise Exception(f'Model was not validated succesfully in test set: {msg}')
         else:
             msg = ('Square root of mean squared error smaller that the thresold fixed:'
                    f' {rmse} < thresold fixed = {self.rmse_threshold}')
             logger.info(f'Model validated succesfully in test set: {msg}')
+            # Update the stage of the model to "Staging" in MLflow model registry
+            client.transition_model_version_stage(
+                    name=REGISTRY_MODEL_NAME,
+                    version=version_model_registered,
+                    stage="Staging"
+            )
+            logger.info('Updated stage of model registered in MLflow registry to Staging.'
+                        f' Name: {REGISTRY_MODEL_NAME}. '
+                        f'Version: {version_model_registered}')

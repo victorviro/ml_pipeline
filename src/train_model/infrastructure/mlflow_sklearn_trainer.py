@@ -7,7 +7,6 @@ from sklearn.linear_model import ElasticNet
 import dvc.api
 import mlflow
 import mlflow.sklearn
-from mlflow.tracking import MlflowClient
 
 from src.shared.constants import TRAIN_MODEL_EXPERIMENT_NAME, REGISTRY_MODEL_NAME
 from src.shared.files_helper import get_json_from_file_path, save_pickle_file
@@ -105,31 +104,23 @@ class MlflowSklearnTrainer:
                 mlflow.set_tag("model_path", self.full_model_path)
                 mlflow.set_tag("raw_data_path", self.full_raw_data_path)
 
-                # Log the model in MLflow
+                # Track the model in MLflow
                 mlflow.sklearn.log_model(sk_model=model, artifact_path=self.model_name)
                 artifact_uri = mlflow.get_artifact_uri()
                 logger.info("Artifact uri: {}".format(artifact_uri))
                 tracking_uri = mlflow.get_tracking_uri()
                 logger.info("Current tracking uri: {}".format(tracking_uri))
-                # Register the model in MLflow registry
+                # Register the model in MLflow registry (staged as None)
                 model_uri = f'runs:/{run.info.run_id}/{self.model_name}'
                 registered_model_info = mlflow.register_model(model_uri=model_uri,
                                                               name=REGISTRY_MODEL_NAME)
                 # Get the version of the model registered in MLflow registry
                 version_model_registered = registered_model_info.version
-                logger.info(f'Registered model version: {version_model_registered}')
-                # Change the stage of the model registered to "Staging"
-                client = MlflowClient()
-                client.transition_model_version_stage(
-                    name=REGISTRY_MODEL_NAME,
-                    version=version_model_registered,
-                    stage="Staging"
-                )
-                # Save the model in /models/
-                save_pickle_file(file_path=self.full_model_path, file=model)
+                logger.info('Model registered in MLflow registry. Name: '
+                            f'{REGISTRY_MODEL_NAME}. Version: {version_model_registered}')
 
         except Exception as err:
-            msg = (f'Error starting MLflow experiment or withing the experiment. '
+            msg = (f'Error starting MLflow experiment or within the experiment. '
                    f'Error traceback: {err}')
             logger.error(msg)
             raise Exception(msg)
