@@ -22,6 +22,7 @@ class Item(BaseModel):
     l1_ratio: float
     version: int
     model_path: str
+    transformer_name: str
     model_name: str
     size_test_split: float
     test_split_seed: int
@@ -41,6 +42,7 @@ async def train_model_endpoint(item: Item):
         l1_ratio=item.l1_ratio,
         version=item.version,
         model_path=item.model_path,
+        transformer_name=item.transformer_name,
         model_name=item.model_name,
         size_test_split=item.size_test_split,
         test_split_seed=item.test_split_seed,

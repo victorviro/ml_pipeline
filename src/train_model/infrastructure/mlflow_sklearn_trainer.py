@@ -9,8 +9,10 @@ import mlflow
 import mlflow.sklearn
 
 from src.shared.constants import TRAIN_MODEL_EXPERIMENT_NAME, REGISTRY_MODEL_NAME
-from src.shared.files_helper import get_json_from_file_path, save_pickle_file
+from src.shared.files_helper import (get_json_from_file_path, save_pickle_file,
+                                     load_pickle_file)
 from src.shared.training_helper import get_regression_metrics
+
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +20,8 @@ logger = logging.getLogger(__name__)
 class MlflowSklearnTrainer:
     def __init__(self, raw_data_path: str, transformed_data_path: str, data_name: str,
                  alpha: float, l1_ratio: float, version: int, model_path: str,
-                 model_name: str, size_test_split: float, test_split_seed: int,
-                 model_seed: int):
+                 transformer_name: str, model_name: str, size_test_split: float,
+                 test_split_seed: int, model_seed: int):
         self.raw_data_path = raw_data_path
         self.transformed_data_path = transformed_data_path
         self.data_name = data_name
@@ -29,8 +31,9 @@ class MlflowSklearnTrainer:
         self.alpha = alpha
         self.l1_ratio = l1_ratio
         self.version = version
+        self.transformer_name = transformer_name
         self.model_name = model_name
-        self.full_model_path = f'{model_path}/{model_name}.pkl'
+        self.full_transformer_path = f'{model_path}/{transformer_name}.pkl'
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
         self.model_seed = model_seed
@@ -101,15 +104,20 @@ class MlflowSklearnTrainer:
                                                     repo=os.getcwd())
                 mlflow.set_tag("dvc_raw_data_path", dvc_raw_data_path)
                 mlflow.set_tag("version", self.version)
-                mlflow.set_tag("model_path", self.full_model_path)
                 mlflow.set_tag("raw_data_path", self.full_raw_data_path)
 
-                # Track the model in MLflow
+                # Track the model and transformer pipeline in MLflow
                 mlflow.sklearn.log_model(sk_model=model, artifact_path=self.model_name)
-                artifact_uri = mlflow.get_artifact_uri()
-                logger.info("Artifact uri: {}".format(artifact_uri))
-                tracking_uri = mlflow.get_tracking_uri()
-                logger.info("Current tracking uri: {}".format(tracking_uri))
+                mlflow.log_artifact(local_path=self.full_transformer_path,
+                                    artifact_path=self.model_name)
+
+                model_artifact_uri = mlflow.get_artifact_uri(self.model_name)
+                logger.info("Model artifact uri: {}".format(model_artifact_uri))
+                # Track in MLflow name of steps of the transformer pipe in a dict
+                transformer_pipe = load_pickle_file(self.full_transformer_path)
+                transformer_steps = {'transformer_steps': [*transformer_pipe.named_steps]}
+                mlflow.log_dict(transformer_steps, 'transformer_pipe.json')
+
                 # Register the model in MLflow registry (staged as None)
                 model_uri = f'runs:/{run.info.run_id}/{self.model_name}'
                 registered_model_info = mlflow.register_model(model_uri=model_uri,
@@ -118,6 +126,9 @@ class MlflowSklearnTrainer:
                 version_model_registered = registered_model_info.version
                 logger.info('Model registered in MLflow registry. Name: '
                             f'{REGISTRY_MODEL_NAME}. Version: {version_model_registered}')
+
+                tracking_uri = mlflow.get_tracking_uri()
+                logger.info("Current tracking uri: {}".format(tracking_uri))
 
         except Exception as err:
             msg = (f'Error starting MLflow experiment or within the experiment. '
