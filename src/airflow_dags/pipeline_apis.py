@@ -18,7 +18,7 @@ from src.shared.constants import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, URL_DOWNLOAD_DATA_API,
                                   URL_VALIDATE_DATA_API, URL_VERSION_DATA_API,
                                   URL_TRANSFORM_TRAIN_DATA_API, URL_TRAIN_MODEL_API,
-                                  URL_VALIDATE_MODEL_API)
+                                  URL_VALIDATE_MODEL_API, TRANSFORMER_PIPELINE_NAME)
 # endregion
 
 
@@ -153,14 +153,15 @@ with DAG('max_char_per_line_apis',
             'size_test_split': op_args[7],
             'test_split_seed': op_args[8],
             'model_seed': op_args[9],
-            'raw_data_path': op_args[10]
+            'raw_data_path': op_args[10],
+            'transformer_name': op_args[11]
         }
         return launch_and_manage_api_request(url_api=URL_TRAIN_MODEL_API, body=body,
                                              description='train the model')
     MODEL_TRAINING_ARGS = [
         TRANSFORMED_DATA_PATH, DATASET_NAME, 0.1, 0.1, VERSION,
         MODELS_PATH, MODEL_NAME, SIZE_TEST_SPLIT, TEST_SPLIT_SEED, MODEL_SEED,
-        RAW_DATA_PATH
+        RAW_DATA_PATH, TRANSFORMER_PIPELINE_NAME
     ]
     # model_training = PythonOperator(task_id='model_training',
     #                                 python_callable=train_model,

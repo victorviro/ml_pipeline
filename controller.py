@@ -5,7 +5,8 @@ import json
 from src.shared.logging_config import LOGGING_CONFIG
 from src.shared.constants import (DATASET_NAME, MODEL_NAME, VERSION,
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
-                                  TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH)
+                                  TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH,
+                                  TRANSFORMER_PIPELINE_NAME)
 
 RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'
 TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
@@ -79,6 +80,7 @@ MODELS_PATH = '/mcpl_prediction/models'
 #     'l1_ratio': 0.1,
 #     'version': 1,
 #     'model_path': MODELS_PATH,
+#     'transformer_name': TRANSFORMER_PIPELINE_NAME,
 #     'model_name': MODEL_NAME,
 #     'size_test_split': 0.33,
 #     'test_split_seed': 1,
