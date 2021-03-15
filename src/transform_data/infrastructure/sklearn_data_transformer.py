@@ -8,6 +8,7 @@ from src.shared.files_helper import (get_json_from_file_path, save_json_file,
                                      save_pickle_file, load_pickle_file)
 from .custom_transformation_sklearn import VariableRatioColsRowsAdder
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -83,7 +84,7 @@ class SklearnTrainDataTransformer(SklearnDataTransformer):
             data_df = pd.DataFrame.from_dict(raw_data)
             # Define the pipeline (feature engineering, scaler, and model)
             pipe = Pipeline([('add_ratio_cols_rows', VariableRatioColsRowsAdder()),
-                             ('scaler', StandardScaler())])
+                             ('standard_scaler', StandardScaler())])
             transformer_pipeline = pipe.fit(data_df)
 
         except Exception as err:
