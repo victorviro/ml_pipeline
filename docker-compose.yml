@@ -231,6 +231,28 @@ services:
     command: >
       uvicorn src.${USE_CASE_VALIDATE_MODEL}.infrastructure.${API_FILE_VALIDATE_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_MODEL}
+
+  serve_model:
+    <<: *use_cases-common
+    container_name: serve_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_SERVE_MODEL}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+    volumes: 
+      - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
+      - ./${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/
+    ports:
+      - ${PORT_SERVE_MODEL}:${PORT_SERVE_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_SERVE_MODEL}.infrastructure.${API_FILE_SERVE_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_SERVE_MODEL}
   # endregion
 
 
