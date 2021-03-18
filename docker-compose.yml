@@ -61,6 +61,26 @@ services:
     container_name: airflow-scheduler
     command: airflow scheduler
   # endregion
+
+  jupyter:
+    container_name: jupyter
+    build:
+      context: .
+      dockerfile: ./docker/jupyter/Dockerfile
+      args:
+        PROJECT_NAME: ${PROJECT_NAME}
+        PROJECT_SRC: ${PROJECT_SRC}
+        JUPYTER_PORT: ${JUPYTER_PORT}
+        JUPYTER_HOST: ${JUPYTER_HOST}
+    environment:
+      PYTHONPATH: /${PROJECT_NAME}
+    ports:
+      - ${JUPYTER_PORT}:${JUPYTER_PORT}
+    volumes:
+      - ./${PROJECT_SRC}/shared:/${PROJECT_NAME}/${PROJECT_SRC}/shared
+      - ./${PROJECT_SRC}/notebooks:/${PROJECT_NAME}/${PROJECT_SRC}/notebooks
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+    restart: always
     
   # region MLflow container
   mlflow:
