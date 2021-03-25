@@ -45,6 +45,4 @@ async def version_data_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# cd /home/lenovo/Documents/projects/mcpl_prediction
-# source venv/bin/activate
 # uvicorn src.version_data.infrastructure.dvc_data_versioner_api:rest_api --port 1217

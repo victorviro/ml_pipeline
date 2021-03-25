@@ -8,8 +8,24 @@ logger = logging.getLogger(__name__)
 
 
 class DVCDataVersioner():
+    """
+    A class which implements the interface IDataVersioner to version the dataset.
+    It versions the dataset using DVC.
+
+    :param relative_data_path: Relative path where the data is stored
+    :type data_path: str
+    :param data_name: Name of the dataset
+    :type data_name: str
+    :param data_version: Version of the data
+    :type data_version: float
+    :param git_remote_name: Name of the remote to the git repository
+    :type git_remote_name: str
+    :param git_branch_name: Name of the branch of the git repository
+    :type git_branch_name: str
+    """
     def __init__(self, relative_data_path: str, data_name: str, data_version: float,
                  git_remote_name: str, git_branch_name: str):
+
         self.relative_data_path = relative_data_path  # 'data/01_raw'
         self.data_name = data_name
         self.relative_full_data_path = f'{relative_data_path}/{data_name}.json'
@@ -18,6 +34,9 @@ class DVCDataVersioner():
         self.git_branch_name = git_branch_name  # master
 
     def version_data(self):
+        """
+        Version the dataset using DVC.
+        """
 
         # Track the data in DVC repository
         try:

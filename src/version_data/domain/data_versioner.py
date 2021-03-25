@@ -2,6 +2,9 @@ import abc
 
 
 class IDataVersioner(metaclass=abc.ABCMeta):
+    """
+    An interface used to version data.
+    """
 
     @classmethod
     def __subclasshook__(cls, subclass):
