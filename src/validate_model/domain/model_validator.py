@@ -2,8 +2,9 @@ import abc
 
 
 class IModelValidator(metaclass=abc.ABCMeta):
-    def __init__(self):
-        self.data = self.get_data()
+    """
+    An interface used to validate a model.
+    """
 
     @classmethod
     def __subclasshook__(cls, subclass):

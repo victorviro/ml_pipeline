@@ -15,6 +15,24 @@ logger = logging.getLogger(__name__)
 
 
 class SklearnModelValidator():
+    """
+    A class which implements the interface IModelValidator to validate the model.
+    It validates the model if the root mean squared error (rmse) in the test set
+    is smaller than a value given. If the model is validated, its stage is updated
+    to 'Staging' in MLflow registry.
+
+    :param transformed_data_path: Path where the preprocessed data is stored
+    :type transformed_data_path: str
+    :param data_name: Name of the dataset
+    :type data_name: str
+    :param rmse_threshold: Threshold to validate the model using the rmse
+    :type rmse_threshold: float
+    :param size_test_split: Percentage of test dataset when splitting the dataset
+    :type size_test_split: float
+    :param test_split_seed: Seed used when splitting the dataset
+    :type test_split_seed: int
+
+    """
     def __init__(self, transformed_data_path: str, data_name: str, rmse_threshold: float,
                  size_test_split: float, test_split_seed: int):
         self.transformed_data_path = transformed_data_path
