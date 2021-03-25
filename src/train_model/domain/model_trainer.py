@@ -2,8 +2,9 @@ import abc
 
 
 class IModelTrainer(metaclass=abc.ABCMeta):
-    def __init__(self):
-        self.data = self.get_data()
+    """
+    An interface used to train a model.
+    """
 
     @classmethod
     def __subclasshook__(cls, subclass):

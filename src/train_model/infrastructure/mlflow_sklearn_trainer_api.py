@@ -59,6 +59,4 @@ async def train_model_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# cd /home/lenovo/Documents/projects/mcpl_prediction
-# source venv/bin/activate
 # uvicorn src.train_model.infrastructure.mlflow_sklearn_trainer_api:rest_api --port 1216

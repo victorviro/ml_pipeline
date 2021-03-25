@@ -18,10 +18,41 @@ logger = logging.getLogger(__name__)
 
 
 class MlflowSklearnTrainer:
+    """
+    A class which implements the interface IModelTrainer to train a model.
+    It trains the model using Scikit-learn, track the experiment in MLFlow, and
+    register the model trained in MLFlow model registry.
+
+    :param raw_data_path: Path where the raw data is stored
+    :type data_path: str
+    :param transformed_data_path: Path where the preprocessed data is stored
+    :type transformed_data_path: str
+    :param data_name: Name of the dataset
+    :type data_name: str
+    :param alpha: Alpha hyperparameter of the elasticnet model
+    :type alpha: float
+    :param l1_ratio: L1 ratio hyperparameter of the elasticnet model
+    :type l1_ratio: float
+    :param version: Version of the data
+    :type version: int
+    :param model_path: Path where the transformer pipeline is stored
+    :type model_path: str
+    :param transformer_name: Name of the transformer pipeline stored
+    :type transformer_name: str
+    :param model_name: Name of the model used to track the experiment in MLFlow
+    :type model_name: str
+    :param size_test_split: Percentage of test dataset when splitting the dataset
+    :type size_test_split: float
+    :param test_split_seed: Seed used when splitting the dataset
+    :type test_split_seed: int
+    :param model_seed: Seed used when training the model
+    :type model_seed: int
+    """
     def __init__(self, raw_data_path: str, transformed_data_path: str, data_name: str,
                  alpha: float, l1_ratio: float, version: int, model_path: str,
                  transformer_name: str, model_name: str, size_test_split: float,
                  test_split_seed: int, model_seed: int):
+
         self.raw_data_path = raw_data_path
         self.transformed_data_path = transformed_data_path
         self.data_name = data_name
