@@ -2,6 +2,9 @@ import abc
 
 
 class IDataDownloander(metaclass=abc.ABCMeta):
+    """
+    An interface used to download data.
+    """
 
     @classmethod
     def __subclasshook__(cls, subclass):

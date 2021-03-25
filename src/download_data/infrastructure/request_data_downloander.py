@@ -8,26 +8,41 @@ logger = logging.getLogger(__name__)
 
 
 class RequestDataDownloander():
-    def __init__(self, url_quotes_image_api_mcpl_data: str, data_path: str,
+    """
+    A class which implements the interface IDataDownloander to download data.
+    It gets the data through a request.
+
+    :param data_api_url: Url of the API to get the data
+    :type data_api_url: str
+    :param data_path: Path where the data will be stored
+    :type data_path: str
+    :param data_name: Name of the dataset to be stored
+    :type data_name: str
+    """
+
+    def __init__(self, data_api_url: str, data_path: str,
                  data_name: str):
 
         self.data_path = data_path
         self.data_name = data_name
-        self.url_quotes_image_api_mcpl_data = url_quotes_image_api_mcpl_data
+        self.data_api_url = data_api_url
         self.full_data_path = f'{data_path}/{data_name}.json'
 
     def download_data(self):
+        """
+        Download the data through a request and store it.
+        """
 
         logger.info(f'Getting raw data. Name: {self.data_name}')
         # Launch the request to get the data
         try:
-            request_response = requests.get(self.url_quotes_image_api_mcpl_data)
+            request_response = requests.get(self.data_api_url)
             msg = f'Request done succesfully.'
             logger.info(msg)
         except Exception as err:
 
             if isinstance(err, requests.exceptions.ConnectionError):
-                msg = ('Connection error. Check that the quotes image backend is'
+                msg = ('Connection error. Check that the quotes image API is'
                        ' running or that the path of the endpoint is correct.')
                 logger.error(msg)
                 raise Exception(msg)
@@ -43,7 +58,7 @@ class RequestDataDownloander():
             logger.info(msg)
 
         except Exception as err:
-            msg = f'Error getting the json from the request response. Taceback: {err}'
+            msg = f'Error getting the json from the request response. Traceback: {err}'
             logger.error(msg)
             raise Exception(msg)
         # Store the dataset

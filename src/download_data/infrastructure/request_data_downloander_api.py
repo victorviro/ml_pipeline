@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class Item(BaseModel):
-    url_quotes_image_api_mcpl_data: str
+    data_api_url: str
     data_path: str
     data_name: str
 
@@ -27,7 +27,7 @@ rest_api = FastAPI()
 async def download_data_endpoint(item: Item):
 
     request_data_downloander = RequestDataDownloander(
-        url_quotes_image_api_mcpl_data=item.url_quotes_image_api_mcpl_data,
+        data_api_url=item.data_api_url,
         data_path=item.data_path,
         data_name=item.data_name
     )
@@ -43,7 +43,5 @@ async def download_data_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# cd /home/lenovo/Documents/projects/mcpl_prediction
-# source venv/bin/activate
 # uvicorn src.download_data.infrastructure.request_data_downloander_api:rest_api --port
 # 1213

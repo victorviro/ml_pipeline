@@ -18,14 +18,14 @@ MODELS_PATH = '/mcpl_prediction/models'
 # from src.download_data.application.download_data_use_case import download_data
 # from src.download_data.infrastructure.request_data_downloander import RequestDataDownloander
 # request_data_downloander = RequestDataDownloander(
-#         url_quotes_image_api_mcpl_data=URL_DATA_MCPL_QUOTES_IMAGE_API,
+#         data_api_url=URL_DATA_MCPL_QUOTES_IMAGE_API,
 #         data_path=RAW_DATA_PATH,
 #         data_name=DATASET_NAME
 #     )
 # download_data(request_data_downloander)
 
 # body = {
-#     'url_quotes_image_api_mcpl_data': URL_DATA_MCPL_QUOTES_IMAGE_API,
+#     'data_api_url': URL_DATA_MCPL_QUOTES_IMAGE_API,
 #     'data_path': RAW_DATA_PATH,
 #     'data_name': DATASET_NAME
 # }
