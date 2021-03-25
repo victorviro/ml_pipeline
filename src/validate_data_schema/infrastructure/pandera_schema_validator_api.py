@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
 from src.validate_data_schema.application.validate_data_schema_use_case import (
-    validate_schema)
+    validate_data_schema)
 from .pandera_schema_validator import PanderaSchemaValidator
 
 
@@ -31,7 +31,7 @@ async def validate_data_schema_endpoint(item: Item):
     )
 
     try:
-        validate_schema(pandera_schema_validator)
+        validate_data_schema(pandera_schema_validator)
         message = 'Data schema validated succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
@@ -40,7 +40,5 @@ async def validate_data_schema_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# cd /home/lenovo/Documents/projects/mcpl_prediction
-# source venv/bin/activate
 # uvicorn src.validate_data_schema.infrastructure.pandera_schema_validator_api:rest_api
 # --port 1214
