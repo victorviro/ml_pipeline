@@ -2,6 +2,9 @@ import abc
 
 
 class IDataTransformer(metaclass=abc.ABCMeta):
+    """
+    An interface used to transform/preprocess data.
+    """
 
     @classmethod
     def __subclasshook__(cls, subclass):

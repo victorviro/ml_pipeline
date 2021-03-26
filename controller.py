@@ -6,7 +6,7 @@ from src.shared.logging_config import LOGGING_CONFIG
 from src.shared.constants import (DATASET_NAME, MODEL_NAME, VERSION,
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
                                   TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH,
-                                  TRANSFORMER_PIPELINE_NAME)
+                                  TRANSFORMER_PIPELINE_NAME, TRANSFORMER_PIPE_PATH)
 
 RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'
 TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
@@ -16,7 +16,8 @@ MODELS_PATH = '/mcpl_prediction/models'
 
 # # Download data
 # from src.download_data.application.download_data_use_case import download_data
-# from src.download_data.infrastructure.request_data_downloander import RequestDataDownloander
+# from src.download_data.infrastructure.request_data_downloander import (
+# RequestDataDownloander)
 # request_data_downloander = RequestDataDownloander(
 #         data_api_url=URL_DATA_MCPL_QUOTES_IMAGE_API,
 #         data_path=RAW_DATA_PATH,
@@ -51,25 +52,29 @@ MODELS_PATH = '/mcpl_prediction/models'
 # body = {
 #     'data_path': RAW_DATA_PATH,
 #     'data_name': DATASET_NAME,
-#     'data_output_path': TRANSFORMED_DATA_PATH,
-#     'model_path': MODELS_PATH,
-#     'pipe_name': 'transformer_pipeline'
+#     'transformer_pipe_path': TRANSFORMER_PIPE_PATH,
+#     'pipe_name': 'transformer_pipeline',
+#     'size_test_split': 0.33,
+#     'test_split_seed': 1
 # }
 # # Request to Fast API to transform the data
-# url_api = 'http://0.0.0.0:1215/api/transform_train_data'
+# url_api = 'http://0.0.0.0:1215/api/fit_transformer_pipeline'
 # request = requests.post(url_api, data=json.dumps(body))
 # print(request.content)
-# body = {
-#     "font_size": 66,
-#     "rows_number": 256,
-#     "cols_number": 500,
-#     "char_number_text": 44,
-#     'model_path': MODELS_PATH,
-#     'pipe_name': 'transformer_pipeline'
-# }
-# url_api = 'http://0.0.0.0:1215/api/transform_serving_data'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
+data = {
+    "font_size": [66],
+    "rows_number": [256],
+    "cols_number": [500],
+    "char_number_text": [44]
+}
+body = {
+    "data": data,
+    'transformer_pipe_path': TRANSFORMER_PIPE_PATH,
+    'pipe_name': 'transformer_pipeline'
+}
+url_api = 'http://0.0.0.0:1215/api/transform_data'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)
 
 # Train model
 # body = {
@@ -119,13 +124,13 @@ MODELS_PATH = '/mcpl_prediction/models'
 # print(request.content)
 
 # Serve model
-body = {
-    'font_size': 33,
-    'rows_number': 233,
-    'cols_number': 344,
-    'char_number_text': 44
-}
-# Request to Fast API to train the model
-url_api = 'http://0.0.0.0:1219/api/served_model'
-request = requests.post(url_api, data=json.dumps(body))
-print(request.content)
+# body = {
+#     'font_size': 33,
+#     'rows_number': 233,
+#     'cols_number': 344,
+#     'char_number_text': 44
+# }
+# # Request to Fast API to train the model
+# url_api = 'http://0.0.0.0:1219/api/served_model'
+# request = requests.post(url_api, data=json.dumps(body))
+# print(request.content)
