@@ -256,6 +256,9 @@ services:
     command: >
       uvicorn src.${USE_CASE_VALIDATE_MODEL}.infrastructure.${API_FILE_VALIDATE_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_MODEL}
+    env_file: 
+      .env
+      # env variables to build the URL_TRANSFORM_DATA_API in constants
 
   serve_model:
     <<: *use_cases-common

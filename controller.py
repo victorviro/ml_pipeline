@@ -112,7 +112,7 @@ print(request.content)
 
 # Validate model
 # body = {
-#     'transformed_data_path': TRANSFORMED_DATA_PATH,
+#     'raw_data_path': RAW_DATA_PATH,
 #     'data_name': DATASET_NAME,
 #     'size_test_split': 0.33,
 #     'test_split_seed': 1,
