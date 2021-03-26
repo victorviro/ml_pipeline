@@ -58,9 +58,12 @@ URL_VALIDATE_DATA_API = (f'http://{os.getenv("HOST_VALIDATE_DATA")}:'
                          f'{os.getenv("PORT_VALIDATE_DATA")}/'
                          f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')
 
-URL_TRANSFORM_TRAIN_DATA_API = (f'http://{os.getenv("HOST_TRANSFORM_DATA")}:'
+URL_FIT_DATA_TRANSFORMER_API = (f'http://{os.getenv("HOST_TRANSFORM_DATA")}:'
                                 f'{os.getenv("PORT_TRANSFORM_DATA")}/'
-                                f'{os.getenv("ENDPOINT_TRANSFORM_TRAIN_DATA")}')
+                                f'{os.getenv("ENDPOINT_FIT_DATA_TRANSFORMER")}')
+URL_TRANSFORM_DATA_API = (f'http://{os.getenv("HOST_TRANSFORM_DATA")}:'
+                          f'{os.getenv("PORT_TRANSFORM_DATA")}/'
+                          f'{os.getenv("ENDPOINT_TRANSFORM_DATA")}')
 
 URL_TRAIN_MODEL_API = (f'http://{os.getenv("HOST_TRAIN_MODEL")}:'
                        f'{os.getenv("PORT_TRAIN_MODEL")}/'

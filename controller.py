@@ -11,6 +11,7 @@ from src.shared.constants import (DATASET_NAME, MODEL_NAME, VERSION,
 RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'
 TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
 MODELS_PATH = '/mcpl_prediction/models'
+TRANSFORMER_PIPE_PATH = '/mcpl_prediction/artifact_store'
 # logging.config.dictConfig(LOGGING_CONFIG)
 # logger = logging.getLogger("controller")
 
@@ -77,24 +78,23 @@ request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
 
 # Train model
-# body = {
-#     'raw_data_path': RAW_DATA_PATH,
-#     'transformed_data_path': TRANSFORMED_DATA_PATH,
-#     'data_name': DATASET_NAME,
-#     'alpha': 0.1,
-#     'l1_ratio': 0.1,
-#     'version': 1,
-#     'model_path': MODELS_PATH,
-#     'transformer_name': TRANSFORMER_PIPELINE_NAME,
-#     'model_name': MODEL_NAME,
-#     'size_test_split': 0.33,
-#     'test_split_seed': 1,
-#     'model_seed': 42
-# }
-# # Request to Fast API to train the model
-# url_api = 'http://0.0.0.0:1216/api/train_model'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
+body = {
+    'raw_data_path': RAW_DATA_PATH,
+    'data_name': DATASET_NAME,
+    'alpha': 0.1,
+    'l1_ratio': 0.1,
+    'version': 1,
+    'transformer_pipe_path': TRANSFORMER_PIPE_PATH,
+    'transformer_name': TRANSFORMER_PIPELINE_NAME,
+    'model_name': MODEL_NAME,
+    'size_test_split': 0.33,
+    'test_split_seed': 1,
+    'model_seed': 42
+}
+# Request to Fast API to train the model
+url_api = 'http://0.0.0.0:1216/api/train_model'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)
 
 # Version data
 # body = {

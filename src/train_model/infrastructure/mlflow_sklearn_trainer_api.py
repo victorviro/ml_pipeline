@@ -16,12 +16,11 @@ logger = logging.getLogger(__name__)
 
 class Item(BaseModel):
     raw_data_path: str
-    transformed_data_path: str
     data_name: str
     alpha: float
     l1_ratio: float
     version: int
-    model_path: str
+    transformer_pipe_path: str
     transformer_name: str
     model_name: str
     size_test_split: float
@@ -36,12 +35,11 @@ rest_api = FastAPI()
 async def train_model_endpoint(item: Item):
     mlflow_sklearn_trainer = MlflowSklearnTrainer(
         raw_data_path=item.raw_data_path,
-        transformed_data_path=item.transformed_data_path,
         data_name=item.data_name,
         alpha=item.alpha,
         l1_ratio=item.l1_ratio,
         version=item.version,
-        model_path=item.model_path,
+        transformer_pipe_path=item.transformer_pipe_path,
         transformer_name=item.transformer_name,
         model_name=item.model_name,
         size_test_split=item.size_test_split,

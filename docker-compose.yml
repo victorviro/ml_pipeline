@@ -197,7 +197,7 @@ services:
         USE_CASE: ${USE_CASE_TRANSFORM_DATA}
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
+      - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
       - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
@@ -220,7 +220,6 @@ services:
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
-      - ./${MODELS_PATH}:/${PROJECT_NAME}/${MODELS_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
       - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
@@ -232,6 +231,9 @@ services:
     command: >
       uvicorn src.${USE_CASE_TRAIN_MODEL}.infrastructure.${API_FILE_TRAIN_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_TRAIN_MODEL}
+    env_file: 
+      .env
+      # env variables to build the URL_TRANSFORM_DATA_API in constants
 
   validate_model:
     <<: *use_cases-common

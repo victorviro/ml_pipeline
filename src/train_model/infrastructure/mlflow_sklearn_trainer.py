@@ -1,14 +1,17 @@
 import logging
-import os
+from os import getcwd
+import requests
+import json
 
-import pandas as pd
+from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet
-import dvc.api
+from dvc.api import get_url
 import mlflow
 import mlflow.sklearn
 
-from src.shared.constants import TRAIN_MODEL_EXPERIMENT_NAME, REGISTRY_MODEL_NAME
+from src.shared.constants import (TRAIN_MODEL_EXPERIMENT_NAME, REGISTRY_MODEL_NAME,
+                                  URL_TRANSFORM_DATA_API)
 from src.shared.files_helper import (get_json_from_file_path, save_pickle_file,
                                      load_pickle_file)
 from src.shared.training_helper import get_regression_metrics
@@ -25,8 +28,6 @@ class MlflowSklearnTrainer:
 
     :param raw_data_path: Path where the raw data is stored
     :type data_path: str
-    :param transformed_data_path: Path where the preprocessed data is stored
-    :type transformed_data_path: str
     :param data_name: Name of the dataset
     :type data_name: str
     :param alpha: Alpha hyperparameter of the elasticnet model
@@ -35,8 +36,8 @@ class MlflowSklearnTrainer:
     :type l1_ratio: float
     :param version: Version of the data
     :type version: int
-    :param model_path: Path where the transformer pipeline is stored
-    :type model_path: str
+    :param transformer_pipe_path: Path where the transformer pipeline is stored
+    :type transformer_pipe_path: str
     :param transformer_name: Name of the transformer pipeline stored
     :type transformer_name: str
     :param model_name: Name of the model used to track the experiment in MLFlow
@@ -48,23 +49,21 @@ class MlflowSklearnTrainer:
     :param model_seed: Seed used when training the model
     :type model_seed: int
     """
-    def __init__(self, raw_data_path: str, transformed_data_path: str, data_name: str,
-                 alpha: float, l1_ratio: float, version: int, model_path: str,
+    def __init__(self, raw_data_path: str, data_name: str,
+                 alpha: float, l1_ratio: float, version: int, transformer_pipe_path: str,
                  transformer_name: str, model_name: str, size_test_split: float,
                  test_split_seed: int, model_seed: int):
 
         self.raw_data_path = raw_data_path
-        self.transformed_data_path = transformed_data_path
         self.data_name = data_name
-        self.full_transformed_data_path = (f'{transformed_data_path}/{data_name}'
-                                           '_processed.json')
         self.full_raw_data_path = f'{raw_data_path}/{data_name}.json'
         self.alpha = alpha
         self.l1_ratio = l1_ratio
         self.version = version
+        self.transformer_pipe_path = transformer_pipe_path
         self.transformer_name = transformer_name
         self.model_name = model_name
-        self.full_transformer_path = f'{model_path}/{transformer_name}.pkl'
+        self.full_transformer_path = f'{transformer_pipe_path}/{transformer_name}.pkl'
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
         self.model_seed = model_seed
@@ -75,9 +74,9 @@ class MlflowSklearnTrainer:
                     f' {self.data_name}')
         # Get data and convert to pandas DataFrame
         try:
-            data = get_json_from_file_path(self.full_transformed_data_path)
+            data = get_json_from_file_path(self.full_raw_data_path)
             logger.info(f'Loaded data succesfully.')
-            data_df = pd.DataFrame.from_dict(data)
+            data_df = DataFrame.from_dict(data)
         except Exception as err:
             msg = f'Error loading data or converting it to df. Error traceback: {err}'
             logger.error(msg)
@@ -93,7 +92,27 @@ class MlflowSklearnTrainer:
             msg = f'Error getting target variable or splitting data. Error: {err}'
             logger.error(msg)
             raise Exception(msg)
-
+        # Transform training and test features.
+        try:
+            body = {
+                "transformer_pipe_path": self.transformer_pipe_path,
+                "pipe_name": self.transformer_name
+            }
+            # Transform training features
+            body.update({"data": X_train.to_dict(orient='list')})
+            request = requests.post(URL_TRANSFORM_DATA_API, data=json.dumps(body))
+            content = json.loads(request.content.decode('utf-8'))
+            X_train = DataFrame(content["data"])
+            # Transform test features
+            body.update({"data": X_test.to_dict(orient='list')})
+            request = requests.post(URL_TRANSFORM_DATA_API, data=json.dumps(body))
+            content = json.loads(request.content.decode('utf-8'))
+            X_test = DataFrame(content["data"])
+        except Exception as err:
+            msg = f'Error transforming train or test features. Error: {err}'
+            logger.error(msg)
+            raise Exception(msg)
+        # Set experiment to track in MLFlow
         try:
             mlflow.set_experiment(experiment_name=TRAIN_MODEL_EXPERIMENT_NAME)
         except Exception as err:
@@ -111,15 +130,23 @@ class MlflowSklearnTrainer:
                 # Train the model
                 model.fit(X_train, y_train)
 
-                # Predictions in the test set
+                # Predictions in the test and training sets
                 y_test_predicted = model.predict(X_test)
+                y_train_predicted = model.predict(X_train)
 
-                # Compute metrics in the test data
-                (rmse, mae, r2) = get_regression_metrics(y_test, y_test_predicted)
+                # Compute metrics in the test and training sets
+                (rmse_test, mae_test, r2_test) = get_regression_metrics(y_test, 
+                                                                        y_test_predicted)
+                (rmse_train, mae_train, r2_train) = get_regression_metrics(
+                    y_train, y_train_predicted
+                )
 
                 logger.info(f'Model trained: alpha={self.alpha}, '
                             f'l1_ratio={self.l1_ratio}.')
-                logger.info(f'Metrics: \nRMSE: {rmse} \nMAE: {mae} \nR2: {r2}')
+                logger.info(f'Metrics train set: \nRMSE: {rmse_train} \nMAE: {mae_train}'
+                            f' \nR2: {r2_train}')
+                logger.info(f'Metrics test set: \nRMSE: {rmse_test} \nMAE: {mae_test}'
+                            f' \nR2: {r2_test}')
 
                 # Track information in MLflow (hyperparameters, metrics...)
                 mlflow.log_param("alpha", self.alpha)
@@ -127,12 +154,15 @@ class MlflowSklearnTrainer:
                 mlflow.log_param("test_split_seed", self.test_split_seed)
                 mlflow.log_param("model_seed", self.model_seed)
                 mlflow.log_param("test_split_percent", self.size_test_split)
-                mlflow.log_metric("rmse", rmse)
-                mlflow.log_metric("r2", r2)
-                mlflow.log_metric("mae", mae)
-                # Get and track the path of the dataset in the DVC repository
-                dvc_raw_data_path = dvc.api.get_url(path=self.full_raw_data_path,
-                                                    repo=os.getcwd())
+                mlflow.log_metric("rmse_train", rmse_train)
+                mlflow.log_metric("r2_train", r2_train)
+                mlflow.log_metric("mae_train", mae_train)
+                mlflow.log_metric("rmse_test", rmse_test)
+                mlflow.log_metric("r2_test", r2_test)
+                mlflow.log_metric("mae_test", mae_test)
+                # Get and track in MLflow the path of the dataset in the DVC repository
+                dvc_raw_data_path = get_url(path=self.full_raw_data_path,
+                                            repo=getcwd())
                 mlflow.set_tag("dvc_raw_data_path", dvc_raw_data_path)
                 mlflow.set_tag("version", self.version)
                 mlflow.set_tag("raw_data_path", self.full_raw_data_path)
@@ -159,7 +189,7 @@ class MlflowSklearnTrainer:
                             f'{REGISTRY_MODEL_NAME}. Version: {version_model_registered}')
 
                 tracking_uri = mlflow.get_tracking_uri()
-                logger.info("Current tracking uri: {}".format(tracking_uri))
+                logger.info(f'Current tracking uri: {tracking_uri}')
 
         except Exception as err:
             msg = (f'Error starting MLflow experiment or within the experiment. '
