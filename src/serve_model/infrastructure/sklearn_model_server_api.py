@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from src.shared.logging_config import LOGGING_CONFIG
 from src.serve_model.application.serve_model_use_case import serve_predictions
 from .sklearn_model_server import SklearnModelServer
-from src.serve_model.infrastructure.sklearn_model_server import SklearnModelServer
+
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -32,10 +32,9 @@ async def serve_model_endpoint(item: Item):
         'cols_number': [item.cols_number],
         'char_number_text': [item.char_number_text]
     }
-
     try:
-        sklearn_model_server = SklearnModelServer(raw_data=raw_data)
-        predictions = sklearn_model_server.serve_predictions()
+        sklearn_model_server = SklearnModelServer()
+        predictions = sklearn_model_server.serve_predictions(raw_data=raw_data)
         message = 'Prediction made by the model succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message, 'prediction': predictions[0]})
@@ -45,6 +44,4 @@ async def serve_model_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# cd /home/lenovo/Documents/projects/mcpl_prediction
-# source venv/bin/activate
 # uvicorn src.serve_model.infrastructure.sklearn_model_server_api:rest_api --port 1219

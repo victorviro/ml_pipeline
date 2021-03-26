@@ -274,13 +274,15 @@ services:
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
       - ./${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/
     ports:
       - ${PORT_SERVE_MODEL}:${PORT_SERVE_MODEL}
     command: >
       uvicorn src.${USE_CASE_SERVE_MODEL}.infrastructure.${API_FILE_SERVE_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_SERVE_MODEL}
+    env_file: 
+      .env
+      #env variables to build the URL_TRANSFORM_DATA_API in constants
   # endregion
 
 
