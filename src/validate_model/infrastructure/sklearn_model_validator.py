@@ -131,8 +131,8 @@ class SklearnModelValidator():
                         version=version_model_registered,
                         stage="Staging"
                 )
-                logger.info('Updated stage of model registered in MLflow registry to Staging.'
-                            f' Name: {REGISTRY_MODEL_NAME}. '
+                logger.info('Updated stage of model registered in MLflow registry to '
+                            f'Staging. Name: {REGISTRY_MODEL_NAME}. '
                             f'Version: {version_model_registered}')
             except Exception as err:
                 msg = ('Error updating the model"s stage in MLflow Registry to "Stagging"'
