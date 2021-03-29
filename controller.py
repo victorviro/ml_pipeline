@@ -28,15 +28,14 @@ request_content = request.content
 print(request.content)
 
 # Validate data schema
-# RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'
-# body = {
-#     'data_path': RAW_DATA_PATH,
-#     'data_name': DATASET_NAME
-# }
-# # Request to Fast API to validate the shema of the dataset
-# url_api = 'http://0.0.0.0:1214/api/validate_data_schema'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
+body = {
+    'data_path': RAW_DATA_PATH,
+    'data_name': DATASET_NAME
+}
+# Request to Fast API to validate the shema of the dataset
+url_api = 'http://0.0.0.0:1214/api/validate_data_schema'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)
 
 # # Tranform data
 # body = {

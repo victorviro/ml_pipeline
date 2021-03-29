@@ -7,8 +7,9 @@ from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
 from src.validate_data_schema.application.validate_data_schema_use_case import (
-    validate_data_schema)
-from .pandera_schema_validator import PanderaSchemaValidator
+    ValidateDataSchema)
+from .pandera_schema_validator import PanderaSchemaValidator, MCPL_SCHEMA
+from src.shared.infrastructure.json_data_loader import JSONDataLoader
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -25,13 +26,18 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/validate_data_schema")
 async def validate_data_schema_endpoint(item: Item):
-    pandera_schema_validator = PanderaSchemaValidator(
-        data_path=item.data_path,
-        data_name=item.data_name
+    data_file_loader = JSONDataLoader()
+    data_validator = PanderaSchemaValidator()
+    file_path = f"{item.data_path}/{item.data_name}.json"
+
+    validate_data_schema = ValidateDataSchema.build(
+        data_file_loader=data_file_loader,
+        data_validator=data_validator
     )
 
     try:
-        validate_data_schema(pandera_schema_validator)
+        # Load the data and validate its schema
+        validate_data_schema.execute(file_path=file_path, data_schema=MCPL_SCHEMA)
         message = 'Data schema validated succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
@@ -40,5 +46,5 @@ async def validate_data_schema_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# uvicorn src.validate_data_schema.infrastructure.pandera_schema_validator_api:rest_api
-# --port 1214
+# uvicorn src.validate_data_schema.infrastructure.validate_data_schema_api_controller:
+# rest_api --port 1214
