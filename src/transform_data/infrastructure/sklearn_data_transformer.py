@@ -5,7 +5,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-from src.shared.files_helper import (get_json_from_file_path, save_json_file,
+from src.shared.files_helper import (get_json_from_file_path,
                                      save_pickle_file, load_pickle_file)
 from .custom_transformation_sklearn import VariableRatioColsRowsAdder
 
@@ -76,7 +76,7 @@ class SklearnFitDataTransformer:
     def __init__(self,  data_path: str, data_name: str,
                  transformer_pipe_path: str, pipe_name: str, size_test_split: float,
                  test_split_seed: int):
-        
+
         self.data_path = data_path
         self.data_name = data_name
         self.full_data_path = f'{data_path}/{data_name}.json'

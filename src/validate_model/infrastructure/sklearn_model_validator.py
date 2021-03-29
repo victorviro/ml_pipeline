@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 import mlflow
 from mlflow.tracking import MlflowClient
 
-from src.shared.files_helper import get_json_from_file_path, load_pickle_file
+from src.shared.files_helper import get_json_from_file_path
 from src.shared.training_helper import get_regression_metrics
 from src.shared.constants import (REGISTRY_MODEL_NAME, URL_TRANSFORM_DATA_API,
                                   TRANSFORMER_PIPELINE_NAME)

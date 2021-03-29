@@ -9,7 +9,6 @@ from mlflow.tracking import MlflowClient
 
 from src.shared.constants import (TRANSFORMER_PIPELINE_NAME, REGISTRY_MODEL_NAME,
                                   URL_TRANSFORM_DATA_API)
-from src.shared.files_helper import load_pickle_file
 
 
 logger = logging.getLogger(__name__)

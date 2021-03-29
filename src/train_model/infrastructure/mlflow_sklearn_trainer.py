@@ -12,8 +12,7 @@ import mlflow.sklearn
 
 from src.shared.constants import (TRAIN_MODEL_EXPERIMENT_NAME, REGISTRY_MODEL_NAME,
                                   URL_TRANSFORM_DATA_API)
-from src.shared.files_helper import (get_json_from_file_path, save_pickle_file,
-                                     load_pickle_file)
+from src.shared.files_helper import (get_json_from_file_path)
 from src.shared.training_helper import get_regression_metrics
 
 
@@ -135,7 +134,7 @@ class MlflowSklearnTrainer:
                 y_train_predicted = model.predict(X_train)
 
                 # Compute metrics in the test and training sets
-                (rmse_test, mae_test, r2_test) = get_regression_metrics(y_test, 
+                (rmse_test, mae_test, r2_test) = get_regression_metrics(y_test,
                                                                         y_test_predicted)
                 (rmse_train, mae_train, r2_train) = get_regression_metrics(
                     y_train, y_train_predicted
@@ -174,10 +173,6 @@ class MlflowSklearnTrainer:
 
                 model_artifact_uri = mlflow.get_artifact_uri(self.model_name)
                 logger.info("Model artifact uri: {}".format(model_artifact_uri))
-                # Track in MLflow name of steps of the transformer pipe in a dict
-                transformer_pipe = load_pickle_file(self.full_transformer_path)
-                transformer_steps = {'transformer_steps': [*transformer_pipe.named_steps]}
-                mlflow.log_dict(transformer_steps, 'transformer_pipe.json')
 
                 # Register the model in MLflow registry (staged as None)
                 model_uri = f'runs:/{run.info.run_id}/{self.model_name}'
