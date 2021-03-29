@@ -16,27 +16,16 @@ TRANSFORMER_PIPE_PATH = '/mcpl_prediction/artifact_store'
 # logger = logging.getLogger("controller")
 
 # # Download data
-# from src.download_data.application.download_data_use_case import download_data
-# from src.download_data.infrastructure.request_data_downloander import (
-# RequestDataDownloander)
-# request_data_downloander = RequestDataDownloander(
-#         data_api_url=URL_DATA_MCPL_QUOTES_IMAGE_API,
-#         data_path=RAW_DATA_PATH,
-#         data_name=DATASET_NAME
-#     )
-# download_data(request_data_downloander)
-
-# body = {
-#     'data_api_url': URL_DATA_MCPL_QUOTES_IMAGE_API,
-#     'data_path': RAW_DATA_PATH,
-#     'data_name': DATASET_NAME
-# }
-# # Request to Fast API to get dataset
-# url_api = 'http://0.0.0.1:1213/api/download_data'
-# request = requests.post(url_api, data=json.dumps(body))
-# request_content = request.content
-# # json.loads(request_content.decode('utf-8'))
-# print(request.content)
+body = {
+    'data_api_url': URL_DATA_MCPL_QUOTES_IMAGE_API,
+    'data_path': RAW_DATA_PATH,
+    'data_name': DATASET_NAME
+}
+# Request to Fast API to get dataset
+url_api = 'http://0.0.0.0:1213/api/get_data'
+request = requests.post(url_api, data=json.dumps(body))
+request_content = request.content
+print(request.content)
 
 # Validate data schema
 # RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'

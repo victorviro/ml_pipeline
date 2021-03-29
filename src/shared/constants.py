@@ -31,7 +31,7 @@ GIT_BRANCH_NAME = 'master'
 # URL request MCPL data quotes image api http://127.0.0.1:8000/api/v1/max_char_per_l...
 URL_DATA_MCPL_QUOTES_IMAGE_API = (f'http://{os.getenv("HOST_QUOTES_IMAGE_API")}:'
                                   f'{os.getenv("PORT_QUOTES_IMAGE_API")}/'
-                                  f'{os.getenv("ENDPOINT_DATA_MCPL_QUOTES_IMAGE_API")}')
+                                  f'{os.getenv("ENDPOINT_DATA_MCPL_QUOTES_IMAGE_API")}/')
 
 # Model training
 SIZE_TEST_SPLIT = 0.33
@@ -50,9 +50,9 @@ HYPEROPT_MAX_EVALS = 50
 
 # Urls of use cases APIs
 # HOST_USE_CASES_APIS = os.getenv("HOST_USE_CASES_APIS")
-URL_DOWNLOAD_DATA_API = (f'http://{os.getenv("HOST_DOWNLOAD_DATA")}:'
-                         f'{os.getenv("PORT_DOWNLOAD_DATA")}/'
-                         f'{os.getenv("ENDPOINT_DOWNLOAD_DATA")}')
+URL_GET_DATA_API = (f'http://{os.getenv("HOST_GET_DATA")}:'
+                    f'{os.getenv("PORT_GET_DATA")}/'
+                    f'{os.getenv("ENDPOINT_GET_DATA")}')
 
 URL_VALIDATE_DATA_API = (f'http://{os.getenv("HOST_VALIDATE_DATA")}:'
                          f'{os.getenv("PORT_VALIDATE_DATA")}/'

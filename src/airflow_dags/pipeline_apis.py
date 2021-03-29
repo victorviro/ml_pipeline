@@ -15,7 +15,7 @@ from src.shared.constants import (DATASET_NAME, RAW_DATA_PATH, TRANSFORMED_DATA_
                                   GIT_REMOTE_NAME, GIT_BRANCH_NAME,
                                   MODEL_NAME, MODELS_PATH, SIZE_TEST_SPLIT,
                                   TEST_SPLIT_SEED, MODEL_SEED, RMSE_THRESOLD,
-                                  URL_DATA_MCPL_QUOTES_IMAGE_API, URL_DOWNLOAD_DATA_API,
+                                  URL_DATA_MCPL_QUOTES_IMAGE_API, URL_GET_DATA_API,
                                   URL_VALIDATE_DATA_API, URL_VERSION_DATA_API,
                                   URL_TRANSFORM_TRAIN_DATA_API, URL_TRAIN_MODEL_API,
                                   URL_VALIDATE_MODEL_API, TRANSFORMER_PIPELINE_NAME)
@@ -73,18 +73,18 @@ with DAG('max_char_per_line_apis',
     # endregion
 
     # region Step 1: Data ingestion
-    def download_data(*op_args):
+    def get_data(*op_args):
         body = {
             'data_api_url': op_args[0],
             'data_path': op_args[1],
             'data_name': op_args[2]
         }
-        return launch_and_manage_api_request(url_api=URL_DOWNLOAD_DATA_API, body=body,
+        return launch_and_manage_api_request(url_api=URL_GET_DATA_API, body=body,
                                              description='download the data')
 
     DATA_INGESTION_ARGS = [URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH, DATASET_NAME]
     # data_ingestion = PythonOperator(task_id='data_ingestion',
-    #                                 python_callable=download_data,
+    #                                 python_callable=get_data,
     #                                 op_args=DATA_INGESTION_ARGS)
     # endregion
 

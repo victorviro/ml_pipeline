@@ -21,18 +21,6 @@ def get_json_from_file_path(file_path: str) -> dict:
     return data
 
 
-def save_json_file(file_path: str, content: dict):
-
-    try:
-        with open(file_path, 'w') as output_file:
-            json.dump(content, output_file, default=str)
-
-    except Exception as err:
-        msg = f'Error saving the json in path {file_path}.\nMessage: {err}'
-        logger.error(msg)
-        raise Exception(msg)
-
-
 def load_pickle_file(file_path: str):
 
     try:

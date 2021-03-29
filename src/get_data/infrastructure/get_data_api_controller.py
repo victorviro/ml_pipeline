@@ -6,8 +6,9 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.download_data.application.download_data_use_case import download_data
 from .request_data_downloander import RequestDataDownloander
+from .json_data_saver import JSONDataSaver
+from src.get_data.application.get_data_use_case import GetData
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -23,18 +24,21 @@ class Item(BaseModel):
 rest_api = FastAPI()
 
 
-@rest_api.post("/api/download_data")
-async def download_data_endpoint(item: Item):
+@rest_api.post("/api/get_data")
+async def get_data_endpoint(item: Item):
+    data_saver = JSONDataSaver()
+    data_downloander = RequestDataDownloander()
+    file_path = f"{item.data_path}/{item.data_name}.json"
 
-    request_data_downloander = RequestDataDownloander(
-        data_api_url=item.data_api_url,
-        data_path=item.data_path,
-        data_name=item.data_name
+    get_data_use_case = GetData.build(
+        data_downloander=data_downloander,
+        data_saver=data_saver
     )
 
     try:
-        download_data(request_data_downloander)
-        message = 'Data stored and saved succesfully'
+        # Download the data and save it
+        get_data_use_case.execute(file_path=file_path, data_api_url=item.data_api_url)
+        message = 'Data downloaded and saved succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
 
@@ -43,5 +47,5 @@ async def download_data_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# uvicorn src.download_data.infrastructure.request_data_downloander_api:rest_api --port
+# uvicorn src.get_data.infrastructure.get_data_api_controller:rest_api --port
 # 1213

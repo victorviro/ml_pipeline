@@ -142,25 +142,25 @@ services:
       uvicorn src.${USE_CASE_VALIDATE_DATA}.infrastructure.${API_FILE_VALIDATE_DATA}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_DATA}
 
-  download_data:
+  get_data:
     <<: *use_cases-common
-    container_name: download_data
+    container_name: get_data
     build:
       <<: *use_cases-common-build
       args:
         <<: *use_cases-common-args
-        USE_CASE: ${USE_CASE_DOWNLOAD_DATA}
+        USE_CASE: ${USE_CASE_GET_DATA}
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/${USE_CASE_DOWNLOAD_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_DOWNLOAD_DATA}/
+      - ./${PROJECT_SRC}/${USE_CASE_GET_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_GET_DATA}/
     ports:
-      - ${PORT_DOWNLOAD_DATA}:${PORT_DOWNLOAD_DATA}
+      - ${PORT_GET_DATA}:${PORT_GET_DATA}
     command: >
-      uvicorn src.${USE_CASE_DOWNLOAD_DATA}.infrastructure.${API_FILE_DOWNLOAD_DATA}:rest_api 
-        --host ${HOST_USE_CASES_APIS} --port ${PORT_DOWNLOAD_DATA}
-#uvicorn src.download_data.infrastructure.request_data_downloander_api:rest_api --host 0.0.0.0 --port 1213
+      uvicorn src.${USE_CASE_GET_DATA}.infrastructure.${API_FILE_GET_DATA}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_GET_DATA}
+    network_mode: host
 
   version_data:
     <<: *use_cases-common
@@ -222,7 +222,7 @@ services:
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
+      #- ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
       - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/
       - ./${DVC_PATH}/:/${PROJECT_NAME}/${DVC_PATH}/
       - ./${GIT_PATH}/:/${PROJECT_NAME}/${GIT_PATH}/
