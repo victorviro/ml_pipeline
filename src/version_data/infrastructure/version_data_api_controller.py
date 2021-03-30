@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.version_data.application.version_data_use_case import version_data
+from src.version_data.application.version_data_use_case import VersionData
 from .dvc_data_versioner import DVCDataVersioner
 
 
@@ -27,16 +27,18 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/version_data")
 async def version_data_endpoint(item: Item):
-    dvc_data_versioner = DVCDataVersioner(
-        relative_data_path=item.relative_data_path,
-        data_name=item.data_name,
-        data_version=item.data_version,
-        git_remote_name=item.git_remote_name,
-        git_branch_name=item.git_branch_name
-    )
+    dvc_data_versioner = DVCDataVersioner()
+    relative_data_file_path = f"{item.relative_data_path}/{item.data_name}.json"
+
+    version_data_use_case = VersionData.build(data_versioner=dvc_data_versioner)
 
     try:
-        version_data(dvc_data_versioner)
+        version_data_use_case.execute(
+            relative_data_file_path=relative_data_file_path,
+            data_version=item.data_version,
+            git_remote_name=item.git_remote_name,
+            git_branch_name=item.git_branch_name
+        )
         message = 'Data versioned succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
@@ -45,4 +47,4 @@ async def version_data_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# uvicorn src.version_data.infrastructure.dvc_data_versioner_api:rest_api --port 1217
+# uvicorn src.version_data.infrastructure.version_data_api_controller:rest_api --port 1217

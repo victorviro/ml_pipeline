@@ -85,17 +85,18 @@ request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
 
 # Version data
-# body = {
-#     'relative_data_path': 'data/01_raw',
-#     'data_name': 'data',
-#     'data_version': VERSION,
-#     'git_remote_name': 'origin',
-#     'git_branch_name': 'master'
-# }
-# # Request to Fast API to train the model
-# url_api = 'http://0.0.0.0:1217/api/version_data'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
+body = {
+    'relative_data_path': 'data/01_raw',
+    'data_name': 'data',
+    'data_version': 1.5,
+    'git_remote_name': 'origin',
+    'git_branch_name': 'master'
+}
+# Request to Fast API to train the model
+url_api = 'http://0.0.0.0:1217/api/version_data'
+# url_api = 'http://version_data:1217/api/version_data'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)
 
 
 # Validate model
