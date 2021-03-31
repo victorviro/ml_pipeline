@@ -84,7 +84,8 @@ body = {
     'model_seed': 42
 }
 # Request to Fast API to train the model
-url_api = 'http://0.0.0.0:1216/api/train_model'
+# url_api = 'http://0.0.0.0:1216/api/train_model'
+url_api = 'http://train_model:1216/api/train_model'
 request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
 
