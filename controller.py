@@ -119,13 +119,14 @@ request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
 
 # Serve model
-# body = {
-#     'font_size': 33,
-#     'rows_number': 233,
-#     'cols_number': 344,
-#     'char_number_text': 44
-# }
-# # Request to Fast API to train the model
+body = {
+    'font_size': 33,
+    'rows_number': 233,
+    'cols_number': 344,
+    'char_number_text': 44
+}
+# Request to Fast API to train the model
 # url_api = 'http://0.0.0.0:1219/api/served_model'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
+url_api = 'http://serve_model:1219/api/served_model'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)

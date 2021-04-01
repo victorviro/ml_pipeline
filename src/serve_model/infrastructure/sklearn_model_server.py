@@ -9,14 +9,26 @@ from mlflow.tracking import MlflowClient
 
 from src.shared.constants import (TRANSFORMER_PIPELINE_NAME, REGISTRY_MODEL_NAME,
                                   URL_TRANSFORM_DATA_API)
+from src.serve_model.domain.model_server import IModelServer
 
 
 logger = logging.getLogger(__name__)
 
 
-class SklearnModelServer():
+class SklearnModelServer(IModelServer):
+    """
+    A class which implements the interface IModelServer to serve the model.
+    """
 
-    def serve_predictions(self, raw_data: dict):
+    def serve_predictions(self, data: dict):
+        """
+        Serve a model to make preditions.
+
+        :param data: The data to be fed to the model to make predictions
+        :type data: dict
+        :return: The prediction/s made by the model
+        :rtype: [type]
+        """
         # Get info of the model
         model_info = self.get_model_info()
         # Load the model trained
@@ -38,7 +50,7 @@ class SklearnModelServer():
             body = {
                 "transformer_pipe_path": f'{getcwd()}/{relative_artifacts_path}',
                 "pipe_name": TRANSFORMER_PIPELINE_NAME,
-                "data": raw_data
+                "data": data
             }
             request = requests.post(URL_TRANSFORM_DATA_API, data=json.dumps(body))
             content = json.loads(request.content.decode('utf-8'))

@@ -2,14 +2,12 @@ import abc
 
 
 class IModelServer(metaclass=abc.ABCMeta):
-
-    @classmethod
-    def __subclasshook__(cls, subclass):
-        return (hasattr(subclass, 'serve_predictions') and
-                callable(subclass.serve_predictions))
+    """
+    An interface used to serve a model.
+    """
 
     @abc.abstractmethod
     def serve_predictions(self):
         """
-        This method must serve serve predictions
+        This method must serve a model to make preditions
         """
