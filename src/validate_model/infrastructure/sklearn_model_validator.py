@@ -8,52 +8,46 @@ from sklearn.model_selection import train_test_split
 import mlflow
 from mlflow.tracking import MlflowClient
 
-from src.shared.files_helper import get_json_from_file_path
 from src.shared.training_helper import get_regression_metrics
 from src.shared.constants import (REGISTRY_MODEL_NAME, URL_TRANSFORM_DATA_API,
                                   TRANSFORMER_PIPELINE_NAME)
+from src.validate_model.domain.model_validator import IModelValidator
 
 
 logger = logging.getLogger(__name__)
 
 
-class SklearnModelValidator():
+class SklearnModelValidator(IModelValidator):
     """
     A class which implements the interface IModelValidator to validate the model.
     It validates the model if the root mean squared error (rmse) in the test set
     is smaller than a value given. If the model is validated, its stage is updated
     to 'Staging' in MLflow registry.
-
-    :param raw_data_path: Path where the raw data is stored
-    :type raw_data_path: str
-    :param data_name: Name of the dataset
-    :type data_name: str
-    :param rmse_threshold: Threshold to validate the model using the rmse
-    :type rmse_threshold: float
-    :param size_test_split: Percentage of test dataset when splitting the dataset
-    :type size_test_split: float
-    :param test_split_seed: Seed used when splitting the dataset
-    :type test_split_seed: int
-
     """
-    def __init__(self, raw_data_path: str, data_name: str, rmse_threshold: float,
-                 size_test_split: float, test_split_seed: int):
-        self.raw_data_path = raw_data_path
-        self.data_name = data_name
-        self.full_raw_data_path = (f'{raw_data_path}/{data_name}.json')
-        self.rmse_threshold = rmse_threshold
-        self.size_test_split = size_test_split
-        self.test_split_seed = test_split_seed
 
-    def validate_model(self):
+    def validate_model(self, data: dict, rmse_threshold: float, size_test_split: float,
+                       test_split_seed: int):
+        """
+        Validate the model if the root mean squared error (rmse) in the test set
+        is smaller than a value given. If the model is validated, its stage is updated
+        to 'Staging' in MLflow registry.
+
+        :param data: The dataset used to validate the model (before splitting it)
+        :type data: dict
+        :param rmse_threshold: Threshold to validate the model using the rmse
+        :type rmse_threshold: float
+        :param size_test_split: Percentage of test dataset when splitting the dataset
+        :type size_test_split: float
+        :param test_split_seed: Seed used when splitting the dataset
+        :type test_split_seed: int
+        """
 
         logger.info(f'Validating model')
 
-        # Get data and convert to pandas DataFrame
+        # Convert dataset to pandas DataFrame
         try:
-            data = get_json_from_file_path(self.full_raw_data_path)
-            logger.info(f'Loaded data succesfully.')
             data_df = DataFrame.from_dict(data)
+            logger.info(f'Dataset converted to pandas DataFrame succesfully.')
         except Exception as err:
             msg = f'Error loading data or converting it to df. Error traceback: {err}'
             logger.error(msg)
@@ -64,7 +58,7 @@ class SklearnModelValidator():
             X = data_df.drop("max_char_per_line", axis=1)
             y = data_df["max_char_per_line"]
             X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=self.size_test_split, random_state=self.test_split_seed
+                X, y, test_size=size_test_split, random_state=test_split_seed
             )
         except Exception as err:
             msg = f'Error getting target variable or splitting data. Error: {err}'
@@ -116,13 +110,13 @@ class SklearnModelValidator():
 
         logger.info(f'Metrics: \nRMSE: {rmse} \nMAE: {mae} \nR2: {r2}')
 
-        if rmse > self.rmse_threshold:
+        if rmse > rmse_threshold:
             msg = ('Square root of mean squared error bigger that the thresold fixed:'
-                   f' {rmse} > thresold fixed = {self.rmse_threshold}')
+                   f' {rmse} > thresold fixed = {rmse_threshold}')
             raise Exception(f'Model was not validated succesfully in test set: {msg}')
         else:
             msg = ('Square root of mean squared error smaller that the thresold fixed:'
-                   f' {rmse} < thresold fixed = {self.rmse_threshold}')
+                   f' {rmse} < thresold fixed = {rmse_threshold}')
             logger.info(f'Model validated succesfully in test set: {msg}')
             try:
                 # Update the stage of the model to "Staging" in MLflow model registry

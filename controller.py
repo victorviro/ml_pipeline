@@ -105,17 +105,18 @@ print(request.content)
 
 
 # Validate model
-# body = {
-#     'raw_data_path': RAW_DATA_PATH,
-#     'data_name': DATASET_NAME,
-#     'size_test_split': 0.33,
-#     'test_split_seed': 1,
-#     'rmse_threshold': RMSE_THRESOLD
-# }
-# # Request to Fast API to train the model
+body = {
+    'raw_data_path': RAW_DATA_PATH,
+    'data_name': DATASET_NAME,
+    'size_test_split': 0.33,
+    'test_split_seed': 1,
+    'rmse_threshold': RMSE_THRESOLD
+}
+# Request to Fast API to train the model
 # url_api = 'http://0.0.0.0:1218/api/validate_model'
-# request = requests.post(url_api, data=json.dumps(body))
-# print(request.content)
+url_api = 'http://validate_model:1218/api/validate_model'
+request = requests.post(url_api, data=json.dumps(body))
+print(request.content)
 
 # Serve model
 # body = {

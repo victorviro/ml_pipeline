@@ -6,7 +6,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.validate_model.application.validate_model_use_case import validate_model
+from src.shared.infrastructure.json_data_loader import JSONDataLoader
+from src.validate_model.application.validate_model_use_case import ValidateModel
 from.sklearn_model_validator import SklearnModelValidator
 
 
@@ -27,16 +28,20 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/validate_model")
 async def train_model_endpoint(item: Item):
-    sklearn_model_validator = SklearnModelValidator(
-        raw_data_path=item.raw_data_path,
-        data_name=item.data_name,
-        size_test_split=item.size_test_split,
-        test_split_seed=item.test_split_seed,
-        rmse_threshold=item.rmse_threshold
+    sklearn_model_validator = SklearnModelValidator()
+    json_data_loader = JSONDataLoader()
+
+    validate_model_use_case = ValidateModel.build(
+        model_validator=sklearn_model_validator,
+        data_file_loader=json_data_loader
     )
+    data_file_path = f'{item.raw_data_path}/{item.data_name}.json'
 
     try:
-        validate_model(sklearn_model_validator)
+        validate_model_use_case.execute(
+            data_file_path=data_file_path, rmse_threshold=item.rmse_threshold,
+            size_test_split=item.size_test_split, test_split_seed=item.test_split_seed
+        )
         message = 'Model validated succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
@@ -45,5 +50,5 @@ async def train_model_endpoint(item: Item):
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 
-# uvicorn src.validate_model.infrastructure.sklearn_model_validator_api:rest_api --port
+# uvicorn src.validate_model.infrastructure.validate_model_api_controller:rest_api --port
 # 1218
