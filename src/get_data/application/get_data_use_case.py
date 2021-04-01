@@ -20,12 +20,14 @@ class GetData:
         self.data_downloander = data_downloander
         self.data_file_saver = data_file_saver
 
-    def execute(self, file_path: str, data_api_url: str):
-        # ping
-        data = self.data_downloander.download_data(data_api_url=data_api_url)
+    def execute(self, file_path: str):
+
+        data = self.data_downloander.download_data()
         if not os.path.exists(os.path.dirname(file_path)):
-            raise Exception(f'Path {os.path.dirname(file_path)} does not exist')
+            raise Exception(f'Path "{os.path.dirname(file_path)}" does not exist')
         self.data_file_saver.save_data(file_path=file_path, data=data)
+        if not os.path.exists(file_path):
+            raise Exception(f'Data file path "{file_path}" does not exist')
 
     @staticmethod
     def build(data_downloander: IDataDownloander,

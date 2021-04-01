@@ -27,17 +27,17 @@ rest_api = FastAPI()
 @rest_api.post("/api/get_data")
 async def get_data_endpoint(item: Item):
     data_saver = JSONDataSaver()
-    data_downloander = RequestDataDownloander()
+    data_downloander = RequestDataDownloander(data_api_url=item.data_api_url)
     file_path = f"{item.data_path}/{item.data_name}.json"
 
     get_data_use_case = GetData.build(
         data_downloander=data_downloander,
-        data_saver=data_saver
+        data_file_saver=data_saver
     )
 
     try:
         # Download the data and save it
-        get_data_use_case.execute(file_path=file_path, data_api_url=item.data_api_url)
+        get_data_use_case.execute(file_path=file_path)
         message = 'Data downloaded and saved succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})

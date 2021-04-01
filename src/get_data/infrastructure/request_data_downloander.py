@@ -10,14 +10,18 @@ class RequestDataDownloander(IDataDownloander):
     """
     A class which implements the interface IDataDownloander to download data.
     It gets the data through a request.
+
+    :param data_api_url: Url of the API to get the data
+    :type data_api_url: str
     """
 
-    def download_data(self, data_api_url: str) -> dict:
+    def __init__(self, data_api_url: str):
+        self.data_api_url = data_api_url
+
+    def download_data(self) -> dict:
         """
         Download the data through a request.
 
-        :param data_api_url: Url of the API to get the data
-        :type data_api_url: str
         :return: The data downloaded
         :rtype: dict
         """
@@ -25,7 +29,8 @@ class RequestDataDownloander(IDataDownloander):
         logger.info(f'Getting raw data through a request.')
         # Launch the request to get the data
         try:
-            request_response = requests.get(data_api_url)
+            # ping
+            request_response = requests.get(self.data_api_url)
             msg = f'Request done succesfully.'
             logger.info(msg)
         except Exception as err:
