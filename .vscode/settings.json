@@ -13,10 +13,15 @@
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true, 
     "python.languageServer": "Microsoft",
-    ///"python.autoComplete.extraPaths": ["src"], // to pylint read src imports,
+    "python.autoComplete.extraPaths": [], // to pylint read src imports,
     "python.linting.pylintArgs": [
         "--load-plugins",
     ],
     "python.linting.pycodestyleEnabled": true,
-    "python.linting.pycodestyleArgs": ["--max-line-length=90"],
+    "python.linting.pycodestyleArgs": [
+        "--max-line-length=90"
+    ],
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "jupyter.jupyterServerType": "remote"
 }

@@ -1,0 +1,19 @@
+pipeline:
+  agent: any
+  options:
+    - "ansiColor('xterm')"
+  stages:
+    - stage: "Checkout project"
+      steps:
+        script:
+          - "checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github', url: env.GIT_URL]]])"
+    - stage: "Install dependencies"
+      steps:
+        - sh "python3 -m pip install --upgrade pip"
+        - sh "make install-test"
+    - stage: "Run tests"
+      steps:
+        - sh "make test"
+  post:
+    always:
+      - "cleanWs()"

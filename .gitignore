@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+output
+.coverage
+.pytest_cache
 
 # Distribution / packaging
 venv/

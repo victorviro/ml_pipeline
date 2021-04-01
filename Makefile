@@ -1,4 +1,5 @@
 .PHONY: help
+export PYTHONPATH := $(shell pwd)
 
 include .env
 
@@ -34,3 +35,15 @@ restart: stop up
 
 enter:
 	docker exec -it $(c) bash
+
+install-test:
+	python3 -m pip install --upgrade pip
+	pip install -r tests/requirements.txt
+
+test:
+	pytest tests
+
+clean:
+	rm -rf .pytest_cache
+	rm -f .coverage
+	rm -rf output

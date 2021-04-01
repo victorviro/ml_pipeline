@@ -22,9 +22,7 @@ class GetData:
 
     def execute(self, file_path: str, data_api_url: str):
         # ping
-        data: dict = self.data_downloander.download_data(data_api_url=data_api_url)
-        if not isinstance(data, dict):
-            raise Exception(f'Data downloaded is not a dict. It is a {type(data)}')
+        data = self.data_downloander.download_data(data_api_url=data_api_url)
         if not os.path.exists(os.path.dirname(file_path)):
             raise Exception(f'Path {os.path.dirname(file_path)} does not exist')
         self.data_file_saver.save_data(file_path=file_path, data=data)
