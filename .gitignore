@@ -20,6 +20,7 @@ artifact_store/*
 
 # VS Code
 #.vscode/
+src/airflow_dags/logs
 
 
 # exclude data from source control by default (not versioning binary/base files)
