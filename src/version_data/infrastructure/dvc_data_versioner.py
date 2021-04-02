@@ -12,25 +12,30 @@ class DVCDataVersioner(IDataVersioner):
     """
     A class which implements the interface IDataVersioner to version the dataset.
     It versions the dataset using DVC.
-    """
 
-    def version_data(self, relative_data_file_path: str, data_version: float,
-                     git_remote_name: str, git_branch_name: str):
+    :param git_remote_name: Name of the remote to the git repository
+    :type git_remote_name: str
+    :param git_branch_name: Name of the branch of the git repository
+    :type git_branch_name: str
+    """
+    def __init__(self, git_remote_name: str, git_branch_name: str):
+        self.git_remote_name = git_remote_name
+        self.git_branch_name = git_branch_name
+
+    def version_data(self, data_file_path: str, data_version: float):
         """
         Version the dataset using DVC.
 
-        :param relative_data_file_path: Relative path of the data file stored
-        :type relative_data_file_path: str
+        :param data_file_path: Path of the data file stored
+        :type data_file_path: str
         :param data_version: Version of the data
         :type data_version: float
-        :param git_remote_name: Name of the remote to the git repository
-        :type git_remote_name: str
-        :param git_branch_name: Name of the branch of the git repository
-        :type git_branch_name: str
         """
 
         # Track the data in DVC repository
         try:
+            relative_data_file_path = os.path.relpath(path=data_file_path,
+                                                      start=os.getcwd())
             subprocess.run(["dvc", "add", relative_data_file_path])
         except Exception as err:
             message = ('Error trying to track the data in the DVC repository.\nTraceback'
@@ -56,7 +61,7 @@ class DVCDataVersioner(IDataVersioner):
 
         # Push the DVC metadata of the data to the git repository
         try:
-            subprocess.run(["git", "push", git_remote_name, git_branch_name])
+            subprocess.run(["git", "push", self.git_remote_name, self.git_branch_name])
         except Exception as err:
             message = ('Error trying to push the metadata (dvc) in the git repository.'
                        f'\nTraceback of error: {str(err)}')

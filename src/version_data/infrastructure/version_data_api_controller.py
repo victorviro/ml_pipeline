@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class Item(BaseModel):
-    relative_data_path: str
+    data_path: str
     data_name: str
     data_version: float
     git_remote_name: str
@@ -27,17 +27,16 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/version_data")
 async def version_data_endpoint(item: Item):
-    dvc_data_versioner = DVCDataVersioner()
-    relative_data_file_path = f"{item.relative_data_path}/{item.data_name}.json"
+    dvc_data_versioner = DVCDataVersioner(git_remote_name=item.git_remote_name,
+                                          git_branch_name=item.git_branch_name)
+    data_file_path = f"{item.data_path}/{item.data_name}.json"
 
     version_data_use_case = VersionData.build(data_versioner=dvc_data_versioner)
 
     try:
         version_data_use_case.execute(
-            relative_data_file_path=relative_data_file_path,
-            data_version=item.data_version,
-            git_remote_name=item.git_remote_name,
-            git_branch_name=item.git_branch_name
+            data_file_path=data_file_path,
+            data_version=item.data_version
         )
         message = 'Data versioned succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,

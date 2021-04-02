@@ -14,17 +14,14 @@ class VersionData:
     def __init__(self, data_versioner: IDataVersioner):
         self.data_versioner = data_versioner
 
-    def execute(self, relative_data_file_path: str, data_version: float,
-                git_remote_name: str, git_branch_name: str):
+    def execute(self, data_file_path: str, data_version: float):
 
-        if not os.path.exists(relative_data_file_path):
+        if not os.path.exists(data_file_path):
             raise Exception('Path of data file does not exist: '
-                            f'"{relative_data_file_path}"')
+                            f'"{data_file_path}"')
         self.data_versioner.version_data(
-            relative_data_file_path=relative_data_file_path,
-            data_version=data_version,
-            git_remote_name=git_remote_name,
-            git_branch_name=git_branch_name
+            data_file_path=data_file_path,
+            data_version=data_version
         )
 
     @staticmethod
