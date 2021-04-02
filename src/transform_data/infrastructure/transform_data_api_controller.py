@@ -72,9 +72,11 @@ class TransformItem(BaseModel):
 
 @rest_api.post("/api/transform_data")
 async def transform_data_endpoint(item: TransformItem):
-    sklearn_data_transformer = SklearnDataTransformer()
-    pickle_data_loader = PickleDataLoader()
     transformer_file_path = f'{item.transformer_pipe_path}/{item.pipe_name}.pkl'
+    sklearn_data_transformer = SklearnDataTransformer(
+        transformer_file_path=transformer_file_path
+    )
+    pickle_data_loader = PickleDataLoader()
 
     transform_data_use_case = TransformData.build(
         data_transformer=sklearn_data_transformer,
@@ -83,10 +85,7 @@ async def transform_data_endpoint(item: TransformItem):
     logger.info(f'Transforming data')
     try:
         # Transform the dataset
-        transformed_data = transform_data_use_case.execute(
-            data=item.data,
-            transformer_file_path=transformer_file_path
-        )
+        transformed_data = transform_data_use_case.execute(data=item.data)
         message = 'Data transformed succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message, 'data': transformed_data})

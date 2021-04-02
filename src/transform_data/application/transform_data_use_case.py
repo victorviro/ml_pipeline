@@ -19,19 +19,11 @@ class TransformData:
         self.data_transformer = data_transformer
         self.data_file_loader = data_file_loader
 
-    def execute(self, data: dict, transformer_file_path: str) -> dict:
-        if not os.path.exists(transformer_file_path):
-            raise Exception('Path of transformer pipeline file does not exist: '
-                            f'"{transformer_file_path}"')
-        # Load the transformer pipeline
-        transformer_pipeline = self.data_file_loader.load_data(
-            file_path=transformer_file_path
-        )
+    def execute(self, data):
         # Tranform the dataset
         data_transformed = self.data_transformer.transform_data(
             data=data,
-            transformer_pipeline=transformer_pipeline
-        )
+            data_file_loader=self.data_file_loader)
         return data_transformed
 
     @staticmethod
