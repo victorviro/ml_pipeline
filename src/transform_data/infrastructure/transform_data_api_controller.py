@@ -34,7 +34,10 @@ rest_api = FastAPI()
 @rest_api.post("/api/fit_transformer_pipeline")
 async def fit_transformer_pipeline_endpoint(item: FitItem):
     json_data_loader = JSONDataLoader()
-    sklearn_transformation_fitter = SklearnTransformationFitter()
+    sklearn_transformation_fitter = SklearnTransformationFitter(
+        size_test_split=item.size_test_split,
+        test_split_seed=item.test_split_seed
+    )
     pickle_data_saver = PickleDataSaver()
     transformer_file_path = f'{item.transformer_pipe_path}/{item.pipe_name}.pkl'
     data_file_path = f'{item.data_path}/{item.data_name}.json'
@@ -50,9 +53,7 @@ async def fit_transformer_pipeline_endpoint(item: FitItem):
     try:
         fit_transformer_use_case.execute(
             data_file_path=data_file_path,
-            transformer_file_path=transformer_file_path,
-            size_test_split=item.size_test_split,
-            test_split_seed=item.test_split_seed
+            transformer_file_path=transformer_file_path
         )
         message = 'Transformer pipeline fitted succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,

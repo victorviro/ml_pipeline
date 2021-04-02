@@ -24,14 +24,13 @@ class FitTransformer:
         self.transformation_fitter = transformation_fitter
         self.data_file_saver = data_file_saver
 
-    def execute(self, data_file_path: dict, transformer_file_path: str,
-                size_test_split: float, test_split_seed: int) -> dict:
+    def execute(self, data_file_path: str, transformer_file_path: str):
+        if not os.path.exists(data_file_path):
+            raise Exception(f'Path of data file does not exist: "{data_file_path}"')
         # Load the dataset
-        data: dict = self.data_file_loader.load_data(file_path=data_file_path)
+        data = self.data_file_loader.load_data(file_path=data_file_path)
         # Fit the transformer pipeline
-        transformer_pipeline = self.transformation_fitter.fit_transformer(
-            data=data, size_test_split=size_test_split, test_split_seed=test_split_seed
-        )
+        transformer_pipeline = self.transformation_fitter.fit_transformer(data=data)
         if not os.path.exists(os.path.dirname(transformer_file_path)):
             raise Exception('Path where save transformer pipeline file does not exist: '
                             f'"{os.path.dirname(transformer_file_path)}"')
