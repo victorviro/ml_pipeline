@@ -27,7 +27,7 @@ rest_api = FastAPI()
 @rest_api.post("/api/validate_data_schema")
 async def validate_data_schema_endpoint(item: Item):
     data_file_loader = JSONDataLoader()
-    data_validator = PanderaSchemaValidator()
+    data_validator = PanderaSchemaValidator(dataset_schema=MCPL_SCHEMA)
     file_path = f"{item.data_path}/{item.data_name}.json"
 
     validate_data_schema = ValidateDataSchema.build(
@@ -37,7 +37,7 @@ async def validate_data_schema_endpoint(item: Item):
 
     try:
         # Load the data and validate its schema
-        validate_data_schema.execute(file_path=file_path, data_schema=MCPL_SCHEMA)
+        validate_data_schema.execute(file_path=file_path)
         message = 'Data schema validated succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})

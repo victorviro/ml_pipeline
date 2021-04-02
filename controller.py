@@ -33,7 +33,8 @@ body = {
     'data_name': DATASET_NAME
 }
 # Request to Fast API to validate the shema of the dataset
-url_api = 'http://0.0.0.0:1214/api/validate_data_schema'
+# url_api = 'http://0.0.0.0:1214/api/validate_data_schema'
+url_api = 'http://validate_data:1214/api/validate_data_schema'
 request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
 

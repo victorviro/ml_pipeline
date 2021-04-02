@@ -1,7 +1,5 @@
 import os
 
-from pandera import DataFrameSchema
-
 from src.validate_data_schema.domain.data_validator import IDataValidator
 from src.shared.interfaces.data_file_loader import IDataFileLoader
 
@@ -21,20 +19,16 @@ class ValidateDataSchema:
         self.data_validator = data_validator
         self.data_file_loader = data_file_loader
 
-    def execute(self, file_path: str, data_schema: DataFrameSchema):
+    def execute(self, file_path: str):
         if not os.path.exists(file_path):
-            raise Exception(f'File in path {file_path} does not exist')
-        data: dict = self.data_file_loader.load_data(file_path=file_path)
-        if not isinstance(data, dict):
-            raise Exception(f'Data loaded is not a dict. It is a {type(data)}')
-        self.data_validator.validate_data(data=data, data_schema=data_schema)
+            raise Exception(f'Data file in path "{file_path}" does not exist')
+        data = self.data_file_loader.load_data(file_path=file_path)
+
+        self.data_validator.validate_data(data=data)
 
     @staticmethod
-    def build(data_validator: IDataValidator,
-              data_file_loader: IDataFileLoader):
+    def build(data_validator: IDataValidator, data_file_loader: IDataFileLoader):
 
-        validate_data_schema = ValidateDataSchema(
-            data_validator=data_validator,
-            data_file_loader=data_file_loader
-        )
+        validate_data_schema = ValidateDataSchema(data_validator=data_validator,
+                                                  data_file_loader=data_file_loader)
         return validate_data_schema

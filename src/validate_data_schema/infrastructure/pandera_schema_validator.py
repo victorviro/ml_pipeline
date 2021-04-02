@@ -24,11 +24,20 @@ class PanderaSchemaValidator(IDataValidator):
     """
     A class which implements the interface IDataValidator to validate the dataset.
     It validates the schema of the dataset in pandas DataFrame format using Pandera.
+
+    :param dataset_schema: The valid schema to validate the dataset
+    :type dataset_schema: pandera.DataFrameSchema
     """
 
-    def validate_data(self, data: dict, data_schema: pandera.DataFrameSchema):
+    def __init__(self, dataset_schema: pandera.DataFrameSchema):
+        self.dataset_schema = dataset_schema
+
+    def validate_data(self, data: dict):
         """
         Validate the schema of data in pandas DataFrame format using Pandera.
+
+        :param data: The dataset to be validated
+        :type data: dict
         """
 
         logger.info(f'Validating raw data')
@@ -39,14 +48,14 @@ class PanderaSchemaValidator(IDataValidator):
             logger.info(f'Converted data to pandas DataFrame succesfully.')
 
         except Exception as err:
-            msg = ('Error loading data or converting it to pandas DataFrame. '
+            msg = ('Error converting data to pandas DataFrame. '
                    f'Error traceback: {err}')
             logger.error(msg)
             raise Exception(msg)
 
         # Validate the schema of the dataset
         try:
-            data_schema.validate(data_df, lazy=True)
+            self.dataset_schema.validate(data_df, lazy=True)
             logger.info('Validated dataset schema succesfully.')
 
         except Exception as err:
