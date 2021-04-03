@@ -19,18 +19,14 @@ class ValidateModel:
         self.model_validator = model_validator
         self.data_file_loader = data_file_loader
 
-    def execute(self, data_file_path: str, rmse_threshold: float,
-                size_test_split: float, test_split_seed: int):
+    def execute(self, data_file_path: str):
         if not os.path.exists(data_file_path):
             raise Exception('Path of dataset file does not exist: '
                             f'"{data_file_path}"')
         # Load the dataset
-        data: dict = self.data_file_loader.load_data(file_path=data_file_path)
+        data = self.data_file_loader.load_data(file_path=data_file_path)
         # Validate the model
-        self.model_validator.validate_model(
-            data=data, rmse_threshold=rmse_threshold,
-            size_test_split=size_test_split, test_split_seed=test_split_seed
-        )
+        self.model_validator.validate_model(data=data)
 
     @staticmethod
     def build(model_validator: IModelValidator, data_file_loader: IDataFileLoader):

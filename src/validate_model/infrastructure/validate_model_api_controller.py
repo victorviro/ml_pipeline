@@ -28,7 +28,11 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/validate_model")
 async def train_model_endpoint(item: Item):
-    sklearn_model_validator = SklearnModelValidator()
+    sklearn_model_validator = SklearnModelValidator(
+        rmse_threshold=item.rmse_threshold,
+        size_test_split=item.size_test_split,
+        test_split_seed=item.test_split_seed
+    )
     json_data_loader = JSONDataLoader()
 
     validate_model_use_case = ValidateModel.build(
@@ -38,10 +42,7 @@ async def train_model_endpoint(item: Item):
     data_file_path = f'{item.raw_data_path}/{item.data_name}.json'
 
     try:
-        validate_model_use_case.execute(
-            data_file_path=data_file_path, rmse_threshold=item.rmse_threshold,
-            size_test_split=item.size_test_split, test_split_seed=item.test_split_seed
-        )
+        validate_model_use_case.execute(data_file_path=data_file_path)
         message = 'Model validated succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
