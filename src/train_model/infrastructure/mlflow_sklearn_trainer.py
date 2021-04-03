@@ -24,33 +24,44 @@ class MlflowSklearnTrainer(IModelTrainer):
     A class which implements the interface IModelTrainer to train a model.
     It trains the model using Scikit-learn, track the experiment in MLFlow, and
     register the model trained in MLFlow model registry.
+
+    :param transformer_pipe_path: Path where the transformer pipeline is stored
+    :type transformer_pipe_path: str
+    :param transformer_name: Name of the transformer pipeline stored
+    :type transformer_name: str
+    :param size_test_split: Percentage of test dataset when splitting the dataset
+    :type size_test_split: float
+    :param test_split_seed: Seed used when splitting the dataset
+    :type test_split_seed: int
+    :param alpha: Alpha hyperparameter of the elasticnet model
+    :type alpha: float
+    :param l1_ratio: L1 ratio hyperparameter of the elasticnet model
+    :type l1_ratio: float
+    :param model_seed: Seed used when training the model
+    :type model_seed: int
+    :param model_name: Name of the model used to track the experiment in MLFlow
+    :type model_name: str
     """
 
-    def train_model(self, data: dict, transformer_pipe_path: str, transformer_name: str,
-                    size_test_split: float, test_split_seed: int, alpha: float,
-                    l1_ratio: float, model_seed: int, model_name: str):
+    def __init__(self, transformer_pipe_path: str, transformer_name: str,
+                 size_test_split: float, test_split_seed: int, alpha: float,
+                 l1_ratio: float, model_seed: int, model_name: str):
+        self.transformer_pipe_path = transformer_pipe_path
+        self.transformer_name = transformer_name
+        self.size_test_split = size_test_split
+        self.test_split_seed = test_split_seed
+        self.alpha = alpha
+        self.l1_ratio = l1_ratio
+        self.model_seed = model_seed
+        self.model_name = model_name
+
+    def train_model(self, data: dict):
         """
         Train the model using Scikit-learn, track the experiment in MLFlow, and
         register the model trained in MLFlow model registry
 
         :param data: The dataset used for training and evaluate the model
         :type data: dict
-        :param transformer_pipe_path: Path where the transformer pipeline is stored
-        :type transformer_pipe_path: str
-        :param transformer_name: Name of the transformer pipeline stored
-        :type transformer_name: str
-        :param size_test_split: Percentage of test dataset when splitting the dataset
-        :type size_test_split: float
-        :param test_split_seed: Seed used when splitting the dataset
-        :type test_split_seed: int
-        :param alpha: Alpha hyperparameter of the elasticnet model
-        :type alpha: float
-        :param l1_ratio: L1 ratio hyperparameter of the elasticnet model
-        :type l1_ratio: float
-        :param model_seed: Seed used when training the model
-        :type model_seed: int
-        :param model_name: Name of the model used to track the experiment in MLFlow
-        :type model_name: str
         """
 
         logger.info('Training the model for MCPL prediction.')
@@ -67,7 +78,7 @@ class MlflowSklearnTrainer(IModelTrainer):
             X = data_df.drop("max_char_per_line", axis=1)
             y = data_df["max_char_per_line"]
             X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=size_test_split, random_state=test_split_seed
+                X, y, test_size=self.size_test_split, random_state=self.test_split_seed
             )
         except Exception as err:
             msg = f'Error getting target variable or splitting the dataset. Error: {err}'
@@ -76,8 +87,8 @@ class MlflowSklearnTrainer(IModelTrainer):
         # Transform training and test features.
         try:
             body = {
-                "transformer_pipe_path": transformer_pipe_path,
-                "pipe_name": transformer_name
+                "transformer_pipe_path": self.transformer_pipe_path,
+                "pipe_name": self.transformer_name
             }
             # Transform training features
             body.update({"data": X_train.to_dict(orient='list')})
@@ -106,8 +117,8 @@ class MlflowSklearnTrainer(IModelTrainer):
             with mlflow.start_run() as run:
 
                 # Define the model
-                model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio,
-                                   random_state=model_seed)
+                model = ElasticNet(alpha=self.alpha, l1_ratio=self.l1_ratio,
+                                   random_state=self.model_seed)
                 # Train the model
                 model.fit(X_train, y_train)
 
@@ -122,7 +133,8 @@ class MlflowSklearnTrainer(IModelTrainer):
                     y_train, y_train_predicted
                 )
 
-                logger.info(f'Model trained: alpha={alpha}, l1_ratio={l1_ratio}.')
+                logger.info(f'Model trained: alpha={self.alpha}, '
+                            f'l1_ratio={self.l1_ratio}.')
                 logger.info(f'Metrics train set: \nRMSE: {rmse_train} \nMAE: {mae_train}'
                             f' \nR2: {r2_train}')
                 logger.info(f'Metrics test set: \nRMSE: {rmse_test} \nMAE: {mae_test}'
@@ -130,11 +142,11 @@ class MlflowSklearnTrainer(IModelTrainer):
 
                 # Track information in MLflow (hyperparameters, metrics...)
                 # mlflow.log_params({})
-                mlflow.log_param("alpha", alpha)
-                mlflow.log_param("l1_ratio", l1_ratio)
-                mlflow.log_param("test_split_seed", test_split_seed)
-                mlflow.log_param("model_seed", model_seed)
-                mlflow.log_param("test_split_percent", size_test_split)
+                mlflow.log_param("alpha", self.alpha)
+                mlflow.log_param("l1_ratio", self.l1_ratio)
+                mlflow.log_param("test_split_seed", self.test_split_seed)
+                mlflow.log_param("model_seed", self.model_seed)
+                mlflow.log_param("test_split_percent", self.size_test_split)
                 # mlflow.log_metrics({})
                 mlflow.log_metric("rmse_train", rmse_train)
                 mlflow.log_metric("r2_train", r2_train)
@@ -151,15 +163,15 @@ class MlflowSklearnTrainer(IModelTrainer):
                 # mlflow.set_tag("raw_data_path", self.full_raw_data_path)
 
                 # Track the model and transformer pipeline in MLflow
-                mlflow.sklearn.log_model(sk_model=model, artifact_path=model_name)
+                mlflow.sklearn.log_model(sk_model=model, artifact_path=self.model_name)
                 # mlflow.log_artifact(local_path=self.full_transformer_path,
                 #                     artifact_path=self.model_name)
 
-                model_artifact_uri = mlflow.get_artifact_uri(model_name)
+                model_artifact_uri = mlflow.get_artifact_uri(self.model_name)
                 logger.info(f'Model artifact uri: {model_artifact_uri}')
 
                 # Register the model in MLflow registry (staged as None)
-                model_uri = f'runs:/{run.info.run_id}/{model_name}'
+                model_uri = f'runs:/{run.info.run_id}/{self.model_name}'
                 registered_model_info = mlflow.register_model(model_uri=model_uri,
                                                               name=REGISTRY_MODEL_NAME)
                 # Get the version of the model registered in MLflow registry
