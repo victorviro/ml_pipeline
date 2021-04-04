@@ -38,7 +38,9 @@ SIZE_TEST_SPLIT = 0.33
 TEST_SPLIT_SEED = 1
 TRAIN_MODEL_EXPERIMENT_NAME = 'Model Training'
 MLFLOW_TRACKING_URI = f'http://{os.getenv("MLFLOW_HOST")}:{os.getenv("MLFLOW_PORT")}'
+MLFLOW_API_URI = f'http://mlflow:{os.getenv("MLFLOW_PORT")}/api'
 MODEL_SEED = 42
+MLFLOW_API_ENDPOINT_LOG_BATCH = '2.0/mlflow/runs/log-batch'
 
 # Model validation
 RMSE_THRESOLD = 20

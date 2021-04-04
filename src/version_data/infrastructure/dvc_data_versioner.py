@@ -2,6 +2,8 @@ import logging
 import subprocess
 import os
 
+from dvc.api import get_url
+
 from src.version_data.domain.data_versioner import IDataVersioner
 
 
@@ -22,14 +24,16 @@ class DVCDataVersioner(IDataVersioner):
         self.git_remote_name = git_remote_name
         self.git_branch_name = git_branch_name
 
-    def version_data(self, data_file_path: str, data_version: float):
+    def version_data(self, data_file_path: str, data_version: float) -> dict:
         """
-        Version the dataset using DVC.
+        Version the dataset using DVC. It outputs a dict with information to track
 
         :param data_file_path: Path of the data file stored
         :type data_file_path: str
         :param data_version: Version of the data
         :type data_version: float
+        :return Information of data versioned to track
+        :type dict
         """
 
         # Track the data in DVC repository
@@ -70,3 +74,21 @@ class DVCDataVersioner(IDataVersioner):
 
         # TODO add command to push data versioned in dvc storage (`push dvc`)
         #  see documentation dvc
+
+        # Output information to track
+        relative_data_file_path = os.path.relpath(path=data_file_path, start=os.getcwd())
+        try:
+            dvc_data_path = get_url(path=relative_data_file_path, repo=os.getcwd())
+            logger.info('Data path in DVC storage gotten succesfully')
+        except Exception as err:
+            message = ('Error getting data path in DVC storage.'
+                       f'\nTraceback of error: {str(err)}')
+            logger.error(message)
+            raise Exception(message)
+
+        information_to_track = {
+            "dvc data path": dvc_data_path,
+            "data version": str(data_version),
+            "data file path": data_file_path
+        }
+        return information_to_track

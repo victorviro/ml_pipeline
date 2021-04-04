@@ -12,6 +12,7 @@ RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'
 TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
 MODELS_PATH = '/mcpl_prediction/models'
 TRANSFORMER_PIPE_PATH = '/mcpl_prediction/artifact_store'
+MLFLOW_RUN_ID = '71e21e1a70d84d60935c4f9b0b530e02'
 # logging.config.dictConfig(LOGGING_CONFIG)
 # logger = logging.getLogger("controller")
 
@@ -96,7 +97,8 @@ body = {
     'data_name': 'data',
     'data_version': 1.5,
     'git_remote_name': 'origin',
-    'git_branch_name': 'master'
+    'git_branch_name': 'master',
+    'mlflow_run_id': MLFLOW_RUN_ID
 }
 # Request to Fast API to train the model
 # url_api = 'http://0.0.0.0:1217/api/version_data'
