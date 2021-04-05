@@ -185,6 +185,10 @@ services:
       git config user.email victor_sanchez91@hotmail.es &&
       uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api \
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}"
+    environment:
+      MLFLOW_PORT: ${MLFLOW_PORT}
+
+
 # /bin/sh -c "./docker/use_cases/version_data/entrypoint_init_git.sh" &
 
   transform_data:
@@ -195,6 +199,8 @@ services:
       args:
         <<: *use_cases-common-args
         USE_CASE: ${USE_CASE_TRANSFORM_DATA}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
@@ -222,10 +228,7 @@ services:
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-      #- ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
       - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/
-      - ./${DVC_PATH}/:/${PROJECT_NAME}/${DVC_PATH}/
-      - ./${GIT_PATH}/:/${PROJECT_NAME}/${GIT_PATH}/
     ports:
       - ${PORT_TRAIN_MODEL}:${PORT_TRAIN_MODEL}
     command: >
