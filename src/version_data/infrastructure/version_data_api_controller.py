@@ -36,8 +36,7 @@ async def version_data_endpoint(item: Item):
     data_file_path = f"{item.data_path}/{item.data_name}.json"
     mlflow_api_tracker = MlflowApiTracker(
         run_id=item.mlflow_run_id,
-        key='tags',
-        url=f'{MLFLOW_API_URI}/{MLFLOW_API_ENDPOINT_LOG_BATCH}'
+        base_url=MLFLOW_API_URI
     )
 
     version_data_use_case = VersionTrackData.build(data_versioner=dvc_data_versioner,

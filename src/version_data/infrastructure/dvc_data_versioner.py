@@ -5,6 +5,8 @@ import os
 from dvc.api import get_url
 
 from src.version_data.domain.data_versioner import IDataVersioner
+from src.shared.interfaces.data_tracker import IDataTracker
+from src.shared.constants import MLFLOW_API_ENDPOINT_LOG_BATCH
 
 
 logger = logging.getLogger(__name__)
@@ -13,7 +15,8 @@ logger = logging.getLogger(__name__)
 class DVCDataVersioner(IDataVersioner):
     """
     A class which implements the interface IDataVersioner to version the dataset.
-    It versions the dataset using DVC.
+    It versions the dataset using DVC. And it tracks dataset information in an
+    experiment run.
 
     :param git_remote_name: Name of the remote to the git repository
     :type git_remote_name: str
@@ -24,16 +27,17 @@ class DVCDataVersioner(IDataVersioner):
         self.git_remote_name = git_remote_name
         self.git_branch_name = git_branch_name
 
-    def version_data(self, data_file_path: str, data_version: float) -> dict:
+    def version_data(self, data_file_path: str, data_version: float,
+                     data_tracker: IDataTracker) -> dict:
         """
-        Version the dataset using DVC. It outputs a dict with information to track
+        Version the dataset using DVC, and track info in a experiment run.
 
         :param data_file_path: Path of the data file stored
         :type data_file_path: str
         :param data_version: Version of the data
         :type data_version: float
-        :return Information of data versioned to track
-        :type dict
+        :param data_tracker: Object to track information in a experiment run
+        :type data_tracker: IDataTracker
         """
 
         # Track the data in DVC repository
@@ -75,7 +79,7 @@ class DVCDataVersioner(IDataVersioner):
         # TODO add command to push data versioned in dvc storage (`push dvc`)
         #  see documentation dvc
 
-        # Output information to track
+        # Get information to track
         relative_data_file_path = os.path.relpath(path=data_file_path, start=os.getcwd())
         try:
             dvc_data_path = get_url(path=relative_data_file_path, repo=os.getcwd())
@@ -91,4 +95,9 @@ class DVCDataVersioner(IDataVersioner):
             "data version": str(data_version),
             "data file path": data_file_path
         }
-        return information_to_track
+        # Track the information
+        data_tracker.track_items(
+            data=information_to_track,
+            item_type="tags",
+            endpoint=MLFLOW_API_ENDPOINT_LOG_BATCH
+        )
