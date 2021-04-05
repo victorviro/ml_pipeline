@@ -7,7 +7,8 @@ from sklearn.model_selection import train_test_split
 
 from .custom_transformation_sklearn import VariableRatioColsRowsAdder
 from src.transform_data.domain.transformation_fitter import ITransformationFitter
-
+from src.shared.interfaces.data_file_saver import IDataFileSaver
+from src.shared.interfaces.data_tracker import IDataTracker
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +23,15 @@ class SklearnTransformationFitter(ITransformationFitter):
     :param test_split_seed: Seed used when splitting the dataset
     :type test_split_seed: int
     """
-    def __init__(self, size_test_split: float, test_split_seed: int):
+    def __init__(self, size_test_split: float, test_split_seed: int,
+                 transformer_file_path: str, model_name: str):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
+        self.transformer_file_path = transformer_file_path
+        self.model_name = model_name
 
-    def fit_transformer(self, data: dict) -> Pipeline:
+    def fit_transformer(self, data: dict, data_file_saver: IDataFileSaver,
+                        data_tracker: IDataTracker) -> Pipeline:
         """
         Fit a Scikit-learn pipeline to transform data.
 
@@ -49,10 +54,31 @@ class SklearnTransformationFitter(ITransformationFitter):
             pipe = Pipeline([('add_ratio_cols_rows', VariableRatioColsRowsAdder()),
                              ('standard_scaler', StandardScaler())])
             transformer_pipeline = pipe.fit(X_train)
-            logger.info('Transformer pipeline fitte succesfully.')
-            return transformer_pipeline
+            logger.info('Transformer pipeline fitted succesfully.')
 
         except Exception as err:
             msg = f'Error fitting transfomer pipeline. Traceback: {err}'
             logger.error(msg)
             raise Exception(msg)
+
+        try:
+            # Save the transformer pipeline
+            data_file_saver.save_data(
+                file_path=self.transformer_file_path,
+                file=transformer_pipeline
+            )
+        except Exception as err:
+            raise Exception('Error saving the sklearn transformer pipeline in path: '
+                            f'{self.transformer_file_path}. Traceback: {err}')
+
+        try:
+            # Track the transformer pipeline as an artifact into the MLflow experiment
+            artifact_path = data_tracker.track_sklearn_transfomer_pipeline(
+                file_path=self.transformer_file_path,
+                model_name=self.model_name,
+                transformer_pipe=transformer_pipeline
+            )
+            return artifact_path
+        except Exception as err:
+            raise Exception('Error tracking the sklearn transformer pipeline. '
+                            f'Traceback: {err}')

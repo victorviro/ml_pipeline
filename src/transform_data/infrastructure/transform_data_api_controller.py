@@ -11,9 +11,9 @@ from src.transform_data.application.fit_transformer_use_case import FitTransform
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.shared.infrastructure.pickle_data_loader import PickleDataLoader
 from src.shared.infrastructure.pickle_data_saver import PickleDataSaver
+from src.shared.infrastructure.mlflow_tracker import MlflowTracker
 from .sklearn_data_transformer import SklearnDataTransformer
 from .sklearn_transformation_fitter import SklearnTransformationFitter
-from .mlflow_artifact_tracker import MlflowArtifactTracker
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -37,26 +37,27 @@ rest_api = FastAPI()
 @rest_api.post("/api/fit_transformer_pipeline")
 async def fit_transformer_pipeline_endpoint(item: FitItem):
     json_data_loader = JSONDataLoader()
+    transformer_file_path = f'{item.transformer_pipe_path}/{item.pipe_name}.pkl'
     sklearn_transformation_fitter = SklearnTransformationFitter(
         size_test_split=item.size_test_split,
-        test_split_seed=item.test_split_seed
+        test_split_seed=item.test_split_seed,
+        transformer_file_path=transformer_file_path,
+        model_name=item.model_name
     )
     pickle_data_saver = PickleDataSaver()
-    transformer_file_path = f'{item.transformer_pipe_path}/{item.pipe_name}.pkl'
     data_file_path = f'{item.data_path}/{item.data_name}.json'
 
-    mlflow_artifact_tracker = MlflowArtifactTracker(
-        run_id=item.mlflow_run_id,
-        model_name=item.model_name)
+    mlflow_tracker = MlflowTracker(
+        run_id=item.mlflow_run_id)
 
     fit_transformer_use_case = FitTransformer(
         data_file_loader=json_data_loader,
         transformation_fitter=sklearn_transformation_fitter,
         data_file_saver=pickle_data_saver,
-        data_tracker=mlflow_artifact_tracker
+        data_tracker=mlflow_tracker
     )
 
-    logger.info('Fitting transfomer...')
+    logger.info('Fitting and tracking data transfomer...')
 
     try:
         fit_transformer_use_case.execute(
