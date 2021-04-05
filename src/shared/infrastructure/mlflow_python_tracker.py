@@ -12,7 +12,7 @@ from src.shared.interfaces.data_tracker import IDataTracker
 logger = logging.getLogger(__name__)
 
 
-class MlflowTracker(IDataTracker):
+class MlflowPythonTracker(IDataTracker):
     """
     A class which implements the interface IDataTracker to track data to an experiment.
     It tracks data (metrics, models,...) into an MLflow experiment using the

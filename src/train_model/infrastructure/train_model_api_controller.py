@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from src.shared.logging_config import LOGGING_CONFIG
 from src.train_model.application.train_model_use_case import TrainModel
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
-from src.shared.infrastructure.mlflow_tracker import MlflowTracker
+from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 from.mlflow_sklearn_trainer import MlflowSklearnTrainer
 
 
@@ -40,12 +40,12 @@ async def train_model_endpoint(item: Item):
         model_seed=item.model_seed, model_name=item.model_name
     )
     json_data_loader = JSONDataLoader()
-    mlflow_tracker = MlflowTracker(run_id=item.mlflow_run_id)
+    mlflow_python_tracker = MlflowPythonTracker(run_id=item.mlflow_run_id)
 
     train_model_use_case = TrainModel.build(
         model_trainer=mlflow_sklearn_trainer,
         data_file_loader=json_data_loader,
-        data_tracker=mlflow_tracker
+        data_tracker=mlflow_python_tracker
     )
     data_file_path = f'{item.raw_data_path}/{item.data_name}.json'
 
