@@ -13,6 +13,7 @@ from src.shared.infrastructure.pickle_data_loader import PickleDataLoader
 from src.shared.infrastructure.pickle_data_saver import PickleDataSaver
 from .sklearn_data_transformer import SklearnDataTransformer
 from .sklearn_transformation_fitter import SklearnTransformationFitter
+from .mlflow_artifact_tracker import MlflowArtifactTracker
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -26,6 +27,8 @@ class FitItem(BaseModel):
     pipe_name: str
     size_test_split: float
     test_split_seed: int
+    model_name: str
+    mlflow_run_id: str
 
 
 rest_api = FastAPI()
@@ -42,24 +45,29 @@ async def fit_transformer_pipeline_endpoint(item: FitItem):
     transformer_file_path = f'{item.transformer_pipe_path}/{item.pipe_name}.pkl'
     data_file_path = f'{item.data_path}/{item.data_name}.json'
 
+    mlflow_artifact_tracker = MlflowArtifactTracker(
+        run_id=item.mlflow_run_id,
+        model_name=item.model_name)
+
     fit_transformer_use_case = FitTransformer(
         data_file_loader=json_data_loader,
         transformation_fitter=sklearn_transformation_fitter,
-        data_file_saver=pickle_data_saver
+        data_file_saver=pickle_data_saver,
+        data_tracker=mlflow_artifact_tracker
     )
 
-    logger.info('Fitting transfomer.')
+    logger.info('Fitting transfomer...')
 
     try:
         fit_transformer_use_case.execute(
             data_file_path=data_file_path,
             transformer_file_path=transformer_file_path
         )
-        message = 'Transformer pipeline fitted succesfully'
+        message = 'Transformer pipeline fitted and tracked succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
     except Exception as err:
-        message = f'Error fitting transformer pipeline: {str(err)}'
+        message = f'Error fitting or tracking transformer pipeline: {str(err)}'
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 

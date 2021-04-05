@@ -47,7 +47,9 @@ body = {
     'transformer_pipe_path': TRANSFORMER_PIPE_PATH,
     'pipe_name': 'transformer_pipeline',
     'size_test_split': 0.33,
-    'test_split_seed': 1
+    'test_split_seed': 1,
+    'model_name': MODEL_NAME,
+    'mlflow_run_id': MLFLOW_RUN_ID
 }
 # Request to Fast API to transform the data
 # url_api = 'http://0.0.0.0:1215/api/fit_transformer_pipeline'

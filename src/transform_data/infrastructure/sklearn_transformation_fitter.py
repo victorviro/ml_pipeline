@@ -49,6 +49,7 @@ class SklearnTransformationFitter(ITransformationFitter):
             pipe = Pipeline([('add_ratio_cols_rows', VariableRatioColsRowsAdder()),
                              ('standard_scaler', StandardScaler())])
             transformer_pipeline = pipe.fit(X_train)
+            logger.info('Transformer pipeline fitte succesfully.')
             return transformer_pipeline
 
         except Exception as err:
