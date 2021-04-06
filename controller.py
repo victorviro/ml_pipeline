@@ -114,7 +114,8 @@ body = {
     'data_name': DATASET_NAME,
     'size_test_split': 0.33,
     'test_split_seed': 1,
-    'rmse_threshold': RMSE_THRESOLD
+    'rmse_threshold': RMSE_THRESOLD,
+    'mlflow_run_id': MLFLOW_RUN_ID
 }
 # Request to Fast API to train the model
 # url_api = 'http://0.0.0.0:1218/api/validate_model'

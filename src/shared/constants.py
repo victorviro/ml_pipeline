@@ -41,6 +41,10 @@ MLFLOW_TRACKING_URI = f'http://{os.getenv("MLFLOW_HOST")}:{os.getenv("MLFLOW_POR
 MLFLOW_API_URI = f'http://mlflow:{os.getenv("MLFLOW_PORT")}/api'
 MODEL_SEED = 42
 MLFLOW_API_ENDPOINT_LOG_BATCH = '2.0/mlflow/runs/log-batch'
+MLFLOW_API_ENDPOINT_GET_RUN = '2.0/mlflow/runs/get'
+MLFLOW_API_ENDPOINT_SEARCH_MODEL_VERSIONS = '2.0/preview/mlflow/model-versions/search'
+MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE = ('2.0/preview/mlflow/model-versions/transition-'
+                                          'stage')
 
 # Model validation
 RMSE_THRESOLD = 20

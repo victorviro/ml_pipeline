@@ -1,18 +1,16 @@
 import logging
-from os import getcwd
-import json
-import requests
+from json import dumps, loads
+from requests import post
 
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
-import mlflow
-from mlflow.tracking import MlflowClient
 
 from src.shared.training_helper import get_regression_metrics
-from src.shared.constants import (REGISTRY_MODEL_NAME, URL_TRANSFORM_DATA_API,
-                                  TRANSFORMER_PIPELINE_NAME)
+from src.shared.constants import (URL_TRANSFORM_DATA_API,
+                                  TRANSFORMER_PIPELINE_NAME, MODEL_NAME)
 from src.validate_model.domain.model_validator import IModelValidator
-
+from src.shared.interfaces.data_tracker import IDataTracker
+from src.shared.interfaces.data_file_loader import IDataFileLoader
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +35,8 @@ class SklearnModelValidator(IModelValidator):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
 
-    def validate_model(self, data: dict):
+    def validate_model(self, data: dict, data_tracker: IDataTracker,
+                       model_file_loader: IDataFileLoader):
         """
         Validate the model if the root mean squared error (rmse) in the test set
         is smaller than a value given. If the model is validated, its stage is updated
@@ -45,9 +44,11 @@ class SklearnModelValidator(IModelValidator):
 
         :param data: The dataset used to validate the model (before splitting it)
         :type data: dict
+        :param data_tracker: A data tracker to track info of the experiment
+        :type data_tracker: IDataTracker
+        :param model_file_loader: A data loader to load the model trained
+        :type model_file_loader: IDataFileLoader
         """
-
-        logger.info(f'Validating model')
 
         # Convert dataset to pandas DataFrame
         try:
@@ -65,35 +66,24 @@ class SklearnModelValidator(IModelValidator):
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=self.size_test_split, random_state=self.test_split_seed
             )
+            logger.info(f'Dataset splitted succesfully.')
         except Exception as err:
             msg = f'Error getting target variable or splitting data. Error: {err}'
             logger.error(msg)
             raise Exception(msg)
-        # Get info of the experiment from MLflow
+        # Get the artifacts path of the MLflow experiment run
+        tracked_artifacts_path = data_tracker.get_artifacts_path()
         try:
-            client = MlflowClient()
-            # Get info of the last model registered in MLflow Registry stagged as None
-            registered_models = client.get_latest_versions(REGISTRY_MODEL_NAME,
-                                                           stages=["None"])
-            version_model_registered = registered_models[0].version
-            logger.info(f'Registered model version: {version_model_registered}')
-            relative_model_path = registered_models[0].source
-        except Exception as err:
-            msg = f'Error getting info of experiment in MLflow. Error: {err}'
-            logger.error(msg)
-            raise Exception(msg)
-
-        # Transform test features.
-        try:
+            # Transform test features.
             body = {
-                "transformer_pipe_path": f'{getcwd()}/{relative_model_path}',
-                "pipe_name": TRANSFORMER_PIPELINE_NAME
+                "transformer_pipe_path": tracked_artifacts_path,
+                "pipe_name": TRANSFORMER_PIPELINE_NAME,
+                "data": X_test.to_dict(orient='list')
             }
-            # Transform test features
-            body.update({"data": X_test.to_dict(orient='list')})
-            request = requests.post(URL_TRANSFORM_DATA_API, data=json.dumps(body))
-            content = json.loads(request.content.decode('utf-8'))
-            X_test = DataFrame(content["data"])
+            request = post(URL_TRANSFORM_DATA_API, data=dumps(body))
+            content = loads(request.content.decode('utf-8'))
+            X_test_transormed = DataFrame(content["data"])
+            logger.info(f'Test features transformed succesfully.')
         except Exception as err:
             msg = f'Error transforming test features. Error: {err}'
             logger.error(msg)
@@ -102,9 +92,9 @@ class SklearnModelValidator(IModelValidator):
         # Load the trained model, make predictions and compute metrics on the test set
         try:
             # Load the model registered in MLflow
-            model_uri = f'models:/{REGISTRY_MODEL_NAME}/{version_model_registered}'
-            model = mlflow.sklearn.load_model(model_uri=model_uri)
-            y_test_predicted = model.predict(X_test)
+            model_file_path = f'{tracked_artifacts_path}/{MODEL_NAME}.pkl'
+            model = model_file_loader.load_data(file_path=model_file_path)
+            y_test_predicted = model.predict(X_test_transormed)
             (rmse, mae, r2) = get_regression_metrics(y_test, y_test_predicted)
 
         except Exception as err:
@@ -123,18 +113,5 @@ class SklearnModelValidator(IModelValidator):
             msg = ('Square root of mean squared error smaller that the thresold fixed:'
                    f' {rmse} < thresold fixed = {self.rmse_threshold}')
             logger.info(f'Model validated succesfully in test set: {msg}')
-            try:
-                # Update the stage of the model to "Staging" in MLflow model registry
-                client.transition_model_version_stage(
-                        name=REGISTRY_MODEL_NAME,
-                        version=version_model_registered,
-                        stage="Staging"
-                )
-                logger.info('Updated stage of model registered in MLflow registry to '
-                            f'Staging. Name: {REGISTRY_MODEL_NAME}. '
-                            f'Version: {version_model_registered}')
-            except Exception as err:
-                msg = ('Error updating the model"s stage in MLflow Registry to "Stagging"'
-                       f'. Traceback of error: {err}')
-                logger.error(msg)
-                raise Exception(msg)
+            # Update the stage of the model to "Staging" in MLflow model registry
+            data_tracker.transition_model_version_stage(stage='Staging')
