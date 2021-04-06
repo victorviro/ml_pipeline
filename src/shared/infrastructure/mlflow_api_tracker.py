@@ -7,7 +7,8 @@ from src.shared.interfaces.data_tracker import IDataTracker
 from src.shared.constants import (MODEL_NAME, MLFLOW_API_ENDPOINT_GET_RUN,
                                   MLFLOW_API_ENDPOINT_SEARCH_MODEL_VERSIONS,
                                   REGISTRY_MODEL_NAME,
-                                  MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE)
+                                  MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE,
+                                  MLFLOW_API_URI, MLFLOW_API_ENDPOINT_LOG_BATCH)
 
 
 logger = logging.getLogger(__name__)
@@ -23,9 +24,9 @@ class MlflowApiTracker(IDataTracker):
     :param base_url: The base url of the MLflow Rest API
     :type base_url: str
     """
-    def __init__(self, run_id: str, base_url: str):
+    def __init__(self, run_id: str = None):
         self.run_id = run_id
-        self.base_url = base_url
+        self.base_url = MLFLOW_API_URI
 
     def track_data(self):
         return NotImplementedError
@@ -66,7 +67,7 @@ class MlflowApiTracker(IDataTracker):
             logger.error(message)
             raise Exception(message)
 
-    def track_items(self, data: dict, item_type: str, endpoint: str):
+    def track_items(self, data: dict, item_type: str):
         """
         Track items (params, metrics or tags) into an MLflow experiment run.
 
@@ -74,8 +75,6 @@ class MlflowApiTracker(IDataTracker):
         :type data: dict
         :param item_type: The type of items to track (tags/metrics/params)
         :type item_type: str
-        :param endpoint: The endpoint of the MLflow Rest API to log batches of items
-        :type endpoint: str
         """
 
         try:
@@ -90,7 +89,8 @@ class MlflowApiTracker(IDataTracker):
                 item_type: items_to_track
             }
             # Launch the post request to track the information in the experiment run
-            self.launch_request(endpoint=endpoint, body=body, request_type='post')
+            self.launch_request(endpoint=MLFLOW_API_ENDPOINT_LOG_BATCH, body=body,
+                                request_type='post')
         except Exception as err:
             message = (f'Error tracking {item_type} in a MLflow experiment run using the '
                        f'MLflow Rest Api.\nTraceback of error: {str(err)}')

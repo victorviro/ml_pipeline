@@ -6,7 +6,6 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.shared.constants import MLFLOW_API_URI
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.validate_model.application.validate_model_use_case import ValidateModel
 from src.shared.infrastructure.pickle_data_loader import PickleDataLoader
@@ -39,8 +38,7 @@ async def train_model_endpoint(item: Item):
     )
     json_data_loader = JSONDataLoader()
     pickle_data_loader = PickleDataLoader()
-    mlflow_api_tracker = MlflowApiTracker(run_id=item.mlflow_run_id,
-                                          base_url=MLFLOW_API_URI)
+    mlflow_api_tracker = MlflowApiTracker(run_id=item.mlflow_run_id)
 
     validate_model_use_case = ValidateModel.build(
         model_validator=sklearn_model_validator,

@@ -6,7 +6,6 @@ from dvc.api import get_url
 
 from src.version_data.domain.data_versioner import IDataVersioner
 from src.shared.interfaces.data_tracker import IDataTracker
-from src.shared.constants import MLFLOW_API_ENDPOINT_LOG_BATCH
 
 
 logger = logging.getLogger(__name__)
@@ -98,6 +97,5 @@ class DVCDataVersioner(IDataVersioner):
         # Track the information
         data_tracker.track_items(
             data=information_to_track,
-            item_type="tags",
-            endpoint=MLFLOW_API_ENDPOINT_LOG_BATCH
+            item_type="tags"
         )
