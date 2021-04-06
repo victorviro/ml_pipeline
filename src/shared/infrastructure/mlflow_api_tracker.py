@@ -8,7 +8,8 @@ from src.shared.constants import (MODEL_NAME, MLFLOW_API_ENDPOINT_GET_RUN,
                                   MLFLOW_API_ENDPOINT_SEARCH_MODEL_VERSIONS,
                                   REGISTRY_MODEL_NAME,
                                   MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE,
-                                  MLFLOW_API_URI, MLFLOW_API_ENDPOINT_LOG_BATCH)
+                                  MLFLOW_API_URI, MLFLOW_API_ENDPOINT_LOG_BATCH,
+                                  MLFLOW_API_ENDPOINT_LATEST_MODEL_VERSION)
 
 
 logger = logging.getLogger(__name__)
@@ -171,6 +172,45 @@ class MlflowApiTracker(IDataTracker):
         except Exception as err:
             message = (f'Error updating stage of model {REGISTRY_MODEL_NAME} version '
                        f'{version_model_registered} in MLflow Registry '
+                       f'using the MLflow Rest Api.\nTraceback of error: {str(err)}')
+            logger.error(message)
+            raise Exception(message)
+
+    def get_artifacts_path_of_latest_model_version(self, name: str, stage: str) -> str:
+        """
+        Get the path of the artifacts stored in the latest model version in stage
+        "Staging" from MLflow Model Registry.
+
+        :param name: The registered model name
+        :type name: str
+        :param stage: The stage of the model version in MLflow Model Registry
+        :type stage: str
+        :return: The artifacts path
+        :rtype: str
+        """
+        try:
+            # Prepare the body of the request
+            body = {
+                "name": name,
+                "stages": [stage]
+            }
+            # Launch the request to get info of latest model versions
+            request = self.launch_request(
+                endpoint=MLFLOW_API_ENDPOINT_LATEST_MODEL_VERSION,
+                body=body, request_type='get'
+            )
+            content = loads(request.content.decode('utf-8'))
+            relative_artifacts_path = content["model_versions"][0]["source"]
+            artifact_paths = f'{getcwd()}/{relative_artifacts_path}'
+            version_model_registered = content["model_versions"][0]["version"]
+            logger.info('Gotten info of the latest model registered in MLflow registry'
+                        f' with stage {stage}. Name: {name}. '
+                        f'Version: {version_model_registered}')
+            return artifact_paths
+        except Exception as err:
+            message = (f'Error getting info of the latest model registered in MLflow '
+                       f'Registry with stage {stage}, name: {name}, '
+                       f'version {version_model_registered}, '
                        f'using the MLflow Rest Api.\nTraceback of error: {str(err)}')
             logger.error(message)
             raise Exception(message)

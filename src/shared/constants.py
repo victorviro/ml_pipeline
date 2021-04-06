@@ -45,6 +45,8 @@ MLFLOW_API_ENDPOINT_GET_RUN = '2.0/mlflow/runs/get'
 MLFLOW_API_ENDPOINT_SEARCH_MODEL_VERSIONS = '2.0/preview/mlflow/model-versions/search'
 MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE = ('2.0/preview/mlflow/model-versions/transition-'
                                           'stage')
+MLFLOW_API_ENDPOINT_LATEST_MODEL_VERSION = ('2.0/preview/mlflow/registered-models/get-'
+                                            'latest-versions')
 
 # Model validation
 RMSE_THRESOLD = 20
