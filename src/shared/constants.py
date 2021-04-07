@@ -37,9 +37,10 @@ URL_DATA_MCPL_QUOTES_IMAGE_API = (f'http://{os.getenv("HOST_QUOTES_IMAGE_API")}:
 SIZE_TEST_SPLIT = 0.33
 TEST_SPLIT_SEED = 1
 TRAIN_MODEL_EXPERIMENT_NAME = 'Model Training'
-MLFLOW_TRACKING_URI = f'http://{os.getenv("MLFLOW_HOST")}:{os.getenv("MLFLOW_PORT")}'
-MLFLOW_API_URI = f'http://mlflow:{os.getenv("MLFLOW_PORT")}/api'
 MODEL_SEED = 42
+
+# MLflow
+MLFLOW_API_URI = f'{os.getenv("MLFLOW_TRACKING_URI")}/api'
 MLFLOW_API_ENDPOINT_LOG_BATCH = '2.0/mlflow/runs/log-batch'
 MLFLOW_API_ENDPOINT_GET_RUN = '2.0/mlflow/runs/get'
 MLFLOW_API_ENDPOINT_SEARCH_MODEL_VERSIONS = '2.0/preview/mlflow/model-versions/search'

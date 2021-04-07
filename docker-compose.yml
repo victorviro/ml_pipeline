@@ -170,6 +170,8 @@ services:
       args:
         <<: *use_cases-common-args
         USE_CASE: ${USE_CASE_VERSION_DATA}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
@@ -185,10 +187,6 @@ services:
       git config user.email victor_sanchez91@hotmail.es &&
       uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api \
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}"
-    environment:
-      MLFLOW_PORT: ${MLFLOW_PORT}
-
-
 # /bin/sh -c "./docker/use_cases/version_data/entrypoint_init_git.sh" &
 
   transform_data:
@@ -223,6 +221,9 @@ services:
         USE_CASE: ${USE_CASE_TRAIN_MODEL}
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      HOST_TRANSFORM_DATA: ${HOST_TRANSFORM_DATA}
+      PORT_TRANSFORM_DATA: ${PORT_TRANSFORM_DATA}
+      ENDPOINT_TRANSFORM_DATA: ${ENDPOINT_TRANSFORM_DATA}
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
@@ -234,9 +235,6 @@ services:
     command: >
       uvicorn src.${USE_CASE_TRAIN_MODEL}.infrastructure.${API_FILE_TRAIN_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_TRAIN_MODEL}
-    env_file: 
-      .env
-      # env variables to build the URL_TRANSFORM_DATA_API in constants
 
   validate_model:
     <<: *use_cases-common
@@ -248,6 +246,9 @@ services:
         USE_CASE: ${USE_CASE_VALIDATE_MODEL}
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      HOST_TRANSFORM_DATA: ${HOST_TRANSFORM_DATA}
+      PORT_TRANSFORM_DATA: ${PORT_TRANSFORM_DATA}
+      ENDPOINT_TRANSFORM_DATA: ${ENDPOINT_TRANSFORM_DATA}
     volumes: 
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
@@ -259,9 +260,7 @@ services:
     command: >
       uvicorn src.${USE_CASE_VALIDATE_MODEL}.infrastructure.${API_FILE_VALIDATE_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_MODEL}
-    env_file: 
-      .env
-      # env variables to build the URL_TRANSFORM_DATA_API in constants
+
 
   serve_model:
     <<: *use_cases-common
@@ -273,6 +272,9 @@ services:
         USE_CASE: ${USE_CASE_SERVE_MODEL}
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      HOST_TRANSFORM_DATA: ${HOST_TRANSFORM_DATA}
+      PORT_TRANSFORM_DATA: ${PORT_TRANSFORM_DATA}
+      ENDPOINT_TRANSFORM_DATA: ${ENDPOINT_TRANSFORM_DATA}
     volumes: 
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
@@ -283,9 +285,6 @@ services:
     command: >
       uvicorn src.${USE_CASE_SERVE_MODEL}.infrastructure.${API_FILE_SERVE_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_SERVE_MODEL}
-    env_file: 
-      .env
-      #env variables to build the URL_TRANSFORM_DATA_API in constants
   # endregion
 
 
