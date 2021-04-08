@@ -2,6 +2,7 @@ from json import dumps, loads
 from requests import post, get
 import logging
 from os import getcwd
+from time import time
 
 from src.shared.interfaces.data_tracker import IDataTracker
 from src.shared.constants import (MODEL_NAME, MLFLOW_API_ENDPOINT_GET_RUN,
@@ -9,7 +10,9 @@ from src.shared.constants import (MODEL_NAME, MLFLOW_API_ENDPOINT_GET_RUN,
                                   REGISTRY_MODEL_NAME,
                                   MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE,
                                   MLFLOW_API_URI, MLFLOW_API_ENDPOINT_LOG_BATCH,
-                                  MLFLOW_API_ENDPOINT_LATEST_MODEL_VERSION)
+                                  MLFLOW_API_ENDPOINT_LATEST_MODEL_VERSION,
+                                  MLFLOW_API_ENDPOINT_GET_EXPERIMENT_BY_NAME,
+                                  MLFLOW_API_ENDPOINT_CREATE_RUN)
 
 
 logger = logging.getLogger(__name__)
@@ -52,11 +55,10 @@ class MlflowApiTracker(IDataTracker):
             if request_type == 'get':
                 request = get(url, data=dumps(body))
                 message = 'Gotten experiment information from MLflow succesfully.'
-                return request
 
             if request.status_code == 200:
                 logger.info(f'{message} Run id: {self.run_id}')
-
+                return request
             else:
                 msg = (f'Request {request_type} error: Status code: {request.status_code}'
                        f'. Content: {request.content}')
@@ -214,3 +216,73 @@ class MlflowApiTracker(IDataTracker):
                        f'using the MLflow Rest Api.\nTraceback of error: {str(err)}')
             logger.error(message)
             raise Exception(message)
+
+    def get_experiment_id_by_name(self, experiment_name: str) -> str:
+        """
+        Get the experiment id given the experiment name.
+
+        :param experiment_name: The name of the experiment
+        :type experiment_name: str
+        :return: The id of the experiment
+        :rtype: str
+        """
+        try:
+            # Prepare the body of the request
+            body = {"experiment_name": experiment_name}
+            # Launch the request to get the experiment info
+            request = self.launch_request(
+                endpoint=MLFLOW_API_ENDPOINT_GET_EXPERIMENT_BY_NAME,
+                body=body, request_type='get'
+            )
+            content = loads(request.content.decode('utf-8'))
+            experiment_id = content["experiment"]["experiment_id"]
+            return experiment_id
+        except Exception as err:
+            message = (f'Error getting the experiment id by an experiment name '
+                       f'using the MLflow Rest Api.\nTraceback of error: {str(err)}')
+            logger.error(message)
+            raise Exception(message)
+
+    def create_run_by_experiment_id(self, experiment_id: str) -> str:
+        """
+        Create a run of an experiment given the experiment id.
+
+        :param experiment_id: The id of the experiment
+        :type experiment_id: str
+        :return: The id of the run created
+        :rtype: str
+        """
+        try:
+            # Prepare the body of the request
+            body = {
+                "experiment_id": experiment_id,
+                "start_time": round(time() * 1000)
+            }
+            # Launch the request to get the experiment info
+            request = self.launch_request(
+                endpoint=MLFLOW_API_ENDPOINT_CREATE_RUN,
+                body=body, request_type='post'
+            )
+            content = loads(request.content.decode('utf-8'))
+            run_id = content["run"]["info"]["run_id"]
+            return run_id
+        except Exception as err:
+            message = (f'Error creating a run in experiment with id {experiment_id} '
+                       f'using the MLflow Rest Api.\nTraceback of error: {str(err)}')
+            logger.error(message)
+            raise Exception(message)
+
+    def create_run_by_experiment_name(self, experiment_name: str) -> str:
+        """
+        Create a run of an experiment given the experiment name.
+
+        :param experiment_name: The name of the experiment
+        :type experiment_name: str
+        :return: The id of the run created
+        :rtype: str
+        """
+        # Get the experiment id by experiment name
+        experiment_id = self.get_experiment_id_by_name(experiment_name)
+        # Create a run of the experiment given the experiment id
+        run_id = self.create_run_by_experiment_id(experiment_id=experiment_id)
+        return run_id

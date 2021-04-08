@@ -48,6 +48,8 @@ MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE = ('2.0/preview/mlflow/model-versions/tra
                                           'stage')
 MLFLOW_API_ENDPOINT_LATEST_MODEL_VERSION = ('2.0/preview/mlflow/registered-models/get-'
                                             'latest-versions')
+MLFLOW_API_ENDPOINT_CREATE_RUN = '2.0/mlflow/runs/create'
+MLFLOW_API_ENDPOINT_GET_EXPERIMENT_BY_NAME = '2.0/mlflow/experiments/get-by-name'
 
 # Model validation
 RMSE_THRESOLD = 20
