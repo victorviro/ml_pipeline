@@ -14,8 +14,10 @@ x-airflow-common:
       AIRFLOW__CORE__DAGS_FOLDER: /${PROJECT_NAME}/${PROJECT_SRC}/airflow_dags
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_EXECUTOR}
       PYTHONPATH: /${PROJECT_NAME}
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
   volumes:
-    - ./${PROJECT_SRC}/shared/constants.py:/${PROJECT_NAME}/${PROJECT_SRC}/shared/constants.py
+    #- ./${PROJECT_SRC}/shared/constants.py:/${PROJECT_NAME}/${PROJECT_SRC}/shared/constants.py
+    - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
     - ./${PROJECT_SRC}/airflow_dags/pipeline_apis.py:/${PROJECT_NAME}/${PROJECT_SRC}/airflow_dags/pipeline_apis.py
     - ./${PROJECT_SRC}/airflow_dags/logs:/root/airflow/logs
   restart: always
