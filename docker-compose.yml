@@ -72,10 +72,10 @@ services:
       args:
         PROJECT_NAME: ${PROJECT_NAME}
         PROJECT_SRC: ${PROJECT_SRC}
-        JUPYTER_PORT: ${JUPYTER_PORT}
-        JUPYTER_HOST: ${JUPYTER_HOST}
     environment:
       PYTHONPATH: /${PROJECT_NAME}
+      JUPYTER_PORT: ${JUPYTER_PORT}
+      JUPYTER_HOST: ${JUPYTER_HOST}
     ports:
       - ${JUPYTER_PORT}:${JUPYTER_PORT}
     volumes:
