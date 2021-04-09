@@ -95,11 +95,12 @@ services:
     restart: always
     ports:
       - ${MLFLOW_PORT}:${MLFLOW_PORT}
-    command: >
-      mlflow server --backend-store-uri postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:$POSTGRES_PORT/$POSTGRES_MLFLOW_DB 
-        --default-artifact-root $ARTIFACT_STORE_PATH
-        --host $MLFLOW_HOST 
-        --port $MLFLOW_PORT 
+    environment:
+      MLFLOW_SQL_ALCHEMY_CONN: "postgresql://${POSTGRES_USER}:\
+        ${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_MLFLOW_DB}"
+      ARTIFACT_STORE_PATH: ${ARTIFACT_STORE_PATH}
+      MLFLOW_HOST: ${MLFLOW_HOST}
+      MLFLOW_PORT: ${MLFLOW_PORT}
     volumes:
       - ./${ARTIFACT_STORE_PATH}:/${PROJECT_NAME}/${ARTIFACT_STORE_PATH}
     depends_on:
