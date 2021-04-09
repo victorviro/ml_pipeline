@@ -113,17 +113,17 @@ services:
     build:
       context: .
       dockerfile: ./docker/postgres/Dockerfile
-      args:
-        POSTGRES_DB: ${POSTGRES_DB}
-        POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_MLFLOW_DB: ${POSTGRES_MLFLOW_DB}
+      POSTGRES_AIRFLOW_DB: ${POSTGRES_AIRFLOW_DB}
     restart: always
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
       - vol_postres:/var/lib/postgresql/data
-    env_file:
-      - .env
 
   # region Use cases
   validate_data:
