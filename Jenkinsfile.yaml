@@ -38,6 +38,8 @@ pipeline:
         - "recordIssues(tool: pyLint(pattern: 'output/pylint.report'), enabledForFailure: true, unstableTotalAll: 500, failedTotalAll: 700)"
         - "recordIssues(tool: pep8(pattern: 'output/pep8.report'), enabledForFailure: true, unstableTotalAll: 20, failedTotalAll: 30)"
         - "recordIssues(tool: flake8(pattern: 'output/flake8.report'), unstableTotalAll: 20, failedTotalAll: 30)"
+        - "junit(testResults: 'output/tests/tests.xml')"
+        - "cobertura(coberturaReportFile: 'output/coverage/coverage.xml')"
 
   post:
     always:
