@@ -1,19 +1,34 @@
 pipeline:
   agent: any
+
   options:
     - "ansiColor('xterm')"
+    
   stages:
     - stage: "Checkout project"
       steps:
         script:
           - "checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github', url: env.GIT_URL]]])"
+
+    - stage: "Prepare environment"
+      steps:
+        - sh "python3 -m virtualenv venv"
+
     - stage: "Install dependencies"
       steps:
-        - sh "python3 -m pip install --upgrade pip"
-        - sh "make install-test"
+        script:
+          - withPythonEnv: "'venv/'"
+            script:
+              - sh "python3 -m pip install --upgrade pip"
+              - sh "make install-test"
+
     - stage: "Run tests"
       steps:
-        - sh "make test"
+        script:
+          - withPythonEnv: "'venv/'"
+            script:
+              - sh "make test"
+
   post:
     always:
       - "cleanWs()"
