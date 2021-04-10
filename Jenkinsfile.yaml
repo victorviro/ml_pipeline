@@ -3,13 +3,8 @@ pipeline:
 
   options:
     - "ansiColor('xterm')"
-    
-  stages:
-    - stage: "Checkout project"
-      steps:
-        script:
-          - "checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[credentialsId: 'github', url: env.GIT_URL]]])"
 
+  stages:
     - stage: "Prepare environment"
       steps:
         - sh "python3 -m virtualenv venv"
