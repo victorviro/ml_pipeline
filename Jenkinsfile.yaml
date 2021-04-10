@@ -24,6 +24,21 @@ pipeline:
             script:
               - sh "make test"
 
+    - stage: "Generate reports"
+      steps:
+        script:
+          - withPythonEnv: "'venv/'"
+            script:
+              - sh "pylint --max-line-length=90 --disable=missing-docstring,missing-import --exit-zero --output-format=parseable src tests > output/pylint.report"
+              - sh "pycodestyle --max-line-length=90 src tests > output/pep8.report"
+              - sh "flake8 --max-line-length=90 src tests > output/flake8.report || true"
+
+    - stage: "Record reports"
+      steps:
+        - "recordIssues(tool: pyLint(pattern: 'output/pylint.report'), enabledForFailure: true, unstableTotalAll: 500, failedTotalAll: 700)"
+        - "recordIssues(tool: pep8(pattern: 'output/pep8.report'), enabledForFailure: true, unstableTotalAll: 20, failedTotalAll: 30)"
+        - "recordIssues(tool: flake8(pattern: 'output/flake8.report'), unstableTotalAll: 20, failedTotalAll: 30)"
+
   post:
     always:
       - "cleanWs()"
