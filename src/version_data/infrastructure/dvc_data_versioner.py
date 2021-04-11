@@ -26,17 +26,16 @@ class DVCDataVersioner(IDataVersioner):
         self.git_remote_name = git_remote_name
         self.git_branch_name = git_branch_name
 
-    def version_data(self, data_file_path: str, data_version: float,
-                     data_tracker: IDataTracker) -> dict:
+    def version_data(self, data_file_path: str, data_version: float) -> dict:
         """
-        Version the dataset using DVC, and track info in a experiment run.
+        Version the dataset using DVC, and return info.
 
         :param data_file_path: Path of the data file stored
         :type data_file_path: str
         :param data_version: Version of the data
         :type data_version: float
-        :param data_tracker: Object to track information in a experiment run
-        :type data_tracker: IDataTracker
+        :return Information to track
+        :type dict
         """
 
         # Track the data in DVC repository
@@ -94,8 +93,4 @@ class DVCDataVersioner(IDataVersioner):
             "data version": str(data_version),
             "data file path": data_file_path
         }
-        # Track the information
-        data_tracker.track_items(
-            data=information_to_track,
-            item_type="tags"
-        )
+        return information_to_track

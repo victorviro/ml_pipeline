@@ -6,8 +6,9 @@ from src.shared.interfaces.data_tracker import IDataTracker
 
 class VersionTrackData:
     """
-    Class to version and track the dataset in some way by calling the method
-    `version_data` of object IDataVersioner.
+    Class to version the dataset in some way by calling the method
+    `version_data` of object IDataVersioner. It also track information by calling
+    the method `track_items` of object IDataTracker.
 
     :param data_versioner: Object with a method to download data
     :type data_versioner: IDataVersioner
@@ -23,12 +24,13 @@ class VersionTrackData:
         if not os.path.exists(data_file_path):
             raise Exception('Path of data file does not exist: '
                             f'"{data_file_path}"')
-        # Version and track the dataset (return info to track)
+        # Version the dataset (return info to track)
         information_to_track = self.data_versioner.version_data(
             data_file_path=data_file_path,
-            data_version=data_version,
-            data_tracker=self.data_tracker
+            data_version=data_version
         )
+        # Track info in a experiment run
+        self.data_tracker.track_items(data=information_to_track, item_type="tags")
 
     @staticmethod
     def build(data_versioner: IDataVersioner, data_tracker: IDataTracker):
