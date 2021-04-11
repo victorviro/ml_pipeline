@@ -51,17 +51,16 @@ class MlflowApiTracker(IDataTracker):
         try:
             if request_type == 'post':
                 request = post(url, data=dumps(body))
-                message = 'Tracked experiment information in MLflow succesfully.'
             if request_type == 'get':
                 request = get(url, data=dumps(body))
-                message = 'Gotten experiment information from MLflow succesfully.'
 
             if request.status_code == 200:
-                logger.info(f'{message} Run id: {self.run_id}')
+                message = f'Request {request_type} using the MLflow rest api succeeded.'
+                logger.info(f'{message}')
                 return request
             else:
-                msg = (f'Request {request_type} error: Status code: {request.status_code}'
-                       f'. Content: {request.content}')
+                msg = (f'Request {request_type} error using the MLflow rest api: Status '
+                       f'code: {request.status_code}. Content: {request.content}')
                 raise Exception(msg)
 
         except Exception as err:
@@ -236,6 +235,8 @@ class MlflowApiTracker(IDataTracker):
             )
             content = loads(request.content.decode('utf-8'))
             experiment_id = content["experiment"]["experiment_id"]
+            logger.info(f'MLflow experiment id gotten {experiment_id} succesfully given '
+                        f'the experiment name {experiment_name}.')
             return experiment_id
         except Exception as err:
             message = (f'Error getting the experiment id by an experiment name '
@@ -265,6 +266,8 @@ class MlflowApiTracker(IDataTracker):
             )
             content = loads(request.content.decode('utf-8'))
             run_id = content["run"]["info"]["run_id"]
+            logger.info(f'Created MLflow experiment run with id {run_id} succesfully '
+                        f'given the experiment id {experiment_id}.')
             return run_id
         except Exception as err:
             message = (f'Error creating a run in experiment with id {experiment_id} '
