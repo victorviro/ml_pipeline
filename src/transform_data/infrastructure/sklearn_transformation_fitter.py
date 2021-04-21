@@ -5,7 +5,9 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-from .custom_transformation_sklearn import VariableRatioColsRowsAdder
+from src.shared.infrastructure.custom_transformation_sklearn import (
+    VariableRatioColsRowsAdder
+)
 from src.transform_data.domain.transformation_fitter import ITransformationFitter
 from src.shared.interfaces.data_file_saver import IDataFileSaver
 from src.shared.interfaces.data_tracker import IDataTracker
