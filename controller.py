@@ -77,10 +77,10 @@ print(request.content)
 body = {
     'raw_data_path': RAW_DATA_PATH,
     'data_name': DATASET_NAME,
+    'transformer_pipe_path': TRANSFORMER_PIPE_PATH,
     'alpha': 0.1,
     'l1_ratio': 0.1,
     'transformer_name': TRANSFORMER_PIPELINE_NAME,
-    'model_name': MODEL_NAME,
     'size_test_split': 0.33,
     'test_split_seed': 1,
     'model_seed': 42,

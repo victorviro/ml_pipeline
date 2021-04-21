@@ -1,28 +1,22 @@
 import logging
-from requests import post
-from json import loads, dumps
 
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet
+from sklearn.pipeline import Pipeline
 
-from src.shared.constants import REGISTRY_MODEL_NAME, URL_TRANSFORM_DATA_API
 from src.train_model.domain.model_trainer import IModelTrainer
-from src.shared.interfaces.data_tracker import IDataTracker
 from src.shared.training_helper import get_regression_metrics
 
 
 logger = logging.getLogger(__name__)
 
 
-class MlflowSklearnTrainer(IModelTrainer):
+class SklearnModelTrainer(IModelTrainer):
     """
     A class which implements the interface IModelTrainer to train a model.
-    It trains the model using Scikit-learn, track the experiment in MLFlow, and
-    register the model trained in MLFlow model registry.
+    It trains the model using Scikit-learn.
 
-    :param transformer_name: Name of the transformer pipeline stored
-    :type transformer_name: str
     :param size_test_split: Percentage of test dataset when splitting the dataset
     :type size_test_split: float
     :param test_split_seed: Seed used when splitting the dataset
@@ -33,58 +27,52 @@ class MlflowSklearnTrainer(IModelTrainer):
     :type l1_ratio: float
     :param model_seed: Seed used when training the model
     :type model_seed: int
-    :param model_name: Name of the model used to track the experiment in MLFlow
-    :type model_name: str
     """
 
-    def __init__(self, transformer_name: str, size_test_split: float,
-                 test_split_seed: int, alpha: float, l1_ratio: float, model_seed: int,
-                 model_name: str):
-        self.transformer_name = transformer_name
+    def __init__(self, size_test_split: float,
+                 test_split_seed: int, alpha: float, l1_ratio: float, model_seed: int):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
         self.alpha = alpha
         self.l1_ratio = l1_ratio
         self.model_seed = model_seed
-        self.model_name = model_name
 
-    def transform_features(self, features: DataFrame,
-                           transformer_pipe_path: str) -> DataFrame:
+    def transform_features(self, features: DataFrame, data_columns: list,
+                           transformer: Pipeline) -> DataFrame:
         """
-        Transform/Preprocess the features through a request by calling the
-        transform data API.
+        Transform/Preprocess the features.
 
         :param features: The features to be transformed
         :type features: DataFrame
-        :param transformer_pipe_path: The path where the sk transformer pipe is stored
-        :type transformer_pipe_path: str
+        :param data_columns: The column names of the data transformed
+        :type data_columns: list
+        :param transformer: The sklearn transformer pipeline fitted
+        :type transformer: Pipeline
         :return: The features transformed
         :rtype: DataFrame
         """
-        body = {
-                "transformer_pipe_path": transformer_pipe_path,
-                "pipe_name": self.transformer_name,
-                "data": features.to_dict(orient='list')
-        }
+
         try:
-            request = post(URL_TRANSFORM_DATA_API, data=dumps(body))
-            content = loads(request.content.decode('utf-8'))
-            features_transformed = DataFrame(content["data"])
+            features_transformed_array = transformer.transform(features)
+            features_transformed = DataFrame(features_transformed_array,
+                                             columns=data_columns)
+
             return features_transformed
         except Exception as err:
             msg = f'Error transforming train or test features. Traceback: {err}'
             logger.error(msg)
             raise Exception(msg)
 
-    def train_model(self, data: dict, data_tracker: IDataTracker):
+    def train_model(self, data: dict, transformer: Pipeline) -> dict:
         """
-        Train the model using Scikit-learn, track the experiment in MLFlow, and
-        register the model trained in MLFlow model registry.
+        Train the model using Scikit-learn, and return information to track.
 
         :param data: The dataset used for training and evaluate the model
         :type data: dict
-        :param data_tracker: A data tracker to track info of the experiment
-        :type data_tracker: IDataTracker
+        :param transformer: The sklearn transformer pipeline fitted
+        :type transformer: Pipeline
+        :return: Information to track
+        :rtype: Dict
         """
 
         # Convert the dataset to pandas DataFrame
@@ -108,14 +96,13 @@ class MlflowSklearnTrainer(IModelTrainer):
             raise Exception(msg)
 
         try:
-            # Get the artifacts path of the MLflow experiment run
-            tracked_artifacts_path = data_tracker.get_artifacts_path(
-                model_name=self.model_name
-            )
             # Transform train features
+            data_columns = X.columns.to_list()
+            data_columns.append('ratio_cols_rows')
             X_train_transformed = self.transform_features(
                 features=X_train,
-                transformer_pipe_path=tracked_artifacts_path
+                data_columns=data_columns,
+                transformer=transformer
             )
             logger.info('Training features transformed succesfully')
 
@@ -134,7 +121,8 @@ class MlflowSklearnTrainer(IModelTrainer):
             y_train_predicted = model.predict(X_train_transformed)
             X_test_transformed = self.transform_features(
                 features=X_test,
-                transformer_pipe_path=tracked_artifacts_path
+                data_columns=data_columns,
+                transformer=transformer
             )
             y_test_predicted = model.predict(X_test_transformed)
 
@@ -150,35 +138,29 @@ class MlflowSklearnTrainer(IModelTrainer):
             logger.info(f'Metrics test set: \nRMSE: {rmse_test} \nMAE: {mae_test}'
                         f' \nR2: {r2_test}')
 
-            # Track information (hyperparameters, metrics...)
-            data_tracker.track_parameters({
+            # Information to track (hyperparameters, metrics...)
+            parameters_to_track = {
                 "alpha": self.alpha,
                 "l1_ratio": self.l1_ratio,
                 "test_split_seed": self.test_split_seed,
                 "model_seed": self.model_seed,
                 "test_split_percent": self.size_test_split
-            })
-            data_tracker.track_metrics({
+            }
+            metrics_to_track = {
                 "rmse_train": rmse_train,
                 "r2_train": r2_train,
                 "mae_train": mae_train,
                 "rmse_test": rmse_test,
                 "r2_test": r2_test,
                 "mae_test": mae_test
-            })
+            }
+            information_to_track = {
+                "parameters": parameters_to_track,
+                "metrics": metrics_to_track,
+                "model": model
+            }
+            return information_to_track
 
-            # Track the model in the experiment run
-            data_tracker.track_sklearn_model(
-                model=model,
-                model_name=self.model_name
-            )
-            logger.info('Model tracked in the experiment succesfully')
-
-            # Register the model in model registry (staged as None)
-            data_tracker.register_model(
-                model_name=self.model_name,
-                name=REGISTRY_MODEL_NAME
-            )
         except Exception as err:
             msg = f'Error training the model. Error traceback: {err}'
             logger.error(msg)
