@@ -6,13 +6,10 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.transform_data.application.transform_data_use_case import TransformData
 from src.transform_data.application.fit_transformer_use_case import FitTransformer
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
-from src.shared.infrastructure.pickle_data_loader import PickleDataLoader
 from src.shared.infrastructure.pickle_data_saver import PickleDataSaver
 from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
-from .sklearn_data_transformer import SklearnDataTransformer
 from .sklearn_transformation_fitter import SklearnTransformationFitter
 
 
@@ -69,37 +66,6 @@ async def fit_transformer_pipeline_endpoint(item: FitItem):
                             content={'message': message})
     except Exception as err:
         message = f'Error fitting or tracking transformer pipeline: {str(err)}'
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            content={'message': message})
-
-
-class TransformItem(BaseModel):
-    data: dict
-    transformer_pipe_path: str
-    pipe_name: str
-
-
-@rest_api.post("/api/transform_data")
-async def transform_data_endpoint(item: TransformItem):
-    transformer_file_path = f'{item.transformer_pipe_path}/{item.pipe_name}.pkl'
-    sklearn_data_transformer = SklearnDataTransformer(
-        transformer_file_path=transformer_file_path
-    )
-    pickle_data_loader = PickleDataLoader()
-
-    transform_data_use_case = TransformData.build(
-        data_transformer=sklearn_data_transformer,
-        data_file_loader=pickle_data_loader
-    )
-    logger.info(f'Transforming data')
-    try:
-        # Transform the dataset
-        transformed_data = transform_data_use_case.execute(data=item.data)
-        message = 'Data transformed succesfully'
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message, 'data': transformed_data})
-    except Exception as err:
-        message = f'Error transforming the data: {str(err)}'
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 

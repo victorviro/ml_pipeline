@@ -56,22 +56,6 @@ body = {
 url_api = 'http://transform_data:1215/api/fit_transformer_pipeline'
 request = requests.post(url_api, data=json.dumps(body))
 print(request.content)
-# Transform data
-data = {
-    "font_size": [66],
-    "rows_number": [256],
-    "cols_number": [500],
-    "char_number_text": [44]
-}
-body = {
-    "data": data,
-    'transformer_pipe_path': TRANSFORMER_PIPE_PATH,
-    'pipe_name': 'transformer_pipeline'
-}
-# url_api = 'http://0.0.0.0:1215/api/transform_data'
-url_api = 'http://transform_data:1215/api/transform_data'
-request = requests.post(url_api, data=json.dumps(body))
-print(request.content)
 
 # Train model
 body = {

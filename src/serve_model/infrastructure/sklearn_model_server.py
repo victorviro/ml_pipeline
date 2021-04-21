@@ -7,7 +7,7 @@ from pandas import DataFrame
 from numpy import ndarray
 
 from src.shared.constants import (TRANSFORMER_PIPELINE_NAME, REGISTRY_MODEL_NAME,
-                                  URL_TRANSFORM_DATA_API, MODEL_NAME)
+                                  MODEL_NAME)
 from src.serve_model.domain.model_server import IModelServer
 from src.shared.interfaces.data_tracker import IDataTracker
 from src.shared.interfaces.data_file_loader import IDataFileLoader
@@ -57,7 +57,7 @@ class SklearnModelServer(IModelServer):
                 "pipe_name": TRANSFORMER_PIPELINE_NAME,
                 "data": data
             }
-            request = post(URL_TRANSFORM_DATA_API, data=dumps(body))
+            request = post('', data=dumps(body))
             content = loads(request.content.decode('utf-8'))
             data_df = DataFrame(content["data"])
             logger.info(f'Data transfomerd succesfully')
