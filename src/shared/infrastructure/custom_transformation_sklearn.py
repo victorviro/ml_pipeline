@@ -3,6 +3,8 @@ Define custom transformations to use in Sklearn pipelines
 """
 
 from sklearn.base import BaseEstimator, TransformerMixin
+from pandas import DataFrame
+from numpy import ndarray, hstack
 
 
 class VariableRatioColsRowsAdder(BaseEstimator, TransformerMixin):
@@ -21,5 +23,9 @@ class VariableRatioColsRowsAdder(BaseEstimator, TransformerMixin):
     def transform(self, X):
         X_new = X.copy()
         # Add a new variable
-        X_new["ratio_cols_rows"] = X.cols_number/X.rows_number
+        if isinstance(X_new, DataFrame):
+            X_new["ratio_cols_rows"] = X.cols_number/X.rows_number
+        if isinstance(X_new, ndarray):
+            ratio_cols_rows = X[:, 2:3]/X[:, 1:2]
+            X_new = hstack((X_new, ratio_cols_rows))
         return X_new
