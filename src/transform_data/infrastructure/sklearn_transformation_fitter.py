@@ -5,9 +5,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-from src.shared.infrastructure.custom_transformation_sklearn import (
-    VariableRatioColsRowsAdder
-)
 from src.transform_data.domain.transformation_fitter import ITransformationFitter
 from src.shared.interfaces.data_file_saver import IDataFileSaver
 from src.shared.interfaces.data_tracker import IDataTracker
@@ -53,8 +50,7 @@ class SklearnTransformationFitter(ITransformationFitter):
                 X, y, test_size=self.size_test_split, random_state=self.test_split_seed
             )
             # Define and fit the pipeline (feature engineering and scaler)
-            pipe = Pipeline([('add_ratio_cols_rows', VariableRatioColsRowsAdder()),
-                             ('standard_scaler', StandardScaler())])
+            pipe = Pipeline([('standard_scaler', StandardScaler())])
             transformer_pipeline = pipe.fit(X_train)
             logger.info('Transformer pipeline fitted succesfully.')
 
