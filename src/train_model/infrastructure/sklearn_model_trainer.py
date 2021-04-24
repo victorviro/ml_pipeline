@@ -72,7 +72,7 @@ class SklearnModelTrainer(IModelTrainer):
         :param transformer: The sklearn transformer pipeline fitted
         :type transformer: Pipeline
         :return: Information to track
-        :rtype: Dict
+        :rtype: dict
         """
 
         # Convert the dataset to pandas DataFrame
@@ -98,7 +98,6 @@ class SklearnModelTrainer(IModelTrainer):
         try:
             # Transform train features
             data_columns = X.columns.to_list()
-            data_columns.append('ratio_cols_rows')
             X_train_transformed = self.transform_features(
                 features=X_train,
                 data_columns=data_columns,
