@@ -31,7 +31,7 @@ class SklearnModelValidator(IModelValidator):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
 
-    def validate_model(self, data: dict, transformer: Pipeline, model):
+    def validate_model(self, data: dict, pipeline: Pipeline):
         """
         Validate the model if the root mean squared error (rmse) in the test set
         is smaller than a value given. If the model is not validated, it raises an
@@ -39,10 +39,8 @@ class SklearnModelValidator(IModelValidator):
 
         :param data: The dataset used to validate the model (before splitting it)
         :type data: dict
-        :param transformer: The sklearn transformer pipeline fitted
-        :type transformer: Pipeline
-        :param model: The sklearn model fitted
-        :type model:
+        :param pipeline: The sklearn pipeline fitted
+        :type pipeline: Pipeline
         """
 
         # Convert dataset to pandas DataFrame
@@ -67,22 +65,9 @@ class SklearnModelValidator(IModelValidator):
             logger.error(msg)
             raise Exception(msg)
 
-        try:
-            # Transform test features
-            data_columns = X.columns.to_list()
-            data_columns.append('ratio_cols_rows')
-            X_test_transormed_array = transformer.transform(X_test)
-            X_test_transormed = DataFrame(X_test_transormed_array,
-                                          columns=data_columns)
-            logger.info(f'Test features transformed succesfully.')
-        except Exception as err:
-            msg = f'Error transforming test features. Error: {err}'
-            logger.error(msg)
-            raise Exception(msg)
-
         # Make predictions and compute metrics on the test set
         try:
-            y_test_predicted = model.predict(X_test_transormed)
+            y_test_predicted = pipeline.predict(X_test)
             (rmse, mae, r2) = get_regression_metrics(y_test, y_test_predicted)
 
         except Exception as err:

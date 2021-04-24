@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.shared.constants import MODEL_NAME, TRANSFORMER_PIPELINE_NAME
+from src.shared.constants import MODEL_NAME
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.validate_model.application.validate_model_use_case import ValidateModel
 from src.shared.infrastructure.pickle_data_loader import PickleDataLoader
@@ -48,15 +48,13 @@ async def train_model_endpoint(item: Item):
         data_tracker=mlflow_api_tracker
     )
     data_file_path = f'{item.raw_data_path}/{item.data_name}.json'
-    model_path = f'{artifacts_path}/{MODEL_NAME}.pkl'
-    transformer_path = f'{artifacts_path}/{TRANSFORMER_PIPELINE_NAME}.pkl'
+    pipeline_path = f'{artifacts_path}/{MODEL_NAME}.pkl'
 
     try:
         logger.info(f'Validating model...')
         validate_model_use_case.execute(
             data_file_path=data_file_path,
-            model_path=model_path,
-            transformer_path=transformer_path
+            pipeline_path=pipeline_path
         )
         message = 'Model validated succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
