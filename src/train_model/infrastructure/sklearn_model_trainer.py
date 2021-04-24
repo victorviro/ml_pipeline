@@ -137,6 +137,11 @@ class SklearnModelTrainer(IModelTrainer):
             logger.info(f'Metrics test set: \nRMSE: {rmse_test} \nMAE: {mae_test}'
                         f' \nR2: {r2_test}')
 
+            # Build the pipeline (transformations plus model)
+            steps_pipe = transformer.steps
+            steps_pipe.append(('elastic_net', model))
+            pipeline = Pipeline(steps=steps_pipe)
+
             # Information to track (hyperparameters, metrics...)
             parameters_to_track = {
                 "alpha": self.alpha,
@@ -156,7 +161,7 @@ class SklearnModelTrainer(IModelTrainer):
             information_to_track = {
                 "parameters": parameters_to_track,
                 "metrics": metrics_to_track,
-                "model": model
+                "pipeline": pipeline
             }
             return information_to_track
 

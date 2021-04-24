@@ -23,12 +23,12 @@ class MlflowTrainTracker(MlflowPythonTracker):
         :param information_to_track: The information to track
         :type information_to_track: dict
         """
-
+        # Track metrics and params
         self.track_metrics(metrics=information_to_track["metrics"])
-
         self.track_parameters(parameters=information_to_track["parameters"])
-        # Track the model in the experiment run
-        self.track_sklearn_model(model=information_to_track["model"],
+
+        # Track the pipeline in the experiment run
+        self.track_sklearn_model(model=information_to_track["pipeline"],
                                  model_name=MODEL_NAME)
         # Register the model in model registry (staged as None)
         self.register_model(model_name=MODEL_NAME, name=REGISTRY_MODEL_NAME)
