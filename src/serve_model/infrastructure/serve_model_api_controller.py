@@ -6,10 +6,10 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
+from src.shared.constants import MODEL_NAME
 from src.serve_model.application.serve_model_use_case import ServeModel
-from src.shared.infrastructure.pickle_data_loader import PickleDataLoader
 from src.shared.infrastructure.mlflow_api_tracker import MlflowApiTracker
-from .sklearn_model_server import SklearnModelServer
+from .gcp_model_server import GCPModelServer
 
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -17,10 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class Item(BaseModel):
-    font_size: int
-    rows_number: int
-    cols_number: int
-    char_number_text: int
+    mlflow_run_id: str
 
 
 rest_api = FastAPI()
@@ -28,30 +25,29 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/served_model")
 async def serve_model_endpoint(item: Item):
-    data = {
-        'font_size': [item.font_size],
-        'rows_number': [item.rows_number],
-        'cols_number': [item.cols_number],
-        'char_number_text': [item.char_number_text]
-    }
-    sklearn_model_server = SklearnModelServer()
-    pickle_data_loader = PickleDataLoader()
-    mlflow_api_tracker = MlflowApiTracker()
+    gcp_model_server = GCPModelServer()
+    mlflow_api_tracker = MlflowApiTracker(run_id=item.mlflow_run_id)
+    artifacts_path = mlflow_api_tracker.get_artifacts_path()
+    model_version = mlflow_api_tracker.search_model_version()
+    version_name = f'v{model_version}'
 
     serve_model_use_case = ServeModel.build(
-        model_server=sklearn_model_server,
-        model_file_loader=pickle_data_loader,
+        model_server=gcp_model_server,
         data_tracker=mlflow_api_tracker
     )
+    pipeline_file_path = f'{artifacts_path}/{MODEL_NAME}.pkl'
 
     try:
         logger.info('Making predictions...')
-        predictions = serve_model_use_case.execute(data=data)
-        message = 'Prediction made by the model succesfully'
+        serve_model_use_case.execute(
+            model_file_path=pipeline_file_path,
+            version_name=version_name
+        )
+        message = 'Model served succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message, 'prediction': predictions[0]})
+                            content={'message': message})
     except Exception as err:
-        message = f'Error making predictions: {str(err)}'
+        message = f'Error serving the model: {str(err)}'
         logger.error(message)
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})

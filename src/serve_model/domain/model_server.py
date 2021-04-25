@@ -7,7 +7,7 @@ class IModelServer(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def serve_predictions(self):
+    def serve_model(self):
         """
-        This method must serve a model to make preditions
+        This method must serve a model to make preditions.
         """

@@ -109,10 +109,7 @@ print(request.content)
 
 # Serve model
 body = {
-    'font_size': 33,
-    'rows_number': 233,
-    'cols_number': 344,
-    'char_number_text': 44
+    'mlflow_run_id': MLFLOW_RUN_ID
 }
 # Request to Fast API to train the model
 # url_api = 'http://0.0.0.0:1219/api/served_model'
