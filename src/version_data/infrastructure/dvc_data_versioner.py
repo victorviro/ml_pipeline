@@ -75,6 +75,7 @@ class DVCDataVersioner(IDataVersioner):
             raise Exception(message)
 
         # TODO add command to push data versioned in dvc storage (`push dvc`)
+        # If GCS is the remote storage, the env GOOGLE_APPLICATION_CREDENTIALS is needed
         #  see documentation dvc
 
         # Get information to track

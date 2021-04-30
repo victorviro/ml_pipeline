@@ -1,5 +1,5 @@
 dvc==1.10.0
-pydrive2==1.7.2
+google-cloud-storage==1.37.1
 python-dotenv==0.15.0
 fastapi[all]==0.63.0
 packaging==20.9
