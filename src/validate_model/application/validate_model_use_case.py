@@ -33,9 +33,6 @@ class ValidateModel:
         if not os.path.exists(data_file_path):
             raise Exception('Path of dataset file does not exist: '
                             f'"{data_file_path}"')
-        if not os.path.exists(pipeline_path):
-            raise Exception('Path of pipeline file does not exist: '
-                            f'"{pipeline_path}"')
 
         # Load the dataset, and the pipeline
         data = self.dataset_file_loader.load_data(file_path=data_file_path)

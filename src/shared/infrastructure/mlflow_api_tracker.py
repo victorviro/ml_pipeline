@@ -114,7 +114,7 @@ class MlflowApiTracker(IDataTracker):
                                           request_type='get')
             content = loads(request.content.decode('utf-8'))
             artifact_uri = content["run"]["info"]["artifact_uri"]
-            artifacts_path = f'{getcwd()}/{artifact_uri}/{MODEL_NAME}'
+            artifacts_path = f'{artifact_uri}/{MODEL_NAME}'
             return artifacts_path
         except Exception as err:
             message = (f'Error getting info (artifacts path) of a MLflow experiment run '

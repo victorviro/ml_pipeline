@@ -6,10 +6,10 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.shared.constants import MODEL_NAME
+from src.shared.constants import MODEL_NAME, GCP_BUCKET_NAME
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.validate_model.application.validate_model_use_case import ValidateModel
-from src.shared.infrastructure.pickle_data_loader import PickleDataLoader
+from src.shared.infrastructure.pickle_gcs_data_loader import PickleGCSDataLoader
 from .sklearn_model_validator import SklearnModelValidator
 from .mlflow_model_validation_tracker import MlflowModelValidationTracker
 
@@ -37,18 +37,19 @@ async def train_model_endpoint(item: Item):
         test_split_seed=item.test_split_seed
     )
     json_data_loader = JSONDataLoader()
-    pickle_data_loader = PickleDataLoader()
+    pickle_gcs_data_loader = PickleGCSDataLoader()
     mlflow_api_tracker = MlflowModelValidationTracker(run_id=item.mlflow_run_id)
     artifacts_path = mlflow_api_tracker.get_artifacts_path()
 
     validate_model_use_case = ValidateModel.build(
         model_validator=sklearn_model_validator,
         dataset_file_loader=json_data_loader,
-        model_file_loader=pickle_data_loader,
+        model_file_loader=pickle_gcs_data_loader,
         data_tracker=mlflow_api_tracker
     )
     data_file_path = f'{item.raw_data_path}/{item.data_name}.json'
-    pipeline_path = f'{artifacts_path}/{MODEL_NAME}.pkl'
+    pipeline_gcs_url = f'{artifacts_path}/{MODEL_NAME}.pkl'
+    pipeline_path = pipeline_gcs_url.replace(f'gs://{GCP_BUCKET_NAME}/', '')
 
     try:
         logger.info(f'Validating model...')
