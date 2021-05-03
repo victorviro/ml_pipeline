@@ -11,7 +11,7 @@ WORKDIR ${PROJECT_NAME}
 RUN apt-get update && apt-get install -y python3-pip
 RUN python3.6 -m pip install --upgrade pip
 RUN pip3.6 install --upgrade pip && pip3.6 install mlflow==1.12.1
-RUN pip3.6 install psycopg2==2.8.6
+RUN pip3.6 install psycopg2==2.8.6 && pip3.6 install google-cloud-storage==1.37.1
 
 COPY ./docker/mlflow/entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

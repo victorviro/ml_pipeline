@@ -50,7 +50,7 @@ class MlflowPythonTracker(IDataTracker):
                 # Get the path of the artifact
                 filename = os.path.basename(file_path)
                 model_artifact_uri = get_artifact_uri(model_name)
-                artifact_path = f'{os.getcwd()}/{model_artifact_uri}/{filename}'
+                artifact_path = f'{model_artifact_uri}/{filename}'
                 return artifact_path
         except Exception as err:
             message = f'Error tracking file as artifact in MLflow experiment: {str(err)}'

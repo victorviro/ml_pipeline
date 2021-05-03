@@ -39,15 +39,11 @@ class FitTransformer:
             raise Exception('Path where save transformer pipeline file does not exist: '
                             f'"{os.path.dirname(transformer_file_path)}"')
         # Fit and track the transformer pipeline
-        artifact_path = self.transformation_fitter.fit_transformer(
+        self.transformation_fitter.fit_transformer(
             data=data,
             data_file_saver=self.data_file_saver,
             data_tracker=self.data_tracker
         )
-
-        if not os.path.exists(artifact_path):
-            raise Exception('Path of transformer pipeline artifact does not exist: '
-                            f'{artifact_path}')
 
     @staticmethod
     def build(data_file_loader: IDataFileLoader,

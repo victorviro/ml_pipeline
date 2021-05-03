@@ -1,6 +1,6 @@
 # Postgre as backend store in MLflow
 
-We use PostgreSQL database as a backend store. 
+We use PostgreSQL database as a backend store and google cloud storage as artifact store. 
 
 ## Install mlflow
 
@@ -37,7 +37,7 @@ The database needs to be encoded as `dialect+driver://username:password@host:por
 
 ```bash
 mlflow server --backend-store-uri postgresql://mlflow_user:mlflow@localhost/mlflow_db \
-        --default-artifact-root /artifact_store \
+        --default-artifact-root gs://<bucket>/<path> \
         --host 0.0.0.0 \
         --port 5000 
 ```
@@ -46,7 +46,7 @@ In this case we have two store locations: `--backend-store-uri` for everything e
 
 Now the Tracking server should be available at the following URL: http://0.0.0.0:5000.
 
-We can set the tracking URI at the beginning of our program, with the same `host:port` as we used to configure the mlflow server (`mlflow.set_tracking_uri('http://0.0.0.0:5000')`) or we can do it with the CLI setting the following environment variable:
+We can set the tracking URI at the beginning of our program, with the same `host:port` as we used to configure the mlflow server (`mlflow.set_tracking_uri('http://0.0.0.0:5000')`) or we can set the following environment variable:
 
 ```bash
 export MLFLOW_TRACKING_URI='http://0.0.0.0:5000'

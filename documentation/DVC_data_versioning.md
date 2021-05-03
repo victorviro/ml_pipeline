@@ -13,13 +13,17 @@ A new `.dvc/` directory is created for internal configuration. This directory is
 
 ### Configure storage 
 
-In order to upload DVC-tracked data or models later with `dvc push`, we need to setup a storage. In this example, we add a new local [data remote](https://dvc.org/doc/command-reference/remote/add) (or a [google drive storage](https://youtu.be/kLKBcPonMYw?t=205)) (storage and remote are interchambiable terms in DVC):
+In order to upload DVC-tracked data or models later with `dvc push`, we need to setup a storage. In this example, we add a new local [data remote](https://dvc.org/doc/command-reference/remote/add) (or a [google drive storage](https://youtu.be/kLKBcPonMYw?t=205), or a google cloud storage) (storage and remote are interchambiable terms in DVC):
 
 ```bash
-dvc remote add -d local_storage /tmp/dvc-storage
+dvc remote add -d storage /tmp/dvc-storage
 dvc remote add -d storage gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn
+# export GOOGLE_APPLICATION_CREDENTIALS=credentials/GCP_key_file.json
+dvc remote add -d storage gs://mcpl/dataset
 ```
-This command creates a remote section in the DVC project's `config` file with name `local_storage` (or `stotage`) and url `/tmp/dvc-storage` (or `gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn`). DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service.
+
+
+This command creates a remote section in the DVC project's `config` file with name `storage` and url `/tmp/dvc-storage` (or `gdrive://1rU99NCYC4WqpCYZcXtyq-WfZJNLh8wGn` or `gs://mcpl/dataset`). DVC remotes let us store a copy of the data tracked by DVC outside of the local cache, usually a cloud storage service.
 
 We can list the remotes we have: 
 
@@ -52,12 +56,12 @@ git commit -m "Added raw data version 1"
 git push origin master
 ```
 
-Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to push the data in the `local_storage` directory (`tmp/dvc-storage`)
+Now we have the dataset which has been tracked by dvc but the dataset is in our directory and we could want to push it into our own remote storage. Now we push the dvc repo to push the data in the `storage` directory (`tmp/dvc-storage` or gdrive or GCS)
 
 ```bash
 dvc push
 ```
-`dvc push` copied the data cached locally (in `.dvc/cache`) to the remote storage we set up earlier (`tmp/dvc-storage` or gdrive).
+`dvc push` copied the data cached locally (in `.dvc/cache`) to the remote storage we set up earlier (`tmp/dvc-storage` or gdrive or GCS).
 
 ### Retrieving
 

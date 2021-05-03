@@ -5,3 +5,4 @@ python-dotenv==0.15.0
 fastapi[all]==0.63.0
 packaging==20.9
 psycopg2==2.8.6
+google-cloud-storage==1.37.1

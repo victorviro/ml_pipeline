@@ -76,6 +76,8 @@ class SklearnTransformationFitter(ITransformationFitter):
                 model_name=self.model_name,
                 transformer_pipe=transformer_pipeline
             )
+            logger.info('Transformer pipeline stored in artifact store. Path: '
+                        f'{artifact_path}.')
             return artifact_path
         except Exception as err:
             raise Exception('Error tracking the sklearn transformer pipeline. '
