@@ -6,7 +6,6 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.shared.constants import MODEL_NAME
 from src.serve_model.application.serve_model_use_case import ServeModel
 from src.shared.infrastructure.mlflow_api_tracker import MlflowApiTracker
 from .gcp_model_server import GCPModelServer
@@ -35,12 +34,12 @@ async def serve_model_endpoint(item: Item):
         model_server=gcp_model_server,
         data_tracker=mlflow_api_tracker
     )
-    pipeline_file_path = f'{artifacts_path}/{MODEL_NAME}.pkl'
+    model_gcs_path = f'{artifacts_path}/'
 
     try:
         logger.info('Making predictions...')
         serve_model_use_case.execute(
-            model_file_path=pipeline_file_path,
+            model_file_path=model_gcs_path,
             version_name=version_name
         )
         message = 'Model served succesfully'

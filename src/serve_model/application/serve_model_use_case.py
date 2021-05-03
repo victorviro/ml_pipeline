@@ -19,9 +19,6 @@ class ServeModel:
         self.data_tracker = data_tracker
 
     def execute(self, model_file_path: str, version_name: str):
-        if not os.path.exists(model_file_path):
-            raise Exception('Path of model file does not exist: '
-                            f'{model_file_path}')
         # Serve model
         self.model_server.serve_model(
             model_file_path=model_file_path,
