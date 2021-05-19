@@ -6,7 +6,6 @@ from sklearn.linear_model import ElasticNet
 from sklearn.pipeline import Pipeline
 
 from src.train_model.domain.model_trainer import IModelTrainer
-from src.shared.training_helper import get_regression_metrics
 
 
 logger = logging.getLogger(__name__)
@@ -36,32 +35,6 @@ class SklearnModelTrainer(IModelTrainer):
         self.alpha = alpha
         self.l1_ratio = l1_ratio
         self.model_seed = model_seed
-
-    def transform_features(self, features: DataFrame, data_columns: list,
-                           transformer: Pipeline) -> DataFrame:
-        """
-        Transform/Preprocess the features.
-
-        :param features: The features to be transformed
-        :type features: DataFrame
-        :param data_columns: The column names of the data transformed
-        :type data_columns: list
-        :param transformer: The sklearn transformer pipeline fitted
-        :type transformer: Pipeline
-        :return: The features transformed
-        :rtype: DataFrame
-        """
-
-        try:
-            features_transformed_array = transformer.transform(features)
-            features_transformed = DataFrame(features_transformed_array,
-                                             columns=data_columns)
-
-            return features_transformed
-        except Exception as err:
-            msg = f'Error transforming train or test features. Traceback: {err}'
-            logger.error(msg)
-            raise Exception(msg)
 
     def train_model(self, data: dict, transformer: Pipeline) -> dict:
         """
@@ -98,11 +71,9 @@ class SklearnModelTrainer(IModelTrainer):
         try:
             # Transform train features
             data_columns = X.columns.to_list()
-            X_train_transformed = self.transform_features(
-                features=X_train,
-                data_columns=data_columns,
-                transformer=transformer
-            )
+            X_train_transformed_array = transformer.transform(X_train)
+            X_train_transformed = DataFrame(X_train_transformed_array,
+                                            columns=data_columns)
             logger.info('Training features transformed succesfully')
 
             # Define the model
@@ -116,33 +87,12 @@ class SklearnModelTrainer(IModelTrainer):
             logger.info(f'Model trained succesfully. Hyperparameters: '
                         f'alpha={self.alpha}, l1_ratio={self.l1_ratio}.')
 
-            # Predictions in the test and training sets
-            y_train_predicted = model.predict(X_train_transformed)
-            X_test_transformed = self.transform_features(
-                features=X_test,
-                data_columns=data_columns,
-                transformer=transformer
-            )
-            y_test_predicted = model.predict(X_test_transformed)
-
-            # Compute metrics in the test and training sets
-            (rmse_test, mae_test, r2_test) = get_regression_metrics(y_test,
-                                                                    y_test_predicted)
-            (rmse_train, mae_train, r2_train) = get_regression_metrics(
-                y_train, y_train_predicted
-            )
-
-            logger.info(f'Metrics train set: \nRMSE: {rmse_train} \nMAE: {mae_train}'
-                        f' \nR2: {r2_train}')
-            logger.info(f'Metrics test set: \nRMSE: {rmse_test} \nMAE: {mae_test}'
-                        f' \nR2: {r2_test}')
-
             # Build the pipeline (transformations plus model)
             steps_pipe = transformer.steps
             steps_pipe.append(('elastic_net', model))
             pipeline = Pipeline(steps=steps_pipe)
 
-            # Information to track (hyperparameters, metrics...)
+            # Information to track (hyperparameters,...)
             parameters_to_track = {
                 "alpha": self.alpha,
                 "l1_ratio": self.l1_ratio,
@@ -150,17 +100,8 @@ class SklearnModelTrainer(IModelTrainer):
                 "model_seed": self.model_seed,
                 "test_split_percent": self.size_test_split
             }
-            metrics_to_track = {
-                "rmse_train": rmse_train,
-                "r2_train": r2_train,
-                "mae_train": mae_train,
-                "rmse_test": rmse_test,
-                "r2_test": r2_test,
-                "mae_test": mae_test
-            }
             information_to_track = {
                 "parameters": parameters_to_track,
-                "metrics": metrics_to_track,
                 "pipeline": pipeline
             }
             return information_to_track

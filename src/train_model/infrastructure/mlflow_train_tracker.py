@@ -6,7 +6,7 @@ from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 class MlflowTrainTracker(MlflowPythonTracker):
     """
     A class which extends the class MlflowPythonTracker to track information of the
-    model training (metrics, models,...) to an MLflow experiment run using the
+    model training (parameters, models,...) to an MLflow experiment run using the
     MLflow python API.
 
     :param run_id: The MLflow run id of the experiment run
@@ -23,8 +23,7 @@ class MlflowTrainTracker(MlflowPythonTracker):
         :param information_to_track: The information to track
         :type information_to_track: dict
         """
-        # Track metrics and params
-        self.track_metrics(metrics=information_to_track["metrics"])
+        # Track parameters
         self.track_parameters(parameters=information_to_track["parameters"])
 
         # Track the pipeline in the experiment run
