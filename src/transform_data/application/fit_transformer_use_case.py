@@ -32,17 +32,24 @@ class FitTransformer:
     def execute(self, data_file_path: str, transformer_file_path: str):
         if not os.path.exists(data_file_path):
             raise Exception(f'Path of data file does not exist: "{data_file_path}"')
-        # Load the dataset
-        data = self.data_file_loader.load_data(file_path=data_file_path)
-
         if not os.path.exists(os.path.dirname(transformer_file_path)):
             raise Exception('Path where save transformer pipeline file does not exist: '
                             f'"{os.path.dirname(transformer_file_path)}"')
-        # Fit and track the transformer pipeline
-        self.transformation_fitter.fit_transformer(
-            data=data,
-            data_file_saver=self.data_file_saver,
-            data_tracker=self.data_tracker
+        # Load the dataset
+        data = self.data_file_loader.load_data(file_path=data_file_path)
+
+        # Fit the transformer file
+        transformer = self.transformation_fitter.fit_transformer(data=data)
+
+        # Save the transformer file
+        self.data_file_saver.save_data(file_path=transformer_file_path, file=transformer)
+        if not os.path.exists(transformer_file_path):
+            raise Exception('Path of transformer file does not exist: '
+                            f'"{transformer_file_path}"')
+        # Track the transformer file
+        self.data_tracker.track_transformer_fitting_info(
+            transformer=transformer,
+            transformer_file_path=transformer_file_path
         )
 
     @staticmethod
