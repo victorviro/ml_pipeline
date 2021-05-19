@@ -38,7 +38,7 @@ class ValidateModel:
         data = self.dataset_file_loader.load_data(file_path=data_file_path)
         model = self.model_file_loader.load_data(file_path=model_path)
         # Validate the model
-        self.model_validator.validate_model(data=data, pipeline=model)
+        self.model_validator.validate_model(data=data, model=model)
         # Update model's stage in Model Registry
         self.data_tracker.update_validated_model_in_registry()
 
