@@ -48,14 +48,14 @@ async def train_model_endpoint(item: Item):
         data_tracker=mlflow_api_tracker
     )
     data_file_path = f'{item.raw_data_path}/{item.data_name}.json'
-    pipeline_gcs_url = f'{artifacts_path}/{MODEL_NAME}.pkl'
-    pipeline_path = pipeline_gcs_url.replace(f'gs://{GCP_BUCKET_NAME}/', '')
+    model_gcs_url = f'{artifacts_path}/{MODEL_NAME}.pkl'
+    model_gcs_path_in_bucket = model_gcs_url.replace(f'gs://{GCP_BUCKET_NAME}/', '')
 
     try:
         logger.info(f'Validating model...')
         validate_model_use_case.execute(
             data_file_path=data_file_path,
-            pipeline_path=pipeline_path
+            model_path=model_gcs_path_in_bucket
         )
         message = 'Model validated succesfully'
         return JSONResponse(status_code=status.HTTP_200_OK,

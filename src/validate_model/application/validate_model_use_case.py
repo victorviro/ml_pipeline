@@ -29,16 +29,16 @@ class ValidateModel:
         self.model_file_loader = model_file_loader
         self.data_tracker = data_tracker
 
-    def execute(self, data_file_path: str, pipeline_path: str):
+    def execute(self, data_file_path: str, model_path: str):
         if not os.path.exists(data_file_path):
             raise Exception('Path of dataset file does not exist: '
                             f'"{data_file_path}"')
 
         # Load the dataset, and the pipeline
         data = self.dataset_file_loader.load_data(file_path=data_file_path)
-        pipeline = self.model_file_loader.load_data(file_path=pipeline_path)
+        model = self.model_file_loader.load_data(file_path=model_path)
         # Validate the model
-        self.model_validator.validate_model(data=data, pipeline=pipeline)
+        self.model_validator.validate_model(data=data, pipeline=model)
         # Update model's stage in Model Registry
         self.data_tracker.update_validated_model_in_registry()
 
