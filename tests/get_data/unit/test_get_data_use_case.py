@@ -40,7 +40,7 @@ def test_get_data_use_case_should_raise_exception_due_non_exist_data_path():
     with pytest.raises(Exception):
         result = use_case.execute(file_path="no_path/no_file")
 
-    mock_data_downloander.download_data.assert_called_once()
+    mock_data_downloander.download_data.assert_not_called()
     mock_data_file_saver.save_data.assert_not_called()
 
 

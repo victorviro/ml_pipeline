@@ -21,10 +21,9 @@ class GetData:
         self.data_file_saver = data_file_saver
 
     def execute(self, file_path: str):
-
-        data = self.data_downloander.download_data()
         if not os.path.exists(os.path.dirname(file_path)):
             raise Exception(f'Path "{os.path.dirname(file_path)}" does not exist')
+        data = self.data_downloander.download_data()
         self.data_file_saver.save_data(file_path=file_path, data=data)
         if not os.path.exists(file_path):
             raise Exception(f'Data file path "{file_path}" does not exist')
