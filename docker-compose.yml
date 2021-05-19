@@ -241,6 +241,30 @@ services:
       uvicorn src.${USE_CASE_TRAIN_MODEL}.infrastructure.${API_FILE_TRAIN_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_TRAIN_MODEL}
 
+  evaluate_model:
+    <<: *use_cases-common
+    container_name: evaluate_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_EVALUATE_MODEL}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+    volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      #- ./artifact_store:/${PROJECT_NAME}/artifact_store
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_EVALUATE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_EVALUATE_MODEL}/
+    ports:
+      - ${PORT_EVALUATE_MODEL}:${PORT_EVALUATE_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_EVALUATE_MODEL}.infrastructure.${API_FILE_EVALUATE_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_EVALUATE_MODEL}
+
   validate_model:
     <<: *use_cases-common
     container_name: validate_model
