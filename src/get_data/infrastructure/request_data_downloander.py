@@ -63,7 +63,7 @@ class RequestDataDownloander(IDataDownloander):
             msg = ('JSON decode error when getting the json from the request response. '
                    f'The request response contains invalid JSON. Traceback: {err}')
             logger.error(msg)
-            raise JSONDecodeError(msg)
+            raise JSONDecodeError(msg=msg, doc=err.doc, pos=err.pos)
 
         except Exception as err:
             msg = ('Unknown error getting the JSON from the request response. Traceback: '
