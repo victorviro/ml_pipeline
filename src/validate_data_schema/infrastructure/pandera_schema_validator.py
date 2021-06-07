@@ -2,11 +2,12 @@ import logging
 
 import pandera
 import pandas as pd
+from pandera.errors import SchemaErrors
 
 from src.validate_data_schema.domain.data_validator import IDataValidator
 
 
-# Define the schema of the dataset
+# Define the schema of the dataset TODO
 MCPL_SCHEMA = pandera.DataFrameSchema({
     "max_char_per_line": pandera.Column(int,
                                         checks=pandera.Check.less_than_or_equal_to(100)),
@@ -40,30 +41,38 @@ class PanderaSchemaValidator(IDataValidator):
         :type data: dict
         """
 
-        logger.info(f'Validating raw data')
+        logger.info(f'Validating raw dataset...')
 
-        # Load data in pandas DataFrame format
+        # Load dataset in pandas DataFrame format
         try:
             data_df = pd.DataFrame.from_dict(data)
-            logger.info(f'Converted data to pandas DataFrame succesfully.')
+            logger.info(f'Converted dataset to pandas DataFrame succesfully.')
+
+        except ValueError as err:
+            msg = ('Value error converting JSON dataset to pandas DataFrame. '
+                   f'Error traceback: {err}')
+            logger.error(msg)
+            raise ValueError(msg)
 
         except Exception as err:
-            msg = ('Error converting data to pandas DataFrame. '
-                   f'Error traceback: {err}')
+            msg = ('Unknown error converting dataset to pandas DataFrame. '
+                   f'Error traceback: {err.__class__.__name__}: {err}')
             logger.error(msg)
             raise Exception(msg)
 
         # Validate the schema of the dataset
         try:
             self.dataset_schema.validate(data_df, lazy=True)
-            logger.info('Validated dataset schema succesfully.')
+            logger.info('Dataset schema validated succesfully.')
+
+        except SchemaErrors as err:
+            msg = ('Dataset schema has been violated. Schema errors found:\n'
+                   f'{err.schema_errors}')
+            logger.error(msg)
+            raise err
 
         except Exception as err:
-            if isinstance(err, pandera.errors.SchemaErrors):
-                msg = ('Dataset schema has not been validated: '
-                       f'Exception trace and description:\n{err}')
-                logger.error(msg)
-                raise Exception(msg)
-            msg = f'Error when validating data schema. Traceback: {err}'
+            msg = ('Unknown error when validating dataset schema. Traceback: '
+                   f'{err.__class__.__name__}: {err}')
             logger.error(msg)
             raise Exception(msg)

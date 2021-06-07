@@ -21,9 +21,9 @@ class ValidateDataSchema:
 
     def execute(self, file_path: str):
         if not os.path.exists(file_path):
-            raise Exception(f'Data file in path "{file_path}" does not exist')
-        data = self.data_file_loader.load_data(file_path=file_path)
+            raise FileNotFoundError(f'Data file in path "{file_path}" does not exist')
 
+        data = self.data_file_loader.load_data(file_path=file_path)
         self.data_validator.validate_data(data=data)
 
     @staticmethod
