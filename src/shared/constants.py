@@ -95,3 +95,7 @@ GCP_REGION = 'europe-west4'
 GCP_PROJECT_ID = 'virotest-311212'
 GCP_MODEL_NAME = 'mcpl'
 GCP_PREDICTION_MACHINE_TYPE = 'n1-standard-2'  # 'n1-standard-4'
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
+    f'{os.getcwd()}/'
+    f'{os.getenv("GCP_CREDENTIALS_FILE_REL_PATH")}'
+)
