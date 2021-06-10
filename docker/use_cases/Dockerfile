@@ -1,4 +1,4 @@
-FROM python:3.6.9
+FROM python:3.9.5
 
 RUN apt-get update && apt-get install -y wget && apt-get clean
 
@@ -16,9 +16,9 @@ RUN file="list dir media: $(echo $USE_CASE)" && echo $file
 COPY ${PROJECT_SRC}/${USE_CASE}/infrastructure/requirements.txt /${PROJECT_NAME}/
 
 # Update pip and install requirements
-RUN apt-get update && apt-get install -y python3-pip
-RUN python3.6 -m pip install --upgrade pip
-RUN pip3.6 install --upgrade pip && pip3.6 install -r requirements.txt
-
+RUN apt-get update && apt-get install -y python3-pip && apt-get install python3-dev
+RUN python3.9 -m pip install --upgrade pip
+RUN pip3.9 install --upgrade pip && pip3.9 install -r requirements.txt
+ 
 # COPY ${PROJECT_SRC}/${USE_CASE}/ ${PROJECT_SRC}/${USE_CASE}/
 #CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
