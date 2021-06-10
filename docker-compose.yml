@@ -176,7 +176,9 @@ services:
         USE_CASE: ${USE_CASE_VERSION_DATA}
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
     volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/

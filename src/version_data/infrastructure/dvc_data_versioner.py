@@ -106,8 +106,18 @@ class DVCDataVersioner(IDataVersioner):
                 logger.error(msg)
                 raise Exception(msg)
 
-            # TODO: Push the dataset versioned in dvc storage (GCS)
-
+            # Push the dataset versioned in dvc storage (GCS)
+            try:
+                # If GCS is the remote storage, env GOOGLE_APPLICATION_CREDENTIALS needed
+                output = subprocess.run(["dvc", "push"], capture_output=True, check=True)
+                logger.info('Dataset versioned pushed in the DVC storage using subprocess'
+                            f'. Stdout: {output.stdout.decode("utf-8")}')
+            except CalledProcessError as err:
+                msg = ('Error pushing the dataset versioned in the DVC storage. '
+                       f'Command: {err.cmd}. Error: {err.stderr}. Env variable GCP '
+                       f'credentials :{os.getenv("GOOGLE_APPLICATION_CREDENTIALS")}')
+                logger.error(msg)
+                raise Exception(msg)
         else:
             logger.warning('The dataset has not changed.')
 
