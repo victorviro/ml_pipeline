@@ -18,7 +18,7 @@ def test_version_data_use_case_should_complete_process_returning_success():
 
     use_case = VersionTrackData.build(data_versioner=mock_data_versioner,
                                       data_tracker=mock_data_tracker)
-    result = use_case.execute(data_file_path=getcwd(), data_version=0)
+    use_case.execute(data_file_path=getcwd(), data_version=0)
 
     mock_data_versioner.version_data.assert_called_once()
     mock_data_tracker.track_items.assert_called_once()
@@ -35,7 +35,7 @@ def test_version_data_use_case_should_raise_exception_due_non_exist_data_file_pa
                                       data_tracker=mock_data_tracker)
 
     with pytest.raises(Exception):
-        result = use_case.execute(file_path="no_file")
+        use_case.execute(file_path="no_file")
 
     mock_data_versioner.version_data.assert_not_called()
     mock_data_tracker.track_items.assert_not_called()
