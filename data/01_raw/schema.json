@@ -1,0 +1,37 @@
+[
+    {
+        "name": "max_char_per_line",
+        "type": "int",
+        "greater": 0,
+        "less": 100,
+        "nullable": "False"
+    },
+    {
+        "name": "font_size",
+        "type": "int",
+        "greater": 0,
+        "less": 1000,
+        "nullable": "False"
+    },
+    {
+        "name": "rows_number",
+        "type": "int",
+        "greater": 0,
+        "less": 10000,
+        "nullable": "False"
+    },
+    {
+        "name": "cols_number",
+        "type": "int",
+        "greater": 0,
+        "less": 10000,
+        "nullable": "False"
+    },
+    {
+        "name": "char_number_text",
+        "type": "int",
+        "greater": 0,
+        "less": 500,
+        "nullable": "False"
+    }
+]

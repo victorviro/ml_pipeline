@@ -4,8 +4,9 @@ load_dotenv()
 
 
 DATASET_NAME = 'data'
+DATASET_SCHEMA_FILENAME = 'schema'
 VERSION = 1.2
-
+TARGET_VARIABLE_NAME = 'max_char_per_line'
 
 PROJECT_PATH = os.getcwd()
 # Data paths

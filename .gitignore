@@ -24,7 +24,7 @@ src/airflow_dags/logs
 
 
 # exclude data from source control by default (not versioning binary/base files)
-/data/*/*.json
+/data/*/data*.json
 /data/*/*.csv
 /models/*.h5
 #/notebooks/
