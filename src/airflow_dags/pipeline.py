@@ -12,7 +12,7 @@ from src.shared.constants import (
     TRAIN_MODEL_EXPERIMENT_NAME, DATASET_NAME, RAW_DATA_PATH, VERSION, GIT_REMOTE_NAME,
     GIT_BRANCH_NAME, MODEL_NAME, TRANSFORMER_PIPELINE_NAME, SIZE_TEST_SPLIT,
     TEST_SPLIT_SEED, MODEL_SEED, L1_RATIO_PARAM_MODEL, ALPHA_PARAM_MODEL,
-    RMSE_THRESOLD, URL_DATA_MCPL_QUOTES_IMAGE_API, TRANSFORMER_PIPE_PATH,
+    RMSE_THRESOLD, URL_DATA_MCPL_QUOTES_IMAGE_API,
     URL_GET_DATA_API, URL_VALIDATE_DATA_API, URL_VERSION_DATA_API,
     URL_FIT_DATA_TRANSFORMER_API, URL_TRAIN_MODEL_API, URL_VALIDATE_MODEL_API
 )
@@ -141,18 +141,14 @@ with DAG('Max char per line ML pipeline',
         body = {
             'data_path': op_args[0],
             'data_name': op_args[1],
-            'transformer_pipe_path': op_args[2],
-            'pipe_name': op_args[3],
-            'size_test_split':  op_args[4],
-            'test_split_seed':  op_args[5],
-            'model_name':  op_args[6],
+            'size_test_split':  op_args[2],
+            'test_split_seed':  op_args[3],
             'mlflow_run_id': context['ti'].xcom_pull(task_ids='create_run')
         }
         return launch_and_manage_api_request(url_api=URL_FIT_DATA_TRANSFORMER_API,
                                              body=body, description='transform the data')
     PREPROCESSING_FITTER_ARGS = [
-        RAW_DATA_PATH, DATASET_NAME, TRANSFORMER_PIPE_PATH, TRANSFORMER_PIPELINE_NAME,
-        SIZE_TEST_SPLIT, TEST_SPLIT_SEED, MODEL_NAME
+        RAW_DATA_PATH, DATASET_NAME, SIZE_TEST_SPLIT, TEST_SPLIT_SEED
     ]
     preprocessing_fitter = PythonOperator(task_id='preprocessing_fitter',
                                           python_callable=fit_data_transformer,

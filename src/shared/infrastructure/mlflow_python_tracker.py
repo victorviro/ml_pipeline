@@ -27,62 +27,6 @@ class MlflowPythonTracker(IDataTracker):
     def track_data(self):
         return NotImplementedError
 
-    def track_artifact(self, file_path: str, model_name: str) -> str:
-        """
-        Track a file as an artifact into an MLflow experiment using the MLflow python API.
-
-        :param file_path: The local path of the file to track
-        :type file_path: str
-        :param model_name: The path inside the artifact uri where store the file
-        :type model_name: str
-        :return: The path of the artifact stored within the MLflow experiment
-        :rtype: str
-        """
-        try:
-            with start_run(run_id=self.run_id):
-                # Track transformer pipeline file in MLflow
-                log_artifact(
-                    local_path=file_path,
-                    artifact_path=model_name
-                )
-                logger.info(f'File in path "{file_path}" tracked in MLflow experiment '
-                            f'with id: "{self.run_id}".')
-                # Get the path of the artifact
-                filename = os.path.basename(file_path)
-                model_artifact_uri = get_artifact_uri(model_name)
-                artifact_path = f'{model_artifact_uri}/{filename}'
-                return artifact_path
-        except Exception as err:
-            message = f'Error tracking file as artifact in MLflow experiment: {str(err)}'
-            raise Exception(message)
-
-    def track_sklearn_transfomer_pipeline(self, file_path: str, model_name: str,
-                                          transformer_pipe: Pipeline) -> str:
-        """Track a sklearn transformer pipeline as an artifact into an MLflow experiment
-        using the MLflow python API.
-
-        :param file_path: The local path of the sklearn transformer pipeline to track
-        :type file_path: str
-        :param model_name: The path inside the artifact uri where store the file
-        :type model_name: str
-        :param transformer_pipe: The sklearn transformer pipeline
-        :type transformer_pipe: Pipeline
-        :return: The path of the artifact stored within the MLflow experiment
-        :rtype: str
-        """
-        try:
-            # Track the file as an artifact into an MLflow experiment
-            artifact_path = self.track_artifact(file_path=file_path,
-                                                model_name=model_name)
-            # Track in MLflow the name of steps of the transformer pipe in a dict
-            with start_run(run_id=self.run_id):
-                transformer_steps = {'transformer_steps': [*transformer_pipe.named_steps]}
-                log_dict(transformer_steps, 'transformer_pipe.json')
-            return artifact_path
-        except Exception as err:
-            message = f'Error tracking transformer pipe in MLflow experiment: {str(err)}'
-            raise Exception(message)
-
     def track_metrics(self, metrics: dict):
         """
         Track metrics in a MLflow experiment run.
@@ -125,6 +69,23 @@ class MlflowPythonTracker(IDataTracker):
                 log_sklearn_model(sk_model=model, artifact_path=model_name)
         except Exception as err:
             message = f'Error tracking sklearn model in MLflow experiment: {str(err)}'
+            raise Exception(message)
+
+    def track_dict(self, dictionary: dict, run_relative_file_path: str):
+        """
+        Track a dictionary into an MLflow experiment using the MLflow python API.
+
+        :param dictionary: The dict to track
+        :type dictionary: dict
+        :param relative_file_path: The run-relative artifact file path to which the dict
+            is saved
+        :type relative_file_path: str
+        """
+        try:
+            with start_run(run_id=self.run_id):
+                log_dict(dictionary=dictionary, artifact_file=run_relative_file_path)
+        except Exception as err:
+            message = f'Error tracking dictionary in MLflow experiment: {str(err)}'
             raise Exception(message)
 
     def register_model(self, model_name: str, name: str):

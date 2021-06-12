@@ -5,7 +5,7 @@ pandas==1.2.4
 seaborn==0.11.0
 dvc==1.10.0
 scikit-learn==0.24.2
-mlflow==1.12.1
+mlflow==1.14.1
 pandera==0.5.0
 psycopg2==2.8.6
 python-dotenv==0.15.0

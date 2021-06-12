@@ -1,6 +1,6 @@
 from sklearn.pipeline import Pipeline
 
-from src.shared.constants import MODEL_NAME
+from src.shared.constants import TRANSFORMER_PIPELINE_NAME
 from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 
 
@@ -16,19 +16,19 @@ class MlflowTransformerTracker(MlflowPythonTracker):
     def __init__(self, run_id: str):
         super().__init__(run_id)
 
-    def track_transformer_fitting_info(self, transformer: Pipeline,
-                                       transformer_file_path: str):
+    def track_transformer_fitting_info(self, transformer: Pipeline):
         """
-        Track information of the transformer fitting (artifact, preprocessing steps,...)
-        to an MLflow experiment run.
+        Track information of the transformer fitting (transformer pipeline, preprocessing
+        steps,...) to an MLflow experiment run.
 
         :param transformer: The sklearn transformer pipeline fitted
         :type transformer: Pipeline
-        :param transformer_file_path: The path where the transformer file was stored
-        :type transformer_file_path: str
         """
-        self.track_sklearn_transfomer_pipeline(
-            file_path=transformer_file_path,
-            model_name=MODEL_NAME,
-            transformer_pipe=transformer
+        # Track the transformer pipeline
+        self.track_sklearn_model(model=transformer, model_name=TRANSFORMER_PIPELINE_NAME)
+        # Get dict with information of the preprocessing steps
+        transformer_steps = {'transformer_steps': [*transformer.named_steps]}
+        self.track_dict(
+            dictionary=transformer_steps,
+            run_relative_file_path=f'{TRANSFORMER_PIPELINE_NAME}.json'
         )
