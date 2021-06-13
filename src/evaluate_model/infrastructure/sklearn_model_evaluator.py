@@ -6,6 +6,7 @@ from sklearn.pipeline import Pipeline
 
 from src.shared.training_helper import get_regression_metrics
 from src.evaluate_model.domain.model_evaluator import IModelEvaluator
+from src.shared.constants import TARGET_VARIABLE_NAME
 
 
 logger = logging.getLogger(__name__)
@@ -26,39 +27,33 @@ class SklearnModelEvaluator(IModelEvaluator):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
 
-    def evaluate_model(self, data: dict, model: Pipeline) -> dict:
+    def evaluate_model(self, dataset: dict, model: Pipeline) -> dict:
         """
         Evaluate the model using different metrics and track the results.
 
-        :param data: The dataset used to validate the model (before splitting it)
-        :type data: dict
+        :param dataset: The dataset used to validate the model (before splitting it)
+        :type dataset: dict
         :param model: The sklearn model fitted (preprocessing + model)
         :type model: Pipeline
         :return: Information (metrics) to track
         :rtype: dict
         """
 
-        # Convert dataset to pandas DataFrame
-        try:
-            data_df = DataFrame.from_dict(data)
-            logger.info(f'Dataset converted to pandas DataFrame succesfully.')
-        except Exception as err:
-            msg = f'Error loading data or converting it to df. Error traceback: {err}'
-            logger.error(msg)
-            raise Exception(msg)
+        # Load the dataset to pandas DataFrame
+        dataset_df = DataFrame.from_dict(dataset)
+        X = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
+        y = dataset_df[TARGET_VARIABLE_NAME]
 
-        # Split the data into training and test sets.
+        # Split the dataset in training and test sets.
         try:
-            X = data_df.drop("max_char_per_line", axis=1)
-            y = data_df["max_char_per_line"]
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=self.size_test_split, random_state=self.test_split_seed
             )
-            logger.info(f'Dataset splitted succesfully.')
-        except Exception as err:
-            msg = f'Error getting target variable or splitting data. Error: {err}'
-            logger.error(msg)
-            raise Exception(msg)
+            logger.info('Dataset split succesfully.')
+        except ValueError as err:
+            msg = ('ValueError splitting the dataset in training and test sets. Error '
+                   f'description: {err}.')
+            raise ValueError(msg)
 
         # Make predictions and compute metrics on the test and training sets
         try:
@@ -66,18 +61,12 @@ class SklearnModelEvaluator(IModelEvaluator):
             (rmse_test, mae_test, r2_test) = get_regression_metrics(y_test,
                                                                     y_test_predicted)
             y_train_predicted = model.predict(X_train)
-            (rmse_train, mae_train, r2_train) = get_regression_metrics(
-                y_train, y_train_predicted
-            )
-
-            logger.info(f'Metrics train set: \nRMSE: {rmse_train} \nMAE: {mae_train}'
-                        f' \nR2: {r2_train}')
-            logger.info(f'Metrics test set: \nRMSE: {rmse_test} \nMAE: {mae_test}'
-                        f' \nR2: {r2_test}')
+            (rmse_train, mae_train, r2_train) = get_regression_metrics(y_train,
+                                                                       y_train_predicted)
 
         except Exception as err:
             msg = ('Error making predictions or getting metrics on test and training sets'
-                   f'. Error traceback: {err}')
+                   f'. Error description: {err.__class__.__name__}: {err}.')
             logger.error(msg)
             raise Exception(msg)
 

@@ -6,10 +6,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.shared.constants import MODEL_NAME, GCP_BUCKET_NAME
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.evaluate_model.application.evaluate_model_use_case import EvaluateModel
-from src.shared.infrastructure.pickle_gcs_data_loader import PickleGCSDataLoader
 from .sklearn_model_evaluator import SklearnModelEvaluator
 from .mlflow_model_evaluation_tracker import MlflowModelEvaluationTracker
 
@@ -36,31 +34,27 @@ async def evaluate_model_endpoint(item: Item):
         test_split_seed=item.test_split_seed
     )
     json_data_loader = JSONDataLoader()
-    pickle_gcs_data_loader = PickleGCSDataLoader()
-    mlflow_api_tracker = MlflowModelEvaluationTracker(run_id=item.mlflow_run_id)
-    artifacts_path = mlflow_api_tracker.get_artifacts_path()
+    mlflow_model_evaluation_tracker = MlflowModelEvaluationTracker(
+        run_id=item.mlflow_run_id
+    )
 
     evaluate_model_use_case = EvaluateModel.build(
         model_evaluator=sklearn_model_evaluator,
         dataset_file_loader=json_data_loader,
-        model_file_loader=pickle_gcs_data_loader,
-        data_tracker=mlflow_api_tracker
+        data_tracker=mlflow_model_evaluation_tracker
     )
-    data_file_path = f'{item.raw_data_path}/{item.data_name}.json'
-    model_gcs_url = f'{artifacts_path}/{MODEL_NAME}.pkl'
-    model_gcs_path_in_bucket = model_gcs_url.replace(f'gs://{GCP_BUCKET_NAME}/', '')
+    dataset_file_path = f'{item.raw_data_path}/{item.data_name}.json'
 
     try:
-        logger.info(f'Evaluating model...')
-        evaluate_model_use_case.execute(
-            data_file_path=data_file_path,
-            model_path=model_gcs_path_in_bucket
-        )
-        message = 'Model evaluated succesfully'
+        logger.info('Evaluating the model...')
+        evaluate_model_use_case.execute(dataset_file_path=dataset_file_path)
+        message = 'Model evaluated succesfully and metrics tracked.'
+        logger.info(message)
         return JSONResponse(status_code=status.HTTP_200_OK,
                             content={'message': message})
     except Exception as err:
-        message = f'Error evaluating the model: {str(err)}'
+        message = f'Error evaluating the model. Error description: {str(err)}.'
+        logger.error(message)
         return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content={'message': message})
 

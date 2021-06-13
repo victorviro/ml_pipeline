@@ -4,8 +4,10 @@ from mlflow import (start_run, get_artifact_uri, log_dict, log_params,
                     log_metrics, register_model)
 from mlflow.sklearn import log_model as log_sklearn_model
 from mlflow.sklearn import load_model
+from mlflow.tracking import MlflowClient
 
 from src.shared.interfaces.data_tracker import IDataTracker
+from src.shared.constants import REGISTRY_MODEL_NAME
 
 
 logger = logging.getLogger(__name__)
@@ -144,4 +146,48 @@ class MlflowPythonTracker(IDataTracker):
         except Exception as err:
             message = ('Error loading sklearn model from a MLflow run. Model uri: '
                        f'{model_uri}. Error description: {str(err)}')
+            raise Exception(message)
+
+    def search_model_version(self) -> str:
+        """
+        Get the model version of a run registered in MLFLOW Registry.
+
+        :return: The model version
+        :rtype: str
+        """
+        try:
+            client = MlflowClient()
+            # Get the version of the model filtered by run id
+            filter_string = f"run_id='{self.run_id}'"
+            results = client.search_model_versions(filter_string=filter_string)
+            version_model_registered = results[0].version
+            return version_model_registered
+        except Exception as err:
+            message = (f'Error getting model version of a run in MLflow Registry. Error '
+                       f'description: {err.__class__.__name__}:{str(err)}.')
+            logger.error(message)
+            raise Exception(message)
+
+    def transition_model_version_stage(self, stage: str):
+        """
+        Update model version stage in MLflow Registry.
+
+        :param stage: New desired stage for this model version (None/staging/production)
+        :type stage: str
+        """
+        # Get the version of the model registered
+        version_model_registered = self.search_model_version()
+        try:
+            client = MlflowClient()
+            # Update model version stage
+            client.transition_model_version_stage(name=REGISTRY_MODEL_NAME, stage=stage,
+                                                  version=version_model_registered)
+            logger.info('Updated stage of model registered in MLflow Registry to '
+                        f'"{stage}"". Name: {REGISTRY_MODEL_NAME}. '
+                        f'Version: {version_model_registered}.')
+        except Exception as err:
+            message = (f'Error updating stage of model "{REGISTRY_MODEL_NAME}" with '
+                       f'version "{version_model_registered}" in MLflow Registry. '
+                       f'Error description: {err.__class__.__name__}{str(err)}.')
+            logger.error(message)
             raise Exception(message)
