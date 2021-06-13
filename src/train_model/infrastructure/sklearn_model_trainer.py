@@ -6,7 +6,7 @@ from sklearn.linear_model import ElasticNet
 from sklearn.pipeline import Pipeline
 
 from src.train_model.domain.model_trainer import IModelTrainer
-
+from src.shared.constants import TARGET_VARIABLE_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -36,46 +36,44 @@ class SklearnModelTrainer(IModelTrainer):
         self.l1_ratio = l1_ratio
         self.model_seed = model_seed
 
-    def train_model(self, data: dict, transformer: Pipeline) -> dict:
+    def train_model(self, dataset: dict, transformer: Pipeline) -> dict:
         """
         Train the model using Scikit-learn, and return information to track.
 
-        :param data: The dataset used for training and evaluate the model
-        :type data: dict
+        :param dataset: The dataset used for training and evaluate the model
+        :type dataset: dict
         :param transformer: The sklearn transformer pipeline fitted
         :type transformer: Pipeline
         :return: Information to track
         :rtype: dict
         """
 
-        # Convert the dataset to pandas DataFrame
+        # Load the dataset to pandas DataFrame
+        dataset_df = DataFrame.from_dict(dataset)
+        X = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
+        y = dataset_df[TARGET_VARIABLE_NAME]
+
+        # Split the dataset in training and test sets.
         try:
-            data_df = DataFrame.from_dict(data)
-            logger.info(f'Dataset converted to pandas DataFrame succesfully.')
-        except Exception as err:
-            msg = f'Error converting the dataset to df. Error traceback: {err}'
-            logger.error(msg)
-            raise Exception(msg)
-        # Split the data into training and test sets.
-        try:
-            X = data_df.drop("max_char_per_line", axis=1)
-            y = data_df["max_char_per_line"]
             X_train, X_test, y_train, y_test = train_test_split(
                 X, y, test_size=self.size_test_split, random_state=self.test_split_seed
             )
-        except Exception as err:
-            msg = f'Error getting target variable or splitting the dataset. Error: {err}'
-            logger.error(msg)
-            raise Exception(msg)
-
+        except ValueError as err:
+            msg = ('ValueError splitting the dataset into training and test sets. Error '
+                   f'description: {err}.')
+            raise ValueError(msg)
+        # Transform train features
         try:
-            # Transform train features
             data_columns = X.columns.to_list()
             X_train_transformed_array = transformer.transform(X_train)
             X_train_transformed = DataFrame(X_train_transformed_array,
                                             columns=data_columns)
-            logger.info('Training features transformed succesfully')
-
+            logger.info('Training features transformed succesfully.')
+        except Exception as err:
+            msg = ('Error transforming training features. Error description: '
+                   f'{err.__class__.__name__}: {err}.')
+        # Define and train the model
+        try:
             # Define the model
             model = ElasticNet(
                 alpha=self.alpha,
@@ -84,13 +82,11 @@ class SklearnModelTrainer(IModelTrainer):
             )
             # Train the model
             model.fit(X_train_transformed, y_train)
-            logger.info(f'Model trained succesfully. Hyperparameters: '
-                        f'alpha={self.alpha}, l1_ratio={self.l1_ratio}.')
+            logger.info('Model trained succesfully')
 
             # Build the pipeline (transformations plus model)
-            steps_pipe = transformer.steps
-            steps_pipe.append(('elastic_net', model))
-            pipeline = Pipeline(steps=steps_pipe)
+            pipeline_steps = [*transformer.steps, *[('elastic_net', model)]]
+            pipeline = Pipeline(steps=pipeline_steps)
 
             # Information to track (hyperparameters,...)
             parameters_to_track = {
@@ -106,7 +102,16 @@ class SklearnModelTrainer(IModelTrainer):
             }
             return information_to_track
 
+        except TypeError as err:
+            msg = f'TypeError training the model. Error description: {err}.'
+            logger.error(msg)
+            raise Exception(msg)
+        except ValueError as err:
+            msg = f'ValueError training the model. Error description: {err}.'
+            logger.error(msg)
+            raise Exception(msg)
         except Exception as err:
-            msg = f'Error training the model. Error traceback: {err}'
+            msg = ('Unknown error training the model. Error description: '
+                   f'{err.__class__.__name__}: {err}.')
             logger.error(msg)
             raise Exception(msg)

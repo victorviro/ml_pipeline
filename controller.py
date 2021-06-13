@@ -3,15 +3,11 @@ import logging.config
 import requests
 import json
 from src.shared.logging_config import LOGGING_CONFIG
-from src.shared.constants import (DATASET_NAME, MODEL_NAME, VERSION,
+from src.shared.constants import (DATASET_NAME, VERSION,
                                   URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH,
-                                  TRANSFORMED_DATA_PATH, RMSE_THRESOLD, MODELS_PATH,
-                                  TRANSFORMER_PIPELINE_NAME, TRANSFORMER_PIPE_PATH)
+                                  RMSE_THRESOLD)
 
 RAW_DATA_PATH = '/mcpl_prediction/data/01_raw'
-TRANSFORMED_DATA_PATH = '/mcpl_prediction/data/04_model_input'
-MODELS_PATH = '/mcpl_prediction/models'
-TRANSFORMER_PIPE_PATH = '/mcpl_prediction/artifact_store'
 MLFLOW_RUN_ID = '9dfa36b182604f548da8b2586b7890ef'
 # logging.config.dictConfig(LOGGING_CONFIG)
 # logger = logging.getLogger("controller")
@@ -58,10 +54,8 @@ print(request.content)
 body = {
     'raw_data_path': RAW_DATA_PATH,
     'data_name': DATASET_NAME,
-    'transformer_pipe_path': TRANSFORMER_PIPE_PATH,
     'alpha': 0.1,
     'l1_ratio': 0.1,
-    'transformer_name': TRANSFORMER_PIPELINE_NAME,
     'size_test_split': 0.33,
     'test_split_seed': 1,
     'model_seed': 42,

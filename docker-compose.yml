@@ -232,7 +232,6 @@ services:
     volumes: 
       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-      - ./artifact_store:/${PROJECT_NAME}/artifact_store
       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
       - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/

@@ -10,9 +10,8 @@ from airflow.operators.python_operator import PythonOperator
 from src.shared.infrastructure.mlflow_api_tracker import MlflowApiTracker
 from src.shared.constants import (
     TRAIN_MODEL_EXPERIMENT_NAME, DATASET_NAME, RAW_DATA_PATH, VERSION, GIT_REMOTE_NAME,
-    GIT_BRANCH_NAME, MODEL_NAME, TRANSFORMER_PIPELINE_NAME, SIZE_TEST_SPLIT,
-    TEST_SPLIT_SEED, MODEL_SEED, L1_RATIO_PARAM_MODEL, ALPHA_PARAM_MODEL,
-    RMSE_THRESOLD, URL_DATA_MCPL_QUOTES_IMAGE_API,
+    GIT_BRANCH_NAME, SIZE_TEST_SPLIT, TEST_SPLIT_SEED, MODEL_SEED, L1_RATIO_PARAM_MODEL,
+    ALPHA_PARAM_MODEL, RMSE_THRESOLD, URL_DATA_MCPL_QUOTES_IMAGE_API,
     URL_GET_DATA_API, URL_VALIDATE_DATA_API, URL_VERSION_DATA_API,
     URL_FIT_DATA_TRANSFORMER_API, URL_TRAIN_MODEL_API, URL_VALIDATE_MODEL_API
 )
@@ -163,19 +162,16 @@ with DAG('Max char per line ML pipeline',
             'data_name': op_args[1],
             'alpha': op_args[2],
             'l1_ratio': op_args[3],
-            'transformer_name': op_args[4],
-            'model_name': op_args[5],
-            'size_test_split': op_args[6],
-            'test_split_seed': op_args[7],
-            'model_seed': op_args[8],
+            'size_test_split': op_args[4],
+            'test_split_seed': op_args[5],
+            'model_seed': op_args[6],
             'mlflow_run_id': context['ti'].xcom_pull(task_ids='create_run')
         }
         return launch_and_manage_api_request(url_api=URL_TRAIN_MODEL_API, body=body,
                                              description='train the model')
     MODEL_TRAINING_ARGS = [
         RAW_DATA_PATH, DATASET_NAME, L1_RATIO_PARAM_MODEL, ALPHA_PARAM_MODEL,
-        TRANSFORMER_PIPELINE_NAME, MODEL_NAME, SIZE_TEST_SPLIT, TEST_SPLIT_SEED,
-        MODEL_SEED
+        SIZE_TEST_SPLIT, TEST_SPLIT_SEED, MODEL_SEED
     ]
     model_training = PythonOperator(task_id='model_training',
                                     python_callable=train_model,

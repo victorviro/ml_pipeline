@@ -1,10 +1,9 @@
 import logging
-import os
 
-from mlflow import (start_run, log_artifact, get_artifact_uri, log_dict, log_params,
+from mlflow import (start_run, get_artifact_uri, log_dict, log_params,
                     log_metrics, register_model)
-from sklearn.pipeline import Pipeline
 from mlflow.sklearn import log_model as log_sklearn_model
+from mlflow.sklearn import load_model
 
 from src.shared.interfaces.data_tracker import IDataTracker
 
@@ -102,14 +101,13 @@ class MlflowPythonTracker(IDataTracker):
                 model_uri = f'runs:/{self.run_id}/{model_name}'
                 registered_model_info = register_model(model_uri=model_uri,
                                                        name=name)
-                logger.info('Model registered in MLflow Registry. '
-                            f'Name: {name}. '
+                logger.info(f'Model registered in MLflow Registry. Name: {name}. '
                             f'Version: {registered_model_info.version}')
         except Exception as err:
             message = f'Error registering model in MLflow Registry: {str(err)}'
             raise Exception(message)
 
-    def get_artifacts_path(self, model_name: str) -> str:
+    def get_artifacts_uri(self, model_name: str) -> str:
         """
         Get the artifacts path of the MLflow experiment run.
 
@@ -122,10 +120,28 @@ class MlflowPythonTracker(IDataTracker):
             with start_run(run_id=self.run_id):
                 # Get the model artifact uri
                 model_artifact_uri = get_artifact_uri(model_name)
-                # Get the artifacts path
-                artifacts_path = f'{os.getcwd()}/{model_artifact_uri}'
-                logger.info(f'Artifacts path gotten: {artifacts_path}')
-                return artifacts_path
+                logger.info(f'Artifacts uri gotten: {model_artifact_uri}')
+                return model_artifact_uri
         except Exception as err:
-            message = f'Error getting artifacts path from a MLflow run: {str(err)}'
+            message = f'Error getting artifacts uri from a MLflow run: {str(err)}'
+            raise Exception(message)
+
+    def load_sklearn_model(self, model_uri: str):
+        """
+        Load a sklearn model from a MLflow run.
+
+        :param model_uri: The location, in URI format, of the MLflow model
+        :type model_uri: str
+        :return: The sklearn model
+        :rtype:
+        """
+        try:
+            with start_run(run_id=self.run_id):
+                model = load_model(model_uri=model_uri)
+                logger.info('Sklearn model loaded succesfully from a MLflow run. Model '
+                            f'uri: {model_uri}')
+                return model
+        except Exception as err:
+            message = ('Error loading sklearn model from a MLflow run. Model uri: '
+                       f'{model_uri}. Error description: {str(err)}')
             raise Exception(message)
