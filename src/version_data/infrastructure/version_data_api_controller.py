@@ -1,5 +1,4 @@
 import logging.config
-import os
 
 from fastapi import FastAPI
 from fastapi import status  # starlette statuses

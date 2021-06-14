@@ -9,7 +9,6 @@ from git import Repo
 from git.exc import InvalidGitRepositoryError, GitCommandError
 
 from src.version_data.domain.data_versioner import IDataVersioner
-from src.shared.interfaces.data_tracker import IDataTracker
 
 
 logger = logging.getLogger(__name__)

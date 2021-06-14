@@ -1,5 +1,3 @@
-import os
-
 from src.serve_model.domain.model_server import IModelServer
 from src.shared.interfaces.data_tracker import IDataTracker
 
