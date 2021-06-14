@@ -99,10 +99,6 @@ print(request.content)
 
 # Validate model
 body = {
-    'raw_data_path': RAW_DATA_PATH,
-    'data_name': DATASET_NAME,
-    'size_test_split': 0.33,
-    'test_split_seed': 1,
     'rmse_threshold': RMSE_THRESOLD,
     'mlflow_run_id': MLFLOW_RUN_ID
 }

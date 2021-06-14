@@ -182,18 +182,12 @@ with DAG('Max char per line ML pipeline',
     # region Step 5: Model validation
     def validate_model(*op_args, **context):
         body = {
-            'raw_data_path': op_args[0],
-            'data_name': op_args[1],
-            'size_test_split': op_args[2],
-            'test_split_seed': op_args[3],
-            'rmse_threshold': op_args[4],
+            'rmse_threshold': op_args[0],
             'mlflow_run_id': context['ti'].xcom_pull(task_ids='create_run')
         }
         return launch_and_manage_api_request(url_api=URL_VALIDATE_MODEL_API, body=body,
                                              description='validate the model')
-    MODEL_VALIDATION_ARGS = [
-        RAW_DATA_PATH, DATASET_NAME, SIZE_TEST_SPLIT, TEST_SPLIT_SEED, RMSE_THRESOLD
-    ]
+    MODEL_VALIDATION_ARGS = [RMSE_THRESOLD]
     model_validation = PythonOperator(task_id='model_validation',
                                       python_callable=validate_model,
                                       op_args=MODEL_VALIDATION_ARGS,

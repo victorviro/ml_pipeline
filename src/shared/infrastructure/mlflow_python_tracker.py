@@ -1,7 +1,7 @@
 import logging
 
 from mlflow import (start_run, get_artifact_uri, log_dict, log_params,
-                    log_metrics, register_model)
+                    log_metrics, register_model, get_run)
 from mlflow.sklearn import log_model as log_sklearn_model
 from mlflow.sklearn import load_model
 from mlflow.tracking import MlflowClient
@@ -189,5 +189,32 @@ class MlflowPythonTracker(IDataTracker):
             message = (f'Error updating stage of model "{REGISTRY_MODEL_NAME}" with '
                        f'version "{version_model_registered}" in MLflow Registry. '
                        f'Error description: {err.__class__.__name__}{str(err)}.')
+            logger.error(message)
+            raise Exception(message)
+
+    def get_tracked_items(self, item_type: str) -> dict:
+        """
+        Get items (parameters, metrics or tags) tracked in the MLflow experiment run.
+
+        :param item_type: The type of the item (metric, parameter or tag)
+        :type item_type: str
+        :return: The items tracked in the experiment run
+        :rtype: dict
+        """
+        try:
+            run_info = get_run(run_id=self.run_id)
+            if item_type == 'metric':
+                items_info = run_info.data.metrics
+            if item_type == 'parameter':
+                items_info = run_info.data.params
+            if item_type == 'tag':
+                items_info = run_info.data.metrics
+            if not items_info:
+                logger.warning(f'The are no {item_type}s tracked in the experiment run '
+                               f'with id: "{self.run_id}"')
+            return items_info
+        except Exception as err:
+            message = (f'Error getting {item_type}s from the mlflow experiment run with '
+                       f'id: "{self.run_id}". Error: {err.__class__.__name__}:{err}')
             logger.error(message)
             raise Exception(message)
