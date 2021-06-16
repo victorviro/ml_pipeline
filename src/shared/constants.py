@@ -89,7 +89,6 @@ URL_VALIDATE_MODEL_API = (f'http://{os.getenv("HOST_VALIDATE_MODEL")}:'
                           f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')
 
 
-GCP_BUCKET_NAME = 'mcpl'
 GCP_REGION = 'europe-west4'
 GCP_MODEL_NAME = 'mcpl'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
