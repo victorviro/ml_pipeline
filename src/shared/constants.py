@@ -89,13 +89,9 @@ URL_VALIDATE_MODEL_API = (f'http://{os.getenv("HOST_VALIDATE_MODEL")}:'
                           f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')
 
 
-GCP_PROJECT_NAME = 'viroTest'
-GCP_BUCKET_NAME = 'mcpl'  # 'mcpl_inference'
-GCP_MODEL_NAME_DESTINATION = 'model.pkl'
+GCP_BUCKET_NAME = 'mcpl'
 GCP_REGION = 'europe-west4'
-GCP_PROJECT_ID = 'virotest-311212'
 GCP_MODEL_NAME = 'mcpl'
-GCP_PREDICTION_MACHINE_TYPE = 'n1-standard-2'  # 'n1-standard-4'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
     f'{os.getcwd()}/'
     f'{os.getenv("GCP_CREDENTIALS_FILE_REL_PATH")}'

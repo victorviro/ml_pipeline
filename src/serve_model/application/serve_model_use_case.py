@@ -16,11 +16,15 @@ class ServeModel:
         self.model_server = model_server
         self.data_tracker = data_tracker
 
-    def execute(self, model_file_path: str, version_name: str):
+    def execute(self):
+        # Get path of the model tracked
+        model_path = self.data_tracker.get_tracked_model_path()
+        # Get the version of the model tracked in Model Registry
+        model_version_in_registry = self.data_tracker.get_model_version_in_registry()
         # Serve model
         self.model_server.serve_model(
-            model_file_path=model_file_path,
-            version_name=version_name
+            model_path=model_path,
+            model_version=model_version_in_registry
         )
 
     @staticmethod

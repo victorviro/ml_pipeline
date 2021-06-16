@@ -1,5 +1,7 @@
-google-cloud-storage==1.37.1
+#google-cloud-storage==1.37.1
 google-api-python-client==2.2.0
 python-dotenv==0.15.0
 fastapi[all]==0.63.0
 packaging==20.9
+mlflow-skinny==1.14.1
+pandas==1.2.4
