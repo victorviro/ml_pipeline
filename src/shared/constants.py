@@ -42,18 +42,6 @@ MODEL_SEED = 42
 L1_RATIO_PARAM_MODEL = 0.1
 ALPHA_PARAM_MODEL = 0.1
 
-# MLflow
-MLFLOW_API_URI = f'{os.getenv("MLFLOW_TRACKING_URI")}/api'
-MLFLOW_API_ENDPOINT_LOG_BATCH = '2.0/mlflow/runs/log-batch'
-MLFLOW_API_ENDPOINT_GET_RUN = '2.0/mlflow/runs/get'
-MLFLOW_API_ENDPOINT_SEARCH_MODEL_VERSIONS = '2.0/preview/mlflow/model-versions/search'
-MLFLOW_API_ENDPOINT_UPDATE_MODEL_STAGE = ('2.0/preview/mlflow/model-versions/transition-'
-                                          'stage')
-MLFLOW_API_ENDPOINT_LATEST_MODEL_VERSION = ('2.0/preview/mlflow/registered-models/get-'
-                                            'latest-versions')
-MLFLOW_API_ENDPOINT_CREATE_RUN = '2.0/mlflow/runs/create'
-MLFLOW_API_ENDPOINT_GET_EXPERIMENT_BY_NAME = '2.0/mlflow/experiments/get-by-name'
-
 # Model validation
 RMSE_THRESOLD = 20
 
