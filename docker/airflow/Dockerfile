@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y python3-pip
 RUN python3.6 -m pip install --upgrade pip==20.2.4
 RUN pip3.6 install apache-airflow==2.0.1 && pip3.6 install psycopg2==2.8.6
 RUN pip3.6 install python-dotenv==0.15.0
+RUN pip3.6 install mlflow-skinny==1.14.1
 
 # RUN file="list dir media: $(echo $PROJECT_NAME)" && echo $file
 

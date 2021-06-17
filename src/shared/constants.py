@@ -84,9 +84,13 @@ URL_VERSION_DATA_API = (f'http://{os.getenv("HOST_VERSION_DATA")}:'
                         f'{os.getenv("PORT_VERSION_DATA")}/'
                         f'{os.getenv("ENDPOINT_VERSION_DATA")}')
 
+URL_EVALUATE_MODEL_API = (f'http://{os.getenv("HOST_EVALUATE_MODEL")}:'
+                          f'{os.getenv("PORT_EVALUATE_MODEL")}/'
+                          f'{os.getenv("ENDPOINT_EVALUATE_MODEL")}')
+
 URL_VALIDATE_MODEL_API = (f'http://{os.getenv("HOST_VALIDATE_MODEL")}:'
-                          f'{os.getenv("PORT_VALIDATE_DATA")}/'
-                          f'{os.getenv("ENDPOINT_VALIDATE_DATA")}')
+                          f'{os.getenv("PORT_VALIDATE_MODEL")}/'
+                          f'{os.getenv("ENDPOINT_VALIDATE_MODEL")}')
 
 
 GCP_REGION = 'europe-west4'
