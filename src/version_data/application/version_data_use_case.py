@@ -30,7 +30,7 @@ class VersionTrackData:
             data_version=data_version
         )
         # Track info in a experiment run
-        self.data_tracker.track_items(data=information_to_track, item_type="tags")
+        self.data_tracker.track_information(information_to_track=information_to_track)
 
     @staticmethod
     def build(data_versioner: IDataVersioner, data_tracker: IDataTracker):

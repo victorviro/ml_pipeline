@@ -1,7 +1,7 @@
 import logging
 
 from mlflow import (start_run, get_artifact_uri, log_dict, log_params,
-                    log_metrics, register_model, get_run)
+                    log_metrics, register_model, get_run, set_tags)
 from mlflow.sklearn import log_model as log_sklearn_model
 from mlflow.sklearn import load_model
 from mlflow.tracking import MlflowClient
@@ -54,6 +54,20 @@ class MlflowPythonTracker(IDataTracker):
                 log_params(parameters)
         except Exception as err:
             message = f'Error tracking parameters in MLflow experiment: {str(err)}'
+            raise Exception(message)
+
+    def track_tags(self, tags: dict):
+        """
+        Track tags in a MLflow experiment run.
+
+        :param parameters: The tags to track
+        :type parameters: dict
+        """
+        try:
+            with start_run(run_id=self.run_id):
+                set_tags(tags)
+        except Exception as err:
+            message = f'Error tracking tags in MLflow experiment: {str(err)}'
             raise Exception(message)
 
     def track_sklearn_model(self, model, model_name: str):

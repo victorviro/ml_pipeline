@@ -4,3 +4,5 @@ python-dotenv==0.15.0
 fastapi[all]==0.63.0
 packaging==20.9
 GitPython==3.1.17
+mlflow-skinny==1.14.1
+pandas==1.2.4
