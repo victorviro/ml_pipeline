@@ -45,11 +45,6 @@ ALPHA_PARAM_MODEL = 0.1
 # Model validation
 RMSE_THRESOLD = 20
 
-# Hyper-parameter optimization
-HYPERPARAM_EXPERIMENT_NAME = 'Hyperparameter search'
-HYPEROPT_MAX_EVALS = 50
-
-
 # Urls of use cases APIs
 # HOST_USE_CASES_APIS = os.getenv("HOST_USE_CASES_APIS")
 URL_GET_DATA_API = (f'http://{os.getenv("HOST_GET_DATA")}:'
