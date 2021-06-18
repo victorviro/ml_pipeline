@@ -21,9 +21,11 @@
     "python.linting.pycodestyleArgs": [
         "--max-line-length=90"
     ],
+    "jupyter.jupyterServerType": "remote",
     //"python.autoComplete.extraPaths": ["./src"], // to pylint read src imports,
     //"python.analysis.extraPaths": ["src"],
     //"python.analysis.completeFunctionParens": true,
     //"python.terminal.activateEnvironment": true,
     //"python.terminal.activateEnvInCurrentTerminal": true
+    //"notebook.showCellStatusBar": true
 }

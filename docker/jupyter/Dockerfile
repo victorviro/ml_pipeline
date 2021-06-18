@@ -1,4 +1,4 @@
-FROM python:3.6.9
+FROM python:3.9.5
 
 RUN apt-get update && apt-get install -y wget && apt-get clean
 
@@ -13,7 +13,7 @@ COPY ${PROJECT_SRC}/notebooks/requirements.txt /${PROJECT_NAME}/
 
 # Update pip and install requirements
 RUN apt-get update && apt-get install -y python3-pip
-RUN python3.6 -m pip install --upgrade pip
-RUN pip3.6 install --upgrade pip && pip3.6 install -r requirements.txt
+RUN python3.9 -m pip install --upgrade pip
+RUN pip3.9 install --upgrade pip && pip3.9 install -r requirements.txt
 
 CMD jupyter notebook --port=$JUPYTER_PORT --no-browser --ip=$JUPYTER_HOST --allow-root

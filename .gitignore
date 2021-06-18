@@ -28,6 +28,7 @@ src/airflow_dags/logs
 /data/*/*.csv
 /models/*.h5
 #/notebooks/
+/src/notebooks/.ipynb_checkpoints
 
 /mlruns
 /models/*/*/*/*.yaml
