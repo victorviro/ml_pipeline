@@ -1,23 +1,21 @@
-# Manage jupyter notebooks
+# 📝 Manage jupyter notebooks
 
-We explain briefly how use jupyter notebooks with VScode.
+To use jupyter notebooks within VS Code we first need to install it and launch it:
 
-
-## Install
-
-```
-pip install jupyter==1.0.0
-```
-
-## Set up
-Launch jupyter in other window:
 ```bash
+pip install jupyter==1.0.0
 jupyter notebook
 ```
 
 ## Create jupyter notebook
 
-Create a notebook via command pallete in vscode (Create new blank jupyter notebook) save it where we want (we have already saved a notebook for EDA in `src/notebooks/EDA_MCPL_data.ipynb`).
+We can create a notebook using the command pallete in vscode (`Jupyter: Create new blank jupyter notebook`), and save it where we want.
+
+## Connect to a remote Jupyter server
+
+To connect to a remote Jupyter server:
+
+- Run the `Jupyter: Specify local or remote Jupyter server for connections` command from the Command Palette, select `Existing: Specify the URI of an existing server`, and enter the URI of a Jupyter server (it can be needed to reload the VS Code).
 
 
 ## References
