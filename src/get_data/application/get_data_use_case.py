@@ -1,7 +1,7 @@
 import os
 
 from src.get_data.domain.data_downloander import IDataDownloander
-from src.shared.interfaces.data_file_saver import IDataFileSaver
+from src.get_data.domain.data_file_saver import IDataFileSaver
 
 
 class GetData:

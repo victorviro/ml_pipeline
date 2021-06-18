@@ -1,7 +1,7 @@
 import json
 import logging
 
-from src.shared.interfaces.data_file_saver import IDataFileSaver
+from src.get_data.domain.data_file_saver import IDataFileSaver
 
 
 logger = logging.getLogger(__name__)

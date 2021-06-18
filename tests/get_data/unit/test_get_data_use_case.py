@@ -5,7 +5,7 @@ import pytest
 
 from src.get_data.application.get_data_use_case import GetData
 from src.get_data.domain.data_downloander import IDataDownloander
-from src.shared.interfaces.data_file_saver import IDataFileSaver
+from src.get_data.domain.data_file_saver import IDataFileSaver
 
 
 @pytest.mark.unit
