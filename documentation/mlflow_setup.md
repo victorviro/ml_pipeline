@@ -1,6 +1,6 @@
-# Postgre as backend store in MLflow
+# Set up MLflow tracking server
 
-We use PostgreSQL database as a backend store and google cloud storage as artifact store. 
+We use PostgreSQL database as backend store and google cloud storage as artifact store. 
 
 ## Install mlflow
 
