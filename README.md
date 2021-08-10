@@ -1,24 +1,19 @@
-Max char per line prediction
+ML pipeline
 ==============================
 
 ## Description
 
-This project aims to automate the **ML pipeline** to train a model for predicting the maximum number of characters per line.
+This project aims to automate the **ML pipeline** to train a regression model. A more detailed description of the problem this project solves and the data used is available in the documentation.
 
-- Data ingestion
-- Data validation
-- Data versioning
-- Data preprocessing/transformation
-- Model training
-- Model evaluation/validation
-- Model versioning
-- Model deployment
+Notes:
 
-![](https://i.ibb.co/YL3s7T8/ml-model-lifecycle.png)
+- Each step/component of the pipeline is **containerized** since each one has its own packages. It also makes the code *reproducible* between development and production environments.
 
-Considerations:
+- The code for each step is separated from the pipeline, which is **orchestraded** with Airflow (the pipeline is defined as a DAG in `src/airflow_dags`).
 
-- This project also aims to define a *template* for future projects. A more detailed description of the problem this project solves and the data used, is available in the documentation.
-- Each step/component of the pipeline is **containerized** since each one has their own packages. Moreover, it makes code *reproducible* between development and production environments.
-- An api is created for each component in order to **separate the code from the pipeline**, which is **orchestraded** with Airflow (the pipeline is defined as a DAG in `src/airflow_dags`).
-- A detailed description of each step is available in the documentation.
+
+
+
+
+![](https://i.ibb.co/9s82GHB/aaa.png)
+
