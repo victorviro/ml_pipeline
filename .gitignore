@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 
+# Pytest
 output
 .coverage
 .pytest_cache
@@ -9,33 +10,17 @@ output
 # Distribution / packaging
 venv/
 
-artifact_store/*
-!artifact_store/*.gitkeep
-
-
-*.log
-
 # DotEnv configuration
 .env
 
-# VS Code
-#.vscode/
+# Logs
+*.log
 src/airflow_dags/logs
 
 
-# exclude data from source control by default (not versioning binary/base files)
+# Exclude data from source control by default (not versioning binary/base files)
 /data/*/data*.json
-/data/*/*.csv
-/models/*.h5
-#/notebooks/
 /src/notebooks/.ipynb_checkpoints
-
-/mlruns
-/models/*/*/*/*.yaml
-/models/*/*/*/MLmodel
-*.pkl
+credentials/*.json
 
 /airflow/*
-
-
-credentials/*.json
