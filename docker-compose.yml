@@ -92,6 +92,8 @@ services:
       dockerfile: ./docker/mlflow/Dockerfile
       args:
         PROJECT_NAME: ${PROJECT_NAME}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
     restart: always
     ports:
       - ${MLFLOW_PORT}:${MLFLOW_PORT}
