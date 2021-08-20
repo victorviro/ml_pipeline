@@ -57,11 +57,15 @@ services:
     command: airflow webserver -p $AIRFLOW_PORT
     ports:
       - '${AIRFLOW_PORT}:${AIRFLOW_PORT}'
+    depends_on:
+      - airflow-init
   
   airflow-scheduler:
     <<: *airflow-common
     container_name: airflow-scheduler
     command: airflow scheduler
+    depends_on:
+      - airflow-init
   # endregion
 
   jupyter:
