@@ -1,4 +1,9 @@
+black==20.8b1
 flake8==3.8.4
+pre-commit==2.11.1
+isort==5.8.0
+pylint==2.6.0
+pycodestyle==2.5.0
 requests==2.24.0
 jupyter==1.0.0
 pandas==1.2.4
@@ -14,3 +19,8 @@ fastapi[all]==0.63.0
 google-cloud-storage==1.37.1
 google-api-python-client==2.2.0
 GitPython==3.1.17
+pytest==6.2.2
+pytest-cov==2.11.1
+pytest-clarity==0.3.0a0
+pytest-mock==3.5.1
+pytest-env==0.6.2
