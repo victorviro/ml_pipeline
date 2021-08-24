@@ -36,6 +36,11 @@ restart: stop up
 enter:
 	docker exec -it $(c) bash
 
+# https://airflow.apache.org/docs/apache-airflow/stable/start/docker.html#initializing-environment
+init-airflow: 
+	make buildup c=postgres 
+	make buildup c=airflow-init 
+
 install-test:
 	python3 -m pip install --upgrade pip
 	pip install -r tests/requirements.txt
