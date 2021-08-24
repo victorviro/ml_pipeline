@@ -7,6 +7,8 @@ x-airflow-common:
     dockerfile: ./docker/airflow/Dockerfile
     args:
       PROJECT_NAME: ${PROJECT_NAME}
+      USER_ID: ${USER_ID}
+      GROUP_ID: ${GROUP_ID}
   environment:
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: "postgresql://${POSTGRES_USER}:\
         ${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_AIRFLOW_DB}"
@@ -20,7 +22,7 @@ x-airflow-common:
     - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
     - ./${PROJECT_SRC}/airflow_dags/:/${PROJECT_NAME}/${PROJECT_SRC}/airflow_dags/
     - ./${PROJECT_SRC}/airflow_dags/logs:/root/airflow/logs
-  restart: always
+  restart: on-failure
   depends_on:
     - postgres
   env_file: 
@@ -44,12 +46,7 @@ services:
   airflow-init: 
     <<: *airflow-common
     container_name: airflow-init
-    command: >
-      bash -c "airflow db init && 
-      airflow users create  -u ${AIRFLOW_USERNAME} -p ${AIRFLOW_USER_PASSWORD} \
-        -r ${AIRFLOW_USER_ROLE} -f ${AIRFLOW_USER_FIRSTNAME} -l ${AIRFLOW_USER_LASTNAME} \
-        -e ${AIRFLOW_USER_EMAIL}"
-    restart: on-failure
+    command: bash /${PROJECT_NAME}/docker/airflow/init_entrypoint.sh
 
   airflow-webserver:
     <<: *airflow-common

@@ -1,29 +1,32 @@
-FROM python:3.6.9
+FROM python:3.9.5
 
-RUN apt-get update && apt-get install -y wget && apt-get clean
+ARG USER_ID
+ARG GROUP_ID
+
+RUN groupadd -g ${GROUP_ID} appgroup &&\
+    useradd -l -u ${USER_ID} -g appgroup appuser &&\
+    install -d -m 0755 -o appuser -g appgroup /home/appuser
+
+RUN apt-get update && apt-get install -y wget python3-pip && apt-get clean
 
 # Install dockerize to avoid startup problems (waiting for DB to start)
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
          -O - | tar -C /usr/local/bin -xzv
 
-## Prepare workdir (mcpl_prediction)
+## Prepare workdir
 ARG PROJECT_NAME
 RUN mkdir ${PROJECT_NAME}
 WORKDIR ${PROJECT_NAME} 
 
+COPY docker/airflow/requirements.txt /${PROJECT_NAME}/
 
 # Update pip and install requirements
-RUN apt-get update && apt-get install -y python3-pip
-RUN python3.6 -m pip install --upgrade pip==20.2.4
-RUN pip3.6 install apache-airflow==2.0.1 && pip3.6 install psycopg2==2.8.6
-RUN pip3.6 install python-dotenv==0.15.0
-RUN pip3.6 install mlflow-skinny==1.14.1
+RUN python3.9 -m pip install --upgrade pip
+RUN pip3.9 install -r requirements.txt
 
-# RUN file="list dir media: $(echo $PROJECT_NAME)" && echo $file
+COPY docker/airflow/init_entrypoint.sh /${PROJECT_NAME}/docker/airflow/init_entrypoint.sh
+RUN chmod gu+x /${PROJECT_NAME}/docker/airflow/init_entrypoint.sh && chown appuser:appgroup \
+        /${PROJECT_NAME}/docker/airflow/init_entrypoint.sh
 
-
-COPY /docker/airflow docker/airflow
-#RUN chmod 755 /mcpl_prediction/docker/airflow/entrypoint.sh
-#ENTRYPOINT ["/mcpl_prediction/docker/airflow/entrypoint.sh"]
-#CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+USER appuser
