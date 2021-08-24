@@ -38,6 +38,8 @@ x-use_cases-common:
       &use_cases-common-args
       PROJECT_NAME: ${PROJECT_NAME}
       PROJECT_SRC: ${PROJECT_SRC}
+      USER_ID: ${USER_ID}
+      GROUP_ID: ${GROUP_ID}
   restart: always
 
 
@@ -73,6 +75,8 @@ services:
       args:
         PROJECT_NAME: ${PROJECT_NAME}
         PROJECT_SRC: ${PROJECT_SRC}
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
     environment:
       PYTHONPATH: /${PROJECT_NAME}
       JUPYTER_PORT: ${JUPYTER_PORT}
