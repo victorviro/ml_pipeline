@@ -43,7 +43,7 @@ init-airflow:
 
 install-test:
 	python3 -m pip install --upgrade pip
-	pip install -r tests/requirements.txt
+	pip install -r requirements/test.txt
 
 test:
 	pytest tests
