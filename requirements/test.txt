@@ -1,5 +1,5 @@
 pytest==6.2.2
 pytest-cov==2.11.1
-pytest-clarity==0.3.0a0
+pytest-clarity==1.0.1
 pytest-mock==3.5.1
 pytest-env==0.6.2
