@@ -14,22 +14,24 @@ class ValidateModel:
     :param data_tracker: Object with methods to track information
     :type data_tracker: IDataTracker
     """
+
     def __init__(self, data_tracker: IDataTracker):
         self.data_tracker = data_tracker
 
     def execute(self, metrics_threshold: dict):
         metrics = self.data_tracker.get_metrics()
         if not metrics:
-            msg = 'There are no metrics tracked from the model evaluation.'
+            msg = "There are no metrics tracked from the model evaluation."
             raise Exception(msg)
         # Validate the model
         model_validated = self.validate_model_performance(
-            metrics=metrics,
-            metrics_threshold=metrics_threshold
+            metrics=metrics, metrics_threshold=metrics_threshold
         )
         if not model_validated:
-            raise Exception('Model was not validated succesfully. Model performance is '
-                            'not enough.')
+            raise Exception(
+                "Model was not validated succesfully. Model performance is "
+                "not enough."
+            )
         # Update model's stage in Model Registry
         self.data_tracker.update_validated_model_in_registry()
 
@@ -38,7 +40,9 @@ class ValidateModel:
         validate_model = ValidateModel(data_tracker=data_tracker)
         return validate_model
 
-    def validate_model_performance(self, metrics: dict, metrics_threshold: dict) -> bool:
+    def validate_model_performance(
+        self, metrics: dict, metrics_threshold: dict
+    ) -> bool:
         """
         Validated the model based on its performance metrics in the test set and
         threshold values.
@@ -52,12 +56,16 @@ class ValidateModel:
         """
         rmse, rmse_threshold = metrics["rmse_test"], metrics_threshold["rmse"]
         if rmse > rmse_threshold:
-            msg = ('Square root of mean squared error bigger that the thresold fixed:'
-                   f' {rmse} > thresold fixed = {rmse_threshold}')
-            logger.warning(f'Model was not validated succesfully: {msg}.')
+            msg = (
+                "Square root of mean squared error bigger that the thresold fixed:"
+                f" {rmse} > thresold fixed = {rmse_threshold}"
+            )
+            logger.warning(f"Model was not validated succesfully: {msg}.")
             return False
         else:
-            msg = ('Square root of mean squared error smaller that the threshold '
-                   f'fixed: {rmse} < thresold fixed = {rmse_threshold}.')
-            logger.info(f'Model validated succesfully in test set: {msg}')
+            msg = (
+                "Square root of mean squared error smaller that the threshold "
+                f"fixed: {rmse} < thresold fixed = {rmse_threshold}."
+            )
+            logger.info(f"Model validated succesfully in test set: {msg}")
             return True

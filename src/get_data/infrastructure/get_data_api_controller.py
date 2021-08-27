@@ -31,21 +31,24 @@ async def get_data_endpoint(item: Item):
     file_path = f"{item.data_path}/{item.data_name}.json"
 
     get_data_use_case = GetData.build(
-        data_downloander=data_downloander,
-        data_file_saver=data_saver
+        data_downloander=data_downloander, data_file_saver=data_saver
     )
 
     try:
         # Download the data and save it
         get_data_use_case.execute(file_path=file_path)
-        message = 'Data downloaded and saved succesfully'
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message})
+        message = "Data downloaded and saved succesfully"
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": message}
+        )
 
     except Exception as err:
-        message = f'Error downloading or storing the dataset: {str(err)}'
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            content={'message': message})
+        message = f"Error downloading or storing the dataset: {str(err)}"
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": message},
+        )
+
 
 # uvicorn src.get_data.infrastructure.get_data_api_controller:rest_api --port
 # 1213

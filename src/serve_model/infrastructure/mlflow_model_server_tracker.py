@@ -1,4 +1,3 @@
-
 from src.shared.constants import MODEL_NAME
 from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 
@@ -24,7 +23,7 @@ class MlflowModelServerTracker(MlflowPythonTracker):
         """
         # Get the artifacts uri of the experiment run
         artifacts_uri = self.get_artifacts_uri(model_name=MODEL_NAME)
-        return f'{artifacts_uri}/'
+        return f"{artifacts_uri}/"
 
     def get_model_version_in_registry(self) -> str:
         """

@@ -30,21 +30,24 @@ async def serve_model_endpoint(item: Item):
     mlflow_model_server_tracker = MlflowModelServerTracker(run_id=item.mlflow_run_id)
 
     serve_model_use_case = ServeModel.build(
-        model_server=gcp_model_server,
-        data_tracker=mlflow_model_server_tracker
+        model_server=gcp_model_server, data_tracker=mlflow_model_server_tracker
     )
 
     try:
-        logger.info('Serving model in GC AI platform...')
+        logger.info("Serving model in GC AI platform...")
         serve_model_use_case.execute()
-        message = 'Model version is being created in GCP AI Platform.'
+        message = "Model version is being created in GCP AI Platform."
         logger.info(message)
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": message}
+        )
     except Exception as err:
-        message = f'Error serving the model: {str(err)}'
+        message = f"Error serving the model: {str(err)}"
         logger.error(message)
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": message},
+        )
+
 
 # uvicorn src.serve_model.infrastructure.serve_model_api_controller:rest_api --port 1219

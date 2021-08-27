@@ -26,7 +26,7 @@ def get_regression_metrics(actual: ndarray, predictions: ndarray) -> tuple:
         mae = mean_absolute_error(actual, predictions)
         r2 = r2_score(actual, predictions)
     except Exception as err:
-        msg = f'Error trying to compute regresion metrics.\nMessage: {err}'
+        msg = f"Error trying to compute regresion metrics.\nMessage: {err}"
         logger.error(msg)
         raise Exception(msg)
     return rmse, mae, r2
@@ -44,11 +44,11 @@ def get_class_parameters(cls) -> list:
     try:
         for attribute in cls.__dict__.keys():
             # Check if the attribute is a parameter
-            is_parameter = attribute[:1] != '_' and attribute[-1:] != '_'
+            is_parameter = attribute[:1] != "_" and attribute[-1:] != "_"
             if is_parameter:
                 parameters.append(attribute)
     except Exception as err:
-        msg = f'Error trying to get parameters of class: {cls}.\nMessage: {err}'
+        msg = f"Error trying to get parameters of class: {cls}.\nMessage: {err}"
         logger.error(msg)
         raise Exception(msg)
     return parameters

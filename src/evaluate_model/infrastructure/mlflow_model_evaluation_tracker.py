@@ -1,4 +1,3 @@
-
 from sklearn.pipeline import Pipeline
 
 from src.shared.constants import MODEL_NAME
@@ -13,6 +12,7 @@ class MlflowModelEvaluationTracker(MlflowPythonTracker):
     :param run_id: The MLflow run id of the experiment run
     :type run_id: str
     """
+
     def __init__(self, run_id: str):
         super().__init__(run_id)
 

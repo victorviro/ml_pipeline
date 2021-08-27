@@ -28,8 +28,14 @@ class SklearnModelTrainer(IModelTrainer):
     :type model_seed: int
     """
 
-    def __init__(self, size_test_split: float,
-                 test_split_seed: int, alpha: float, l1_ratio: float, model_seed: int):
+    def __init__(
+        self,
+        size_test_split: float,
+        test_split_seed: int,
+        alpha: float,
+        l1_ratio: float,
+        model_seed: int,
+    ):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
         self.alpha = alpha
@@ -59,33 +65,36 @@ class SklearnModelTrainer(IModelTrainer):
                 X, y, test_size=self.size_test_split, random_state=self.test_split_seed
             )
         except ValueError as err:
-            msg = ('ValueError splitting the dataset into training and test sets. Error '
-                   f'description: {err}.')
+            msg = (
+                "ValueError splitting the dataset into training and test sets. Error "
+                f"description: {err}."
+            )
             raise ValueError(msg)
         # Transform train features
         try:
             data_columns = X.columns.to_list()
             X_train_transformed_array = transformer.transform(X_train)
-            X_train_transformed = DataFrame(X_train_transformed_array,
-                                            columns=data_columns)
-            logger.info('Training features transformed succesfully.')
+            X_train_transformed = DataFrame(
+                X_train_transformed_array, columns=data_columns
+            )
+            logger.info("Training features transformed succesfully.")
         except Exception as err:
-            msg = ('Error transforming training features. Error description: '
-                   f'{err.__class__.__name__}: {err}.')
+            msg = (
+                "Error transforming training features. Error description: "
+                f"{err.__class__.__name__}: {err}."
+            )
         # Define and train the model
         try:
             # Define the model
             model = ElasticNet(
-                alpha=self.alpha,
-                l1_ratio=self.l1_ratio,
-                random_state=self.model_seed
+                alpha=self.alpha, l1_ratio=self.l1_ratio, random_state=self.model_seed
             )
             # Train the model
             model.fit(X_train_transformed, y_train)
-            logger.info('Model trained succesfully')
+            logger.info("Model trained succesfully")
 
             # Build the pipeline (transformations plus model)
-            pipeline_steps = [*transformer.steps, *[('elastic_net', model)]]
+            pipeline_steps = [*transformer.steps, *[("elastic_net", model)]]
             pipeline = Pipeline(steps=pipeline_steps)
 
             # Information to track (hyperparameters,...)
@@ -94,24 +103,26 @@ class SklearnModelTrainer(IModelTrainer):
                 "l1_ratio": self.l1_ratio,
                 "test_split_seed": self.test_split_seed,
                 "model_seed": self.model_seed,
-                "test_split_percent": self.size_test_split
+                "test_split_percent": self.size_test_split,
             }
             information_to_track = {
                 "parameters": parameters_to_track,
-                "pipeline": pipeline
+                "pipeline": pipeline,
             }
             return information_to_track
 
         except TypeError as err:
-            msg = f'TypeError training the model. Error description: {err}.'
+            msg = f"TypeError training the model. Error description: {err}."
             logger.error(msg)
             raise Exception(msg)
         except ValueError as err:
-            msg = f'ValueError training the model. Error description: {err}.'
+            msg = f"ValueError training the model. Error description: {err}."
             logger.error(msg)
             raise Exception(msg)
         except Exception as err:
-            msg = ('Unknown error training the model. Error description: '
-                   f'{err.__class__.__name__}: {err}.')
+            msg = (
+                "Unknown error training the model. Error description: "
+                f"{err.__class__.__name__}: {err}."
+            )
             logger.error(msg)
             raise Exception(msg)

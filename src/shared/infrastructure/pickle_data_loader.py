@@ -17,9 +17,9 @@ class PickleDataLoader(IDataFileLoader):
         Load pickle data from a file.
         """
 
-        with open(file_path, 'rb') as f:
+        with open(file_path, "rb") as f:
             file = pickle.load(f)
 
-        msg = f'Pickle data file loaded succesfully from file in path: {file_path}'
+        msg = f"Pickle data file loaded succesfully from file in path: {file_path}"
         logger.info(msg)
         return file

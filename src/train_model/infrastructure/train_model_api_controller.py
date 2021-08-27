@@ -37,7 +37,7 @@ async def train_model_endpoint(item: Item):
         test_split_seed=item.test_split_seed,
         alpha=item.alpha,
         l1_ratio=item.l1_ratio,
-        model_seed=item.model_seed
+        model_seed=item.model_seed,
     )
     dataset_file_loader = JSONDataLoader()
     mlflow_train_tracker = MlflowTrainTracker(run_id=item.mlflow_run_id)
@@ -45,21 +45,25 @@ async def train_model_endpoint(item: Item):
     train_model_use_case = TrainModel.build(
         model_trainer=mlflow_sklearn_trainer,
         dataset_file_loader=dataset_file_loader,
-        data_tracker=mlflow_train_tracker
+        data_tracker=mlflow_train_tracker,
     )
-    dataset_file_path = f'{item.raw_data_path}/{item.data_name}.json'
+    dataset_file_path = f"{item.raw_data_path}/{item.data_name}.json"
 
-    logger.info('Train the model and track it...')
+    logger.info("Train the model and track it...")
     try:
         train_model_use_case.execute(dataset_file_path=dataset_file_path)
-        message = 'Model trained and info tracked succesfully'
+        message = "Model trained and info tracked succesfully"
         logger.info(message)
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": message}
+        )
     except Exception as err:
-        message = f'Error training the model or tracking info: {str(err)}'
+        message = f"Error training the model or tracking info: {str(err)}"
         logger.error(message)
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": message},
+        )
+
 
 # uvicorn src.train_model.infrastructure.train_model_api_controller:rest_api --port 1216

@@ -15,14 +15,18 @@ class GetData:
     :param data_file_saver: Object with a method to save data
     :type data_file_saver: IDataFileSaver
     """
-    def __init__(self, data_downloander: IDataDownloander,
-                 data_file_saver: IDataFileSaver):
+
+    def __init__(
+        self, data_downloander: IDataDownloander, data_file_saver: IDataFileSaver
+    ):
         self.data_downloander = data_downloander
         self.data_file_saver = data_file_saver
 
     def execute(self, file_path: str):
         if not os.path.exists(os.path.dirname(file_path)):
-            raise FileNotFoundError(f'Path "{os.path.dirname(file_path)}" does not exist')
+            raise FileNotFoundError(
+                f'Path "{os.path.dirname(file_path)}" does not exist'
+            )
 
         data = self.data_downloander.download_data()
         self.data_file_saver.save_data(file_path=file_path, data=data)
@@ -31,11 +35,9 @@ class GetData:
             raise FileNotFoundError(f'Dataset file path "{file_path}" does not exist')
 
     @staticmethod
-    def build(data_downloander: IDataDownloander,
-              data_file_saver: IDataFileSaver):
+    def build(data_downloander: IDataDownloander, data_file_saver: IDataFileSaver):
 
         get_data = GetData(
-            data_downloander=data_downloander,
-            data_file_saver=data_file_saver
+            data_downloander=data_downloander, data_file_saver=data_file_saver
         )
         return get_data

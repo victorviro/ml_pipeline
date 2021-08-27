@@ -30,21 +30,23 @@ async def train_model_endpoint(item: Item):
     validate_model_use_case = ValidateModel.build(
         data_tracker=mlflow_model_validation_tracker
     )
-    metrics_threshold = {
-        "rmse": item.rmse_threshold
-    }
+    metrics_threshold = {"rmse": item.rmse_threshold}
     try:
-        logger.info(f'Validating model...')
+        logger.info(f"Validating model...")
         validate_model_use_case.execute(metrics_threshold=metrics_threshold)
-        message = 'Model validated succesfully.'
+        message = "Model validated succesfully."
         logger.info(message)
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": message}
+        )
     except Exception as err:
-        message = f'Error validating the model: {str(err)}.'
+        message = f"Error validating the model: {str(err)}."
         logger.error(message)
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": message},
+        )
+
 
 # uvicorn src.validate_model.infrastructure.validate_model_api_controller:rest_api --port
 # 1218

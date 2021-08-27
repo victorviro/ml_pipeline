@@ -13,6 +13,7 @@ class MlflowTransformerTracker(MlflowPythonTracker):
     :param run_id: The MLflow run id of the experiment run
     :type run_id: str
     """
+
     def __init__(self, run_id: str):
         super().__init__(run_id)
 
@@ -25,10 +26,12 @@ class MlflowTransformerTracker(MlflowPythonTracker):
         :type transformer: Pipeline
         """
         # Track the transformer pipeline
-        self.track_sklearn_model(model=transformer, model_name=TRANSFORMER_PIPELINE_NAME)
+        self.track_sklearn_model(
+            model=transformer, model_name=TRANSFORMER_PIPELINE_NAME
+        )
         # Get dict with information of the preprocessing steps
-        transformer_steps = {'transformer_steps': [*transformer.named_steps]}
+        transformer_steps = {"transformer_steps": [*transformer.named_steps]}
         self.track_dict(
             dictionary=transformer_steps,
-            run_relative_file_path=f'{TRANSFORMER_PIPELINE_NAME}.json'
+            run_relative_file_path=f"{TRANSFORMER_PIPELINE_NAME}.json",
         )

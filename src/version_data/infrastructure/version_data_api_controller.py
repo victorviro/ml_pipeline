@@ -31,32 +31,37 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/version_data")
 async def version_data_endpoint(item: Item):
-    dvc_data_versioner = DVCDataVersioner(git_remote_name=item.git_remote_name,
-                                          git_branch_name=item.git_branch_name)
+    dvc_data_versioner = DVCDataVersioner(
+        git_remote_name=item.git_remote_name, git_branch_name=item.git_branch_name
+    )
     data_file_path = f"{item.data_path}/{item.data_name}.json"
     mlflow_data_versioning_tracker = MlflowDataVersioningTracker(
         run_id=item.mlflow_run_id
     )
 
     version_data_use_case = VersionTrackData.build(
-        data_versioner=dvc_data_versioner,
-        data_tracker=mlflow_data_versioning_tracker
+        data_versioner=dvc_data_versioner, data_tracker=mlflow_data_versioning_tracker
     )
 
     try:
-        logger.info('Versioning the dataset...')
+        logger.info("Versioning the dataset...")
         version_data_use_case.execute(
-            data_file_path=data_file_path,
-            data_version=item.data_version
+            data_file_path=data_file_path, data_version=item.data_version
         )
-        message = 'Data versioned and tracked succesfully'
+        message = "Data versioned and tracked succesfully"
         logger.info(message)
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": message}
+        )
     except Exception as err:
-        message = f'Error versioning the dataset or tracking data information: {str(err)}'
+        message = (
+            f"Error versioning the dataset or tracking data information: {str(err)}"
+        )
         logger.error(message)
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            content={'message': message})
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": message},
+        )
+
 
 # uvicorn src.version_data.infrastructure.version_data_api_controller:rest_api --port 1217

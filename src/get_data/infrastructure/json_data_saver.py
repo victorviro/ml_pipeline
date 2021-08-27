@@ -17,8 +17,8 @@ class JSONDataSaver(IDataFileSaver):
         Save the data.
         """
 
-        with open(file_path, 'w') as output_file:
+        with open(file_path, "w") as output_file:
             json.dump(data, output_file, default=str)
 
-        msg = f'Data stored succesfully in path: {file_path}'
+        msg = f"Data stored succesfully in path: {file_path}"
         logger.info(msg)

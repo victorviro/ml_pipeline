@@ -1,4 +1,3 @@
-
 from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 
 
@@ -22,11 +21,11 @@ class MlflowModelValidationTracker(MlflowPythonTracker):
         :return: The metrics
         :rtype: dict
         """
-        metrics = self.get_tracked_items(item_type='metric')
+        metrics = self.get_tracked_items(item_type="metric")
         return metrics
 
     def update_validated_model_in_registry(self):
         """
         Update the stage of the model to "Staging" in MLflow model registry.
         """
-        self.transition_model_version_stage(stage='Staging')
+        self.transition_model_version_stage(stage="Staging")

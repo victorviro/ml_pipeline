@@ -36,22 +36,26 @@ async def validate_data_schema_endpoint(item: Item):
     validate_data_schema = ValidateDataSchema.build(
         data_validator=pandera_schema_validator,
         dataset_file_loader=json_data_loader,
-        dataset_schema_info_file_loader=json_data_loader
+        dataset_schema_info_file_loader=json_data_loader,
     )
 
     try:
         # Load the data and validate its schema
         validate_data_schema.execute(
             dataset_file_path=dataset_file_path,
-            dataset_schema_info_file_path=dataset_schema_info_file_path
+            dataset_schema_info_file_path=dataset_schema_info_file_path,
         )
-        message = 'Data schema validated succesfully'
-        return JSONResponse(status_code=status.HTTP_200_OK,
-                            content={'message': message})
+        message = "Data schema validated succesfully"
+        return JSONResponse(
+            status_code=status.HTTP_200_OK, content={"message": message}
+        )
     except Exception as err:
-        message = f'Error validating the schema of the dataset: {str(err)}'
-        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            content={'message': message})
+        message = f"Error validating the schema of the dataset: {str(err)}"
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"message": message},
+        )
+
 
 # uvicorn src.validate_data_schema.infrastructure.validate_data_schema_api_controller:
 # rest_api --port 1214

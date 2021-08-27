@@ -17,6 +17,7 @@ class MlflowTrainTracker(MlflowPythonTracker):
     :param run_id: The MLflow run id of the experiment run
     :type run_id: str
     """
+
     def __init__(self, run_id: str):
         super().__init__(run_id)
 
@@ -32,8 +33,9 @@ class MlflowTrainTracker(MlflowPythonTracker):
         self.track_parameters(parameters=information_to_track["parameters"])
 
         # Track the pipeline in the experiment run
-        self.track_sklearn_model(model=information_to_track["pipeline"],
-                                 model_name=MODEL_NAME)
+        self.track_sklearn_model(
+            model=information_to_track["pipeline"], model_name=MODEL_NAME
+        )
         # Register the model in model registry (staged as None)
         self.register_model(model_name=MODEL_NAME, name=REGISTRY_MODEL_NAME)
 

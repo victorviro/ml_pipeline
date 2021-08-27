@@ -26,22 +26,26 @@ class PanderaSchemaValidator(IDataValidator):
         :type dataset_schema_info: list
         """
 
-        logger.info(f'Validating raw dataset...')
+        logger.info(f"Validating raw dataset...")
 
         # Load dataset in pandas DataFrame format
         try:
             dataset_df = pd.DataFrame.from_dict(dataset)
-            logger.info(f'Converted dataset to pandas DataFrame succesfully.')
+            logger.info(f"Converted dataset to pandas DataFrame succesfully.")
 
         except ValueError as err:
-            msg = ('Value error converting JSON dataset to pandas DataFrame. '
-                   f'Error description: {err}')
+            msg = (
+                "Value error converting JSON dataset to pandas DataFrame. "
+                f"Error description: {err}"
+            )
             logger.error(msg)
             raise ValueError(msg)
 
         except Exception as err:
-            msg = ('Unknown error converting dataset to pandas DataFrame. '
-                   f'Error description: {err.__class__.__name__}: {err}')
+            msg = (
+                "Unknown error converting dataset to pandas DataFrame. "
+                f"Error description: {err.__class__.__name__}: {err}"
+            )
             logger.error(msg)
             raise Exception(msg)
 
@@ -52,17 +56,21 @@ class PanderaSchemaValidator(IDataValidator):
         # Validate the schema of the dataset
         try:
             pandera_dataset_schema.validate(dataset_df, lazy=True)
-            logger.info('Dataset schema validated succesfully.')
+            logger.info("Dataset schema validated succesfully.")
 
         except SchemaErrors as err:
-            msg = ('Dataset schema has been violated. Schema errors found:\n'
-                   f'{err.schema_errors}')
+            msg = (
+                "Dataset schema has been violated. Schema errors found:\n"
+                f"{err.schema_errors}"
+            )
             logger.error(msg)
             raise err
 
         except Exception as err:
-            msg = ('Unknown error when validating dataset schema. Error description: '
-                   f'{err.__class__.__name__}: {err}')
+            msg = (
+                "Unknown error when validating dataset schema. Error description: "
+                f"{err.__class__.__name__}: {err}"
+            )
             logger.error(msg)
             raise Exception(msg)
 
@@ -80,11 +88,15 @@ class PanderaSchemaValidator(IDataValidator):
             try:
                 variable_name = variable_info["name"]
                 # Checks to verify validity of the column
-                range_condition = (variable_info["greater"] is not None and
-                                   variable_info["less"] is not None)
+                range_condition = (
+                    variable_info["greater"] is not None
+                    and variable_info["less"] is not None
+                )
                 if range_condition:
-                    checks = pandera.Check.in_range(min_value=variable_info["greater"],
-                                                    max_value=variable_info["less"])
+                    checks = pandera.Check.in_range(
+                        min_value=variable_info["greater"],
+                        max_value=variable_info["less"],
+                    )
                 elif variable_info["greater"] is not None:
                     checks = pandera.Check.greater_than_or_equal_to(
                         min_value=variable_info["greater"]
@@ -94,20 +106,25 @@ class PanderaSchemaValidator(IDataValidator):
                         max_value=variable_info["less"]
                     )
                 # Create column validator of pandera for the variable
-                pandera_column = pandera.Column(pandas_dtype=variable_info["type"],
-                                                nullable=variable_info["nullable"],
-                                                name=variable_name, checks=checks)
+                pandera_column = pandera.Column(
+                    pandas_dtype=variable_info["type"],
+                    nullable=variable_info["nullable"],
+                    name=variable_name,
+                    checks=checks,
+                )
                 # Update dict
-                pandera_dataset_schema_dict.update({
-                    variable_name: pandera_column
-                })
+                pandera_dataset_schema_dict.update({variable_name: pandera_column})
             except TypeError as err:
-                msg = ('TypeError creating pandera dataset schema of the variable: '
-                       f' {variable_name}. Error description: {err}')
+                msg = (
+                    "TypeError creating pandera dataset schema of the variable: "
+                    f" {variable_name}. Error description: {err}"
+                )
                 raise TypeError(msg)
             except KeyError as err:
-                msg = ('Error accessing a value of a dict with an invalid key. Key not :'
-                       f'found {err}. Dict: {variable_info}')
+                msg = (
+                    "Error accessing a value of a dict with an invalid key. Key not :"
+                    f"found {err}. Dict: {variable_info}"
+                )
                 raise KeyError(msg)
 
         pandera_dataset_schema = pandera.DataFrameSchema(pandera_dataset_schema_dict)

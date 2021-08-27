@@ -21,6 +21,7 @@ class SklearnTransformationFitter(ITransformationFitter):
     :param test_split_seed: Seed used when splitting the dataset
     :type test_split_seed: int
     """
+
     def __init__(self, size_test_split: float, test_split_seed: int):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
@@ -45,17 +46,21 @@ class SklearnTransformationFitter(ITransformationFitter):
                 X, y, test_size=self.size_test_split, random_state=self.test_split_seed
             )
         except ValueError as err:
-            msg = ('ValueError splitting the dataset into training and test sets. Error '
-                   f'description: {err}')
+            msg = (
+                "ValueError splitting the dataset into training and test sets. Error "
+                f"description: {err}"
+            )
             raise ValueError(msg)
         # Define and fit the pipeline (standard scaler)
         try:
-            pipeline = Pipeline([('standard_scaler', StandardScaler())])
+            pipeline = Pipeline([("standard_scaler", StandardScaler())])
             transformer_pipeline = pipeline.fit(X_train)
-            logger.info('Transformer pipeline fitted succesfully.')
+            logger.info("Transformer pipeline fitted succesfully.")
             return transformer_pipeline
         except Exception as err:
-            msg = ('Error fitting transfomer pipeline. Error description: '
-                   f'{err.__class__.__name__}: {err}')
+            msg = (
+                "Error fitting transfomer pipeline. Error description: "
+                f"{err.__class__.__name__}: {err}"
+            )
             logger.error(msg)
             raise Exception(msg)
