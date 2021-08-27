@@ -1,12 +1,13 @@
 import logging.config
 
-from fastapi import FastAPI
 from fastapi import status  # starlette statuses
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
 from src.validate_model.application.validate_model_use_case import ValidateModel
+
 from .mlflow_model_validation_tracker import MlflowModelValidationTracker
 
 logging.config.dictConfig(LOGGING_CONFIG)

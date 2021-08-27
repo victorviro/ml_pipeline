@@ -1,8 +1,8 @@
 
 from sklearn.pipeline import Pipeline
 
-from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 from src.shared.constants import MODEL_NAME
+from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 
 
 class MlflowModelEvaluationTracker(MlflowPythonTracker):

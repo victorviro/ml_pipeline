@@ -1,21 +1,35 @@
 # region Imports
 from datetime import datetime, timedelta
+from json import dumps, loads
+
+from airflow.operators.python_operator import PythonOperator
+from mlflow import active_run, end_run, start_run
 from requests import post
 from requests.exceptions import ConnectionError
-from json import loads, dumps
 
 from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-from mlflow import start_run, active_run, end_run
-
 from src.shared.constants import (
-    DATASET_NAME, RAW_DATA_PATH, VERSION, GIT_REMOTE_NAME,
-    GIT_BRANCH_NAME, SIZE_TEST_SPLIT, TEST_SPLIT_SEED, MODEL_SEED, L1_RATIO_PARAM_MODEL,
-    ALPHA_PARAM_MODEL, RMSE_THRESOLD, URL_DATA_MCPL_QUOTES_IMAGE_API,
-    URL_GET_DATA_API, URL_VALIDATE_DATA_API, URL_VERSION_DATA_API,
-    URL_FIT_DATA_TRANSFORMER_API, URL_TRAIN_MODEL_API, URL_VALIDATE_MODEL_API,
-    URL_EVALUATE_MODEL_API
+    ALPHA_PARAM_MODEL,
+    DATASET_NAME,
+    GIT_BRANCH_NAME,
+    GIT_REMOTE_NAME,
+    L1_RATIO_PARAM_MODEL,
+    MODEL_SEED,
+    RAW_DATA_PATH,
+    RMSE_THRESOLD,
+    SIZE_TEST_SPLIT,
+    TEST_SPLIT_SEED,
+    URL_DATA_MCPL_QUOTES_IMAGE_API,
+    URL_EVALUATE_MODEL_API,
+    URL_FIT_DATA_TRANSFORMER_API,
+    URL_GET_DATA_API,
+    URL_TRAIN_MODEL_API,
+    URL_VALIDATE_DATA_API,
+    URL_VALIDATE_MODEL_API,
+    URL_VERSION_DATA_API,
+    VERSION,
 )
+
 # endregion
 
 

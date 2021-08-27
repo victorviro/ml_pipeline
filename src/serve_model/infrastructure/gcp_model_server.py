@@ -1,12 +1,11 @@
 import logging
 from os import getenv
 
-from googleapiclient import discovery, errors
 from google.api_core.client_options import ClientOptions
+from googleapiclient import discovery, errors
 
-from src.shared.constants import GCP_MODEL_NAME, GCP_REGION
 from src.serve_model.domain.model_server import IModelServer
-
+from src.shared.constants import GCP_MODEL_NAME, GCP_REGION
 
 logger = logging.getLogger(__name__)
 

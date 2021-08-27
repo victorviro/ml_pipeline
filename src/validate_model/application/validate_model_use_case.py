@@ -2,7 +2,6 @@ import logging
 
 from src.shared.interfaces.data_tracker import IDataTracker
 
-
 logger = logging.getLogger(__name__)
 
 

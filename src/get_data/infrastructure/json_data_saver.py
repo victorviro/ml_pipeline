@@ -3,7 +3,6 @@ import logging
 
 from src.get_data.domain.data_file_saver import IDataFileSaver
 
-
 logger = logging.getLogger(__name__)
 
 

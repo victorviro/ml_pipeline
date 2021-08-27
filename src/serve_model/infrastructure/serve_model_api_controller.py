@@ -1,16 +1,17 @@
 import logging.config
 
-from fastapi import FastAPI
 from fastapi import status  # starlette statuses
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.shared.logging_config import LOGGING_CONFIG
 from src.serve_model.application.serve_model_use_case import ServeModel
 from src.serve_model.infrastructure.mlflow_model_server_tracker import (
-    MlflowModelServerTracker)
-from .gcp_model_server import GCPModelServer
+    MlflowModelServerTracker,
+)
+from src.shared.logging_config import LOGGING_CONFIG
 
+from .gcp_model_server import GCPModelServer
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

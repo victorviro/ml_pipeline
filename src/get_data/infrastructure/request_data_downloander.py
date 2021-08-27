@@ -1,10 +1,10 @@
 import logging
-import requests
-from requests.exceptions import ConnectionError
 from json.decoder import JSONDecodeError
 
-from src.get_data.domain.data_downloander import IDataDownloander
+import requests
+from requests.exceptions import ConnectionError
 
+from src.get_data.domain.data_downloander import IDataDownloander
 
 logger = logging.getLogger(__name__)
 

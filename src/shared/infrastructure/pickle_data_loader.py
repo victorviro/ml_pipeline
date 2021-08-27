@@ -1,8 +1,7 @@
-import pickle
 import logging
+import pickle
 
 from src.shared.interfaces.data_file_loader import IDataFileLoader
-
 
 logger = logging.getLogger(__name__)
 

@@ -28,4 +28,8 @@
     //"python.terminal.activateEnvironment": true,
     //"python.terminal.activateEnvInCurrentTerminal": true
     //"notebook.showCellStatusBar": true
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true,
+    },
+    // "python.formatting.provider": "black",
 }

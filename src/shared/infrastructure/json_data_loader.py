@@ -3,7 +3,6 @@ import logging
 
 from src.shared.interfaces.data_file_loader import IDataFileLoader
 
-
 logger = logging.getLogger(__name__)
 
 

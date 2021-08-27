@@ -1,7 +1,7 @@
 import os
 
-from src.version_data.domain.data_versioner import IDataVersioner
 from src.shared.interfaces.data_tracker import IDataTracker
+from src.version_data.domain.data_versioner import IDataVersioner
 
 
 class VersionTrackData:

@@ -1,12 +1,12 @@
-from unittest.mock import Mock
 from os import getcwd
+from unittest.mock import Mock
 
 import pytest
 
-from src.transform_data.application.fit_transformer_use_case import FitTransformer
-from src.transform_data.domain.transformation_fitter import ITransformationFitter
 from src.shared.interfaces.data_file_loader import IDataFileLoader
 from src.shared.interfaces.data_tracker import IDataTracker
+from src.transform_data.application.fit_transformer_use_case import FitTransformer
+from src.transform_data.domain.transformation_fitter import ITransformationFitter
 
 
 @pytest.mark.unit

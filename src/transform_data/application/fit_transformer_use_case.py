@@ -1,8 +1,8 @@
 import os
 
-from src.transform_data.domain.transformation_fitter import ITransformationFitter
 from src.shared.interfaces.data_file_loader import IDataFileLoader
 from src.shared.interfaces.data_tracker import IDataTracker
+from src.transform_data.domain.transformation_fitter import ITransformationFitter
 
 
 class FitTransformer:

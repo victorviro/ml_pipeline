@@ -1,11 +1,11 @@
-from unittest.mock import Mock
 from os import getcwd
+from unittest.mock import Mock
 
 import pytest
 
+from src.shared.interfaces.data_tracker import IDataTracker
 from src.version_data.application.version_data_use_case import VersionTrackData
 from src.version_data.domain.data_versioner import IDataVersioner
-from src.shared.interfaces.data_tracker import IDataTracker
 
 
 @pytest.mark.unit

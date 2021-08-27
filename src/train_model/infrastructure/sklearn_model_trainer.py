@@ -1,12 +1,12 @@
 import logging
 
 from pandas import DataFrame
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import ElasticNet
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
-from src.train_model.domain.model_trainer import IModelTrainer
 from src.shared.constants import TARGET_VARIABLE_NAME
+from src.train_model.domain.model_trainer import IModelTrainer
 
 logger = logging.getLogger(__name__)
 

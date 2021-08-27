@@ -1,14 +1,21 @@
 import logging
 
-from mlflow import (start_run, get_artifact_uri, log_dict, log_params,
-                    log_metrics, register_model, get_run, set_tags)
-from mlflow.sklearn import log_model as log_sklearn_model
+from mlflow import (
+    get_artifact_uri,
+    get_run,
+    log_dict,
+    log_metrics,
+    log_params,
+    register_model,
+    set_tags,
+    start_run,
+)
 from mlflow.sklearn import load_model
+from mlflow.sklearn import log_model as log_sklearn_model
 from mlflow.tracking import MlflowClient
 
-from src.shared.interfaces.data_tracker import IDataTracker
 from src.shared.constants import REGISTRY_MODEL_NAME
-
+from src.shared.interfaces.data_tracker import IDataTracker
 
 logger = logging.getLogger(__name__)
 

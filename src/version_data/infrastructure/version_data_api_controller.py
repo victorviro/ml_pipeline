@@ -1,16 +1,17 @@
 import logging.config
 
-from fastapi import FastAPI
 from fastapi import status  # starlette statuses
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
-from src.version_data.infrastructure.mlflow_data_versioning_tracker import (
-    MlflowDataVersioningTracker)
 from src.version_data.application.version_data_use_case import VersionTrackData
-from .dvc_data_versioner import DVCDataVersioner
+from src.version_data.infrastructure.mlflow_data_versioning_tracker import (
+    MlflowDataVersioningTracker,
+)
 
+from .dvc_data_versioner import DVCDataVersioner
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

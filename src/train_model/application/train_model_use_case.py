@@ -1,8 +1,8 @@
 import os
 
 from src.shared.interfaces.data_file_loader import IDataFileLoader
-from src.train_model.domain.model_trainer import IModelTrainer
 from src.shared.interfaces.data_tracker import IDataTracker
+from src.train_model.domain.model_trainer import IModelTrainer
 
 
 class TrainModel:

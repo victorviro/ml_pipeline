@@ -1,12 +1,13 @@
-from unittest.mock import Mock
 from os import getcwd
+from unittest.mock import Mock
 
 import pytest
 
-from src.validate_data_schema.application.validate_data_schema_use_case import (
-    ValidateDataSchema)
-from src.validate_data_schema.domain.data_validator import IDataValidator
 from src.shared.interfaces.data_file_loader import IDataFileLoader
+from src.validate_data_schema.application.validate_data_schema_use_case import (
+    ValidateDataSchema,
+)
+from src.validate_data_schema.domain.data_validator import IDataValidator
 
 
 @pytest.mark.unit

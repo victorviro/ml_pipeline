@@ -1,15 +1,14 @@
 import logging
+import os
 import subprocess
 from subprocess import CalledProcessError
-import os
 
 from dvc.api import get_url
 from dvc.exceptions import OutputNotFoundError
 from git import Repo
-from git.exc import InvalidGitRepositoryError, GitCommandError
+from git.exc import GitCommandError, InvalidGitRepositoryError
 
 from src.version_data.domain.data_versioner import IDataVersioner
-
 
 logger = logging.getLogger(__name__)
 

@@ -1,5 +1,5 @@
-from unittest.mock import Mock
 from os import getcwd
+from unittest.mock import Mock
 
 import pytest
 

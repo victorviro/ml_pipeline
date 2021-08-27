@@ -1,12 +1,11 @@
 import logging
 
-import pandera
 import pandas as pd
+import pandera
 from pandera.errors import SchemaErrors
 from pandera.schemas import DataFrameSchema
 
 from src.validate_data_schema.domain.data_validator import IDataValidator
-
 
 logger = logging.getLogger(__name__)
 

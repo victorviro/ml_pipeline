@@ -1,13 +1,12 @@
 import logging
 
 from pandas import DataFrame
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 
-from src.transform_data.domain.transformation_fitter import ITransformationFitter
 from src.shared.constants import TARGET_VARIABLE_NAME
-
+from src.transform_data.domain.transformation_fitter import ITransformationFitter
 
 logger = logging.getLogger(__name__)
 

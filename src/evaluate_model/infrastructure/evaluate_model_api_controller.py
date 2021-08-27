@@ -1,16 +1,16 @@
 import logging.config
 
-from fastapi import FastAPI
 from fastapi import status  # starlette statuses
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.shared.logging_config import LOGGING_CONFIG
-from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.evaluate_model.application.evaluate_model_use_case import EvaluateModel
-from .sklearn_model_evaluator import SklearnModelEvaluator
-from .mlflow_model_evaluation_tracker import MlflowModelEvaluationTracker
+from src.shared.infrastructure.json_data_loader import JSONDataLoader
+from src.shared.logging_config import LOGGING_CONFIG
 
+from .mlflow_model_evaluation_tracker import MlflowModelEvaluationTracker
+from .sklearn_model_evaluator import SklearnModelEvaluator
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

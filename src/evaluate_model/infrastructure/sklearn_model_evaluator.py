@@ -4,10 +4,9 @@ from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
-from src.shared.training_helper import get_regression_metrics
 from src.evaluate_model.domain.model_evaluator import IModelEvaluator
 from src.shared.constants import TARGET_VARIABLE_NAME
-
+from src.shared.training_helper import get_regression_metrics
 
 logger = logging.getLogger(__name__)
 

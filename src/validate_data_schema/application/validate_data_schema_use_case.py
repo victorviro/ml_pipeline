@@ -1,7 +1,7 @@
 import os
 
-from src.validate_data_schema.domain.data_validator import IDataValidator
 from src.shared.interfaces.data_file_loader import IDataFileLoader
+from src.validate_data_schema.domain.data_validator import IDataValidator
 
 
 class ValidateDataSchema:
