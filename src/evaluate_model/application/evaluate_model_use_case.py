@@ -30,7 +30,7 @@ class EvaluateModel:
 
     def execute(self, dataset_file_path: str):
         if not os.path.exists(dataset_file_path):
-            raise NotImplementedError(
+            raise FileNotFoundError(
                 "Path of dataset file does not exist: " f'"{dataset_file_path}"'
             )
 
