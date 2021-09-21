@@ -154,170 +154,170 @@ services:
       uvicorn src.${USE_CASE_VALIDATE_DATA}.infrastructure.${API_FILE_VALIDATE_DATA}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_DATA}
 
-#   get_data:
-#     <<: *use_cases-common
-#     container_name: get_data
-#     build:
-#       <<: *use_cases-common-build
-#       args:
-#         <<: *use_cases-common-args
-#         USE_CASE: ${USE_CASE_GET_DATA}
-#     volumes: 
-#       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-#       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-#       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-#       - ./${PROJECT_SRC}/${USE_CASE_GET_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_GET_DATA}/
-#     ports:
-#       - ${PORT_GET_DATA}:${PORT_GET_DATA}
-#     command: >
-#       uvicorn src.${USE_CASE_GET_DATA}.infrastructure.${API_FILE_GET_DATA}:rest_api 
-#         --host ${HOST_USE_CASES_APIS} --port ${PORT_GET_DATA}
-#     network_mode: host
+  get_data:
+    <<: *use_cases-common
+    container_name: get_data
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_GET_DATA}
+    volumes: 
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_GET_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_GET_DATA}/
+    ports:
+      - ${PORT_GET_DATA}:${PORT_GET_DATA}
+    command: >
+      uvicorn src.${USE_CASE_GET_DATA}.infrastructure.${API_FILE_GET_DATA}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_GET_DATA}
+    network_mode: host
 
-#   version_data:
-#     <<: *use_cases-common
-#     container_name: version_data
-#     build:
-#       <<: *use_cases-common-build
-#       args:
-#         <<: *use_cases-common-args
-#         USE_CASE: ${USE_CASE_VERSION_DATA}
-#     environment:
-#       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
-#       GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
-#     volumes: 
-#       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
-#       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-#       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-#       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-#       - ./${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/
-#       - ./${DVC_PATH}/:/${PROJECT_NAME}/${DVC_PATH}/
-#       - ./${GIT_PATH}/:/${PROJECT_NAME}/${GIT_PATH}/
-#       - ${LOCAL_SSH_DIR}/.ssh/:/root/.ssh/
-#     ports:
-#       - ${PORT_VERSION_DATA}:${PORT_VERSION_DATA}
-#     command: >
-#       bash -c "git config user.name victorviro &&
-#       git config user.email victor_sanchez91@hotmail.es &&
-#       uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api \
-#         --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}"
-# # /bin/sh -c "./docker/use_cases/version_data/entrypoint_init_git.sh" &
+  version_data:
+    <<: *use_cases-common
+    container_name: version_data
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_VERSION_DATA}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
+    volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VERSION_DATA}/
+      - ./${DVC_PATH}/:/${PROJECT_NAME}/${DVC_PATH}/
+      - ./${GIT_PATH}/:/${PROJECT_NAME}/${GIT_PATH}/
+      - ${LOCAL_SSH_DIR}/.ssh/:/root/.ssh/
+    ports:
+      - ${PORT_VERSION_DATA}:${PORT_VERSION_DATA}
+    command: >
+      bash -c "git config user.name victorviro &&
+      git config user.email victor_sanchez91@hotmail.es &&
+      uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api \
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}"
+# /bin/sh -c "./docker/use_cases/version_data/entrypoint_init_git.sh" &
 
-#   transform_data:
-#     <<: *use_cases-common
-#     container_name: transform_data
-#     build:
-#       <<: *use_cases-common-build
-#       args:
-#         <<: *use_cases-common-args
-#         USE_CASE: ${USE_CASE_TRANSFORM_DATA}
-#     environment:
-#       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
-#       GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
-#     volumes: 
-#       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
-#       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-#       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-#       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-#       - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
-#     ports:
-#       - ${PORT_TRANSFORM_DATA}:${PORT_TRANSFORM_DATA}
-#     command: >
-#       uvicorn src.${USE_CASE_TRANSFORM_DATA}.infrastructure.${API_FILE_TRANSFORM_DATA}:rest_api 
-#         --host ${HOST_USE_CASES_APIS} --port ${PORT_TRANSFORM_DATA}
+  transform_data:
+    <<: *use_cases-common
+    container_name: transform_data
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_TRANSFORM_DATA}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
+    volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRANSFORM_DATA}/
+    ports:
+      - ${PORT_TRANSFORM_DATA}:${PORT_TRANSFORM_DATA}
+    command: >
+      uvicorn src.${USE_CASE_TRANSFORM_DATA}.infrastructure.${API_FILE_TRANSFORM_DATA}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_TRANSFORM_DATA}
   
-#   train_model:
-#     <<: *use_cases-common
-#     container_name: train_model
-#     build:
-#       <<: *use_cases-common-build
-#       args:
-#         <<: *use_cases-common-args
-#         USE_CASE: ${USE_CASE_TRAIN_MODEL}
-#     environment:
-#       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
-#       GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
-#     volumes: 
-#       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
-#       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-#       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-#       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-#       - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/
-#     ports:
-#       - ${PORT_TRAIN_MODEL}:${PORT_TRAIN_MODEL}
-#     command: >
-#       uvicorn src.${USE_CASE_TRAIN_MODEL}.infrastructure.${API_FILE_TRAIN_MODEL}:rest_api 
-#         --host ${HOST_USE_CASES_APIS} --port ${PORT_TRAIN_MODEL}
+  train_model:
+    <<: *use_cases-common
+    container_name: train_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_TRAIN_MODEL}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
+    volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_TRAIN_MODEL}/
+    ports:
+      - ${PORT_TRAIN_MODEL}:${PORT_TRAIN_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_TRAIN_MODEL}.infrastructure.${API_FILE_TRAIN_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_TRAIN_MODEL}
 
-#   evaluate_model:
-#     <<: *use_cases-common
-#     container_name: evaluate_model
-#     build:
-#       <<: *use_cases-common-build
-#       args:
-#         <<: *use_cases-common-args
-#         USE_CASE: ${USE_CASE_EVALUATE_MODEL}
-#     environment:
-#       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
-#       GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
-#     volumes: 
-#       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
-#       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
-#       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-#       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-#       - ./${PROJECT_SRC}/${USE_CASE_EVALUATE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_EVALUATE_MODEL}/
-#     ports:
-#       - ${PORT_EVALUATE_MODEL}:${PORT_EVALUATE_MODEL}
-#     command: >
-#       uvicorn src.${USE_CASE_EVALUATE_MODEL}.infrastructure.${API_FILE_EVALUATE_MODEL}:rest_api 
-#         --host ${HOST_USE_CASES_APIS} --port ${PORT_EVALUATE_MODEL}
+  evaluate_model:
+    <<: *use_cases-common
+    container_name: evaluate_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_EVALUATE_MODEL}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
+    volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
+      - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_EVALUATE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_EVALUATE_MODEL}/
+    ports:
+      - ${PORT_EVALUATE_MODEL}:${PORT_EVALUATE_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_EVALUATE_MODEL}.infrastructure.${API_FILE_EVALUATE_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_EVALUATE_MODEL}
 
-#   validate_model:
-#     <<: *use_cases-common
-#     container_name: validate_model
-#     build:
-#       <<: *use_cases-common-build
-#       args:
-#         <<: *use_cases-common-args
-#         USE_CASE: ${USE_CASE_VALIDATE_MODEL}
-#     environment:
-#       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
-#       GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
-#     volumes: 
-#       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
-#       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-#       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-#       - ./${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/
-#     ports:
-#       - ${PORT_VALIDATE_MODEL}:${PORT_VALIDATE_MODEL}
-#     command: >
-#       uvicorn src.${USE_CASE_VALIDATE_MODEL}.infrastructure.${API_FILE_VALIDATE_MODEL}:rest_api 
-#         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_MODEL}
+  validate_model:
+    <<: *use_cases-common
+    container_name: validate_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_VALIDATE_MODEL}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
+    volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_VALIDATE_MODEL}/
+    ports:
+      - ${PORT_VALIDATE_MODEL}:${PORT_VALIDATE_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_VALIDATE_MODEL}.infrastructure.${API_FILE_VALIDATE_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_MODEL}
 
 
-#   serve_model:
-#     <<: *use_cases-common
-#     container_name: serve_model
-#     build:
-#       <<: *use_cases-common-build
-#       args:
-#         <<: *use_cases-common-args
-#         USE_CASE: ${USE_CASE_SERVE_MODEL}
-#     environment:
-#       MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
-#       GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
-#       GCP_PROJECT_ID: $GCP_PROJECT_ID
-#       GCP_PREDICTION_MACHINE_TYPE: $GCP_PREDICTION_MACHINE_TYPE
-#     volumes: 
-#       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
-#       - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
-#       - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
-#       - ./${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/
-#     ports:
-#       - ${PORT_SERVE_MODEL}:${PORT_SERVE_MODEL}
-#     command: >
-#       uvicorn src.${USE_CASE_SERVE_MODEL}.infrastructure.${API_FILE_SERVE_MODEL}:rest_api 
-#         --host ${HOST_USE_CASES_APIS} --port ${PORT_SERVE_MODEL}
+  serve_model:
+    <<: *use_cases-common
+    container_name: serve_model
+    build:
+      <<: *use_cases-common-build
+      args:
+        <<: *use_cases-common-args
+        USE_CASE: ${USE_CASE_SERVE_MODEL}
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:$MLFLOW_PORT
+      GCP_CREDENTIALS_FILE_REL_PATH: $GCP_CREDENTIALS_FILE_REL_PATH
+      GCP_PROJECT_ID: $GCP_PROJECT_ID
+      GCP_PREDICTION_MACHINE_TYPE: $GCP_PREDICTION_MACHINE_TYPE
+    volumes: 
+      - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
+      - ./${LOGS_PATH}:/${PROJECT_NAME}/${LOGS_PATH}
+      - ./${PROJECT_SRC}/shared/:/${PROJECT_NAME}/${PROJECT_SRC}/shared/
+      - ./${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/:/${PROJECT_NAME}/${PROJECT_SRC}/${USE_CASE_SERVE_MODEL}/
+    ports:
+      - ${PORT_SERVE_MODEL}:${PORT_SERVE_MODEL}
+    command: >
+      uvicorn src.${USE_CASE_SERVE_MODEL}.infrastructure.${API_FILE_SERVE_MODEL}:rest_api 
+        --host ${HOST_USE_CASES_APIS} --port ${PORT_SERVE_MODEL}
   # endregion
 
 
