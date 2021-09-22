@@ -103,76 +103,88 @@ with DAG(
     # endregion
 
     # region Step 1: Data ingestion
-    def get_data(*op_args):
+    def get_data(**kwargs):
         body = {
-            "data_api_url": op_args[0],
-            "data_path": op_args[1],
-            "data_name": op_args[2],
+            "data_api_url": kwargs["data_api_url"],
+            "data_path": kwargs["data_path"],
+            "data_name": kwargs["data_name"],
         }
         return launch_and_manage_api_request(
             api_url=URL_GET_DATA_API, body=body, description="download the data"
         )
 
-    DATA_INGESTION_ARGS = [URL_DATA_MCPL_QUOTES_IMAGE_API, RAW_DATA_PATH, DATASET_NAME]
+    DATA_INGESTION_ARGS = {
+        "data_api_url": URL_DATA_MCPL_QUOTES_IMAGE_API,
+        "data_path": RAW_DATA_PATH,
+        "data_name": DATASET_NAME,
+    }
     data_ingestion = PythonOperator(
-        task_id="data_ingestion", python_callable=get_data, op_args=DATA_INGESTION_ARGS
+        task_id="data_ingestion",
+        python_callable=get_data,
+        op_kwargs=DATA_INGESTION_ARGS,
     )
     # endregion
 
     # region Step 2: Data validation
-    def validate_data(*op_args):
-        body = {"data_path": op_args[0], "data_name": op_args[1]}
+    def validate_data(**kwargs):
+        body = {
+            "data_path": kwargs["data_path"],
+            "data_name": kwargs["data_name"],
+        }
         return launch_and_manage_api_request(
             api_url=URL_VALIDATE_DATA_API,
             body=body,
             description="validate the data schema",
         )
 
-    DATA_VALIDATION_ARGS = [RAW_DATA_PATH, DATASET_NAME]
+    DATA_VALIDATION_ARGS = {
+        "data_path": RAW_DATA_PATH,
+        "data_name": DATASET_NAME,
+    }
     data_validation = PythonOperator(
         task_id="data_validation",
         python_callable=validate_data,
-        op_args=DATA_VALIDATION_ARGS,
+        op_kwargs=DATA_VALIDATION_ARGS,
     )
     # endregion
 
     # region Step 3: Data versioning
-    def version_data(*op_args, **context):
+    def version_data(**kwargs):
         body = {
-            "data_path": op_args[0],
-            "data_name": op_args[1],
-            "data_version": op_args[2],
-            "git_remote_name": op_args[3],
-            "git_branch_name": op_args[4],
-            "mlflow_run_id": context["ti"].xcom_pull(task_ids="create_run"),
+            "data_path": kwargs["data_path"],
+            "data_name": kwargs["data_name"],
+            "data_version": kwargs["data_version"],
+            "git_remote_name": kwargs["git_remote_name"],
+            "git_branch_name": kwargs["git_branch_name"],
+            "mlflow_run_id": kwargs["ti"].xcom_pull(task_ids="create_run"),
         }
         return launch_and_manage_api_request(
             api_url=URL_VERSION_DATA_API, body=body, description="version the data"
         )
 
-    DATA_VERSIONING_ARGS = [
-        RAW_DATA_PATH,
-        DATASET_NAME,
-        VERSION,
-        GIT_REMOTE_NAME,
-        GIT_BRANCH_NAME,
-    ]
+    DATA_VERSIONING_ARGS = {
+        "data_path": RAW_DATA_PATH,
+        "data_name": DATASET_NAME,
+        "data_version": VERSION,
+        "git_remote_name": GIT_REMOTE_NAME,
+        "git_branch_name": GIT_BRANCH_NAME,
+    }
     data_versioning = PythonOperator(
         task_id="data_versioning",
         python_callable=version_data,
-        op_args=DATA_VERSIONING_ARGS,
+        op_kwargs=DATA_VERSIONING_ARGS,
         provide_context=True,
     )
     # endregion
 
     # region Step 4: Preprocessing fitter
-    def fit_data_transformer(*op_args, **context):
+    def fit_data_transformer(**kwargs):
         body = {
-            "data_path": op_args[0],
-            "data_name": op_args[1],
-            "size_test_split": op_args[2],
-            "test_split_seed": op_args[3],
-            "mlflow_run_id": context["ti"].xcom_pull(task_ids="create_run"),
+            "data_path": kwargs["data_path"],
+            "data_name": kwargs["data_name"],
+            "size_test_split": kwargs["size_test_split"],
+            "test_split_seed": kwargs["test_split_seed"],
+            "mlflow_run_id": kwargs["ti"].xcom_pull(task_ids="create_run"),
         }
         return launch_and_manage_api_request(
             api_url=URL_FIT_DATA_TRANSFORMER_API,
@@ -180,95 +192,95 @@ with DAG(
             description="transform the data",
         )
 
-    PREPROCESSING_FITTER_ARGS = [
-        RAW_DATA_PATH,
-        DATASET_NAME,
-        SIZE_TEST_SPLIT,
-        TEST_SPLIT_SEED,
-    ]
+    PREPROCESSING_FITTER_ARGS = {
+        "data_path": RAW_DATA_PATH,
+        "data_name": DATASET_NAME,
+        "size_test_split": SIZE_TEST_SPLIT,
+        "test_split_seed": TEST_SPLIT_SEED,
+    }
     preprocessing_fitter = PythonOperator(
         task_id="preprocessing_fitter",
         python_callable=fit_data_transformer,
-        op_args=PREPROCESSING_FITTER_ARGS,
+        op_kwargs=PREPROCESSING_FITTER_ARGS,
         provide_context=True,
     )
     # endregion
 
     # region Step 5: Model training
-    def train_model(*op_args, **context):
+    def train_model(**kwargs):
         body = {
-            "raw_data_path": op_args[0],
-            "data_name": op_args[1],
-            "alpha": op_args[2],
-            "l1_ratio": op_args[3],
-            "size_test_split": op_args[4],
-            "test_split_seed": op_args[5],
-            "model_seed": op_args[6],
-            "mlflow_run_id": context["ti"].xcom_pull(task_ids="create_run"),
+            "raw_data_path": kwargs["raw_data_path"],
+            "data_name": kwargs["data_name"],
+            "alpha": kwargs["alpha"],
+            "l1_ratio": kwargs["l1_ratio"],
+            "size_test_split": kwargs["size_test_split"],
+            "test_split_seed": kwargs["test_split_seed"],
+            "model_seed": kwargs["model_seed"],
+            "mlflow_run_id": kwargs["ti"].xcom_pull(task_ids="create_run"),
         }
         return launch_and_manage_api_request(
             api_url=URL_TRAIN_MODEL_API, body=body, description="train the model"
         )
 
-    MODEL_TRAINING_ARGS = [
-        RAW_DATA_PATH,
-        DATASET_NAME,
-        L1_RATIO_PARAM_MODEL,
-        ALPHA_PARAM_MODEL,
-        SIZE_TEST_SPLIT,
-        TEST_SPLIT_SEED,
-        MODEL_SEED,
-    ]
+    MODEL_TRAINING_ARGS = {
+        "raw_data_path": RAW_DATA_PATH,
+        "data_name": DATASET_NAME,
+        "l1_ratio": L1_RATIO_PARAM_MODEL,
+        "alpha": ALPHA_PARAM_MODEL,
+        "size_test_split": SIZE_TEST_SPLIT,
+        "test_split_seed": TEST_SPLIT_SEED,
+        "model_seed": MODEL_SEED,
+    }
     model_training = PythonOperator(
         task_id="model_training",
         python_callable=train_model,
-        op_args=MODEL_TRAINING_ARGS,
+        op_kwargs=MODEL_TRAINING_ARGS,
         provide_context=True,
     )
     # endregion
 
     # region Step 6: Model evaluation
-    def evaluate_model(*op_args, **context):
+    def evaluate_model(**kwargs):
         body = {
-            "raw_data_path": op_args[0],
-            "data_name": op_args[1],
-            "size_test_split": op_args[2],
-            "test_split_seed": op_args[3],
-            "mlflow_run_id": context["ti"].xcom_pull(task_ids="create_run"),
+            "raw_data_path": kwargs["raw_data_path"],
+            "data_name": kwargs["data_name"],
+            "size_test_split": kwargs["size_test_split"],
+            "test_split_seed": kwargs["test_split_seed"],
+            "mlflow_run_id": kwargs["ti"].xcom_pull(task_ids="create_run"),
         }
         return launch_and_manage_api_request(
             api_url=URL_EVALUATE_MODEL_API, body=body, description="evaluate the model"
         )
 
-    MODEL_EVALUATION_ARGS = [
-        RAW_DATA_PATH,
-        DATASET_NAME,
-        SIZE_TEST_SPLIT,
-        TEST_SPLIT_SEED,
-    ]
+    MODEL_EVALUATION_ARGS = {
+        "raw_data_path": RAW_DATA_PATH,
+        "data_name": DATASET_NAME,
+        "size_test_split": SIZE_TEST_SPLIT,
+        "test_split_seed": TEST_SPLIT_SEED,
+    }
     model_evaluation = PythonOperator(
         task_id="model_evaluation",
         python_callable=evaluate_model,
-        op_args=MODEL_EVALUATION_ARGS,
+        op_kwargs=MODEL_EVALUATION_ARGS,
         provide_context=True,
     )
     # endregion
 
     # region Step 7: Model validation
-    def validate_model(*op_args, **context):
+    def validate_model(**kwargs):
         body = {
-            "rmse_threshold": op_args[0],
-            "mlflow_run_id": context["ti"].xcom_pull(task_ids="create_run"),
+            "rmse_threshold": kwargs["rmse_threshold"],
+            "mlflow_run_id": kwargs["ti"].xcom_pull(task_ids="create_run"),
         }
         return launch_and_manage_api_request(
             api_url=URL_VALIDATE_MODEL_API, body=body, description="validate the model"
         )
 
-    MODEL_VALIDATION_ARGS = [RMSE_THRESOLD]
+    MODEL_VALIDATION_ARGS = {"rmse_threshold": RMSE_THRESOLD}
     model_validation = PythonOperator(
         task_id="model_validation",
         python_callable=validate_model,
-        op_args=MODEL_VALIDATION_ARGS,
+        op_kwargs=MODEL_VALIDATION_ARGS,
         provide_context=True,
     )
     # endregion
