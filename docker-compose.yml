@@ -45,7 +45,7 @@ x-use_cases-common:
 
 
 services:
-  # region Airflow containers
+  # Airflow containers
   airflow-init: 
     <<: *airflow-common
     container_name: airflow-init
@@ -66,7 +66,7 @@ services:
     command: airflow scheduler
     depends_on:
       - airflow-init
-  # endregion
+
 
   jupyter:
     container_name: jupyter
@@ -89,8 +89,9 @@ services:
       - ./${PROJECT_SRC}/notebooks:/${PROJECT_NAME}/${PROJECT_SRC}/notebooks
       - ./${DATA_PATH}:/${PROJECT_NAME}/${DATA_PATH}
     restart: always
-    
-  # region MLflow container
+
+
+  # MLflow container
   mlflow:
     container_name: mlflow
     build:
@@ -114,7 +115,6 @@ services:
       - ./${CREDENTIALS_PATH}:/${PROJECT_NAME}/${CREDENTIALS_PATH}
     depends_on:
       - postgres
-  # endregion
 
 
   postgres:
@@ -134,7 +134,8 @@ services:
     volumes:
       - vol_postres:/var/lib/postgresql/data
 
-  # region Use cases
+
+  # Use cases
   validate_data:
     <<: *use_cases-common
     container_name: validate_data
@@ -201,7 +202,6 @@ services:
       git config user.email victor_sanchez91@hotmail.es &&
       uvicorn src.${USE_CASE_VERSION_DATA}.infrastructure.${API_FILE_VERSION_DATA}:rest_api \
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VERSION_DATA}"
-# /bin/sh -c "./docker/use_cases/version_data/entrypoint_init_git.sh" &
 
   transform_data:
     <<: *use_cases-common
@@ -294,7 +294,6 @@ services:
       uvicorn src.${USE_CASE_VALIDATE_MODEL}.infrastructure.${API_FILE_VALIDATE_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_VALIDATE_MODEL}
 
-
   serve_model:
     <<: *use_cases-common
     container_name: serve_model
@@ -318,7 +317,6 @@ services:
     command: >
       uvicorn src.${USE_CASE_SERVE_MODEL}.infrastructure.${API_FILE_SERVE_MODEL}:rest_api 
         --host ${HOST_USE_CASES_APIS} --port ${PORT_SERVE_MODEL}
-  # endregion
 
 
 volumes:

@@ -1,4 +1,4 @@
-# region Imports
+# Imports
 from datetime import datetime, timedelta
 from json import dumps, loads
 
@@ -29,9 +29,6 @@ from src.shared.constants import (
     URL_VERSION_DATA_API,
     VERSION,
 )
-
-# endregion
-
 
 # Define the general arguments for the DAG (it will apply to any of its operators)
 default_args = {
@@ -91,8 +88,8 @@ with DAG(
     schedule_interval="0 0 * * *",
 ) as dag:
 
-    # region Step 0: Create experiment run
-    def create_run(*op_args):
+    # Step 0: Create experiment run
+    def create_run():
         start_run()
         run = active_run()
         run_id = run.info.run_id
@@ -100,9 +97,8 @@ with DAG(
         return run_id
 
     run_creation = PythonOperator(task_id="create_run", python_callable=create_run)
-    # endregion
 
-    # region Step 1: Data ingestion
+    # Step 1: Data ingestion
     def get_data(**kwargs):
         body = {
             "data_api_url": kwargs["data_api_url"],
@@ -123,9 +119,8 @@ with DAG(
         python_callable=get_data,
         op_kwargs=DATA_INGESTION_ARGS,
     )
-    # endregion
 
-    # region Step 2: Data validation
+    # Step 2: Data validation
     def validate_data(**kwargs):
         body = {
             "data_path": kwargs["data_path"],
@@ -146,9 +141,8 @@ with DAG(
         python_callable=validate_data,
         op_kwargs=DATA_VALIDATION_ARGS,
     )
-    # endregion
 
-    # region Step 3: Data versioning
+    # Step 3: Data versioning
     def version_data(**kwargs):
         body = {
             "data_path": kwargs["data_path"],
@@ -175,9 +169,8 @@ with DAG(
         op_kwargs=DATA_VERSIONING_ARGS,
         provide_context=True,
     )
-    # endregion
 
-    # region Step 4: Preprocessing fitter
+    # Step 4: Preprocessing fitter
     def fit_data_transformer(**kwargs):
         body = {
             "data_path": kwargs["data_path"],
@@ -204,9 +197,8 @@ with DAG(
         op_kwargs=PREPROCESSING_FITTER_ARGS,
         provide_context=True,
     )
-    # endregion
 
-    # region Step 5: Model training
+    # Step 5: Model training
     def train_model(**kwargs):
         body = {
             "raw_data_path": kwargs["raw_data_path"],
@@ -237,9 +229,8 @@ with DAG(
         op_kwargs=MODEL_TRAINING_ARGS,
         provide_context=True,
     )
-    # endregion
 
-    # region Step 6: Model evaluation
+    # Step 6: Model evaluation
     def evaluate_model(**kwargs):
         body = {
             "raw_data_path": kwargs["raw_data_path"],
@@ -264,9 +255,8 @@ with DAG(
         op_kwargs=MODEL_EVALUATION_ARGS,
         provide_context=True,
     )
-    # endregion
 
-    # region Step 7: Model validation
+    # Step 7: Model validation
     def validate_model(**kwargs):
         body = {
             "rmse_threshold": kwargs["rmse_threshold"],
@@ -283,7 +273,7 @@ with DAG(
         op_kwargs=MODEL_VALIDATION_ARGS,
         provide_context=True,
     )
-    # endregion
+
 
 (
     run_creation
