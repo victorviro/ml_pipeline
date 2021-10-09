@@ -12,7 +12,8 @@ class JSONDataLoader(IDataFileLoader):
     It loads JSON data.
     """
 
-    def load_data(self, file_path: str) -> dict:
+    @staticmethod
+    def load_data(file_path: str) -> dict:
         """
         Load JSON data from a file.
         """

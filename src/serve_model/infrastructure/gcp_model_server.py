@@ -28,7 +28,8 @@ class GCPModelServer(IModelServer):
     Platform.
     """
 
-    def create_model_version(self, version_name: str, model_gcs_path: str):
+    @staticmethod
+    def create_model_version(version_name: str, model_gcs_path: str):
         """
         Create a new version of a model in GCP AI Platform.
 
@@ -39,14 +40,14 @@ class GCPModelServer(IModelServer):
         """
         # Create the AI Platform service object
         client_options = ClientOptions(api_endpoint=GCP_ENDPOINT)
-        ml = discovery.build("ml", "v1", client_options=client_options)
+        service = discovery.build("ml", "v1", client_options=client_options)
         # Create a request to call projects.models.versions.create.
         GCP_MODEL_VERSION_BODY.update(
             {"name": version_name, "deploymentUri": model_gcs_path}
         )
 
         request = (
-            ml.projects()
+            service.projects()  # pylint: disable=maybe-no-member
             .models()
             .versions()
             .create(parent=GCP_PARENT, body=GCP_MODEL_VERSION_BODY)
@@ -59,12 +60,9 @@ class GCPModelServer(IModelServer):
                 f"Response:\n{response}"
             )
         except errors.HttpError as err:
-            msg = (
-                "There was an error creating the model version. Details of the error:"
-                f" {err._get_reason()}"
-            )
+            msg = "There was an error creating the model version."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
 
     def serve_model(self, model_path: str, model_version: str):
         """

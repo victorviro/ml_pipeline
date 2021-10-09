@@ -13,9 +13,6 @@ class MlflowModelEvaluationTracker(MlflowPythonTracker):
     :type run_id: str
     """
 
-    def __init__(self, run_id: str):
-        super().__init__(run_id)
-
     def track_model_evaluation_info(self, information_to_track: dict):
         """
         Track information of the model evaluation (metrics) to an

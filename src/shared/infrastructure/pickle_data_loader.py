@@ -12,14 +12,15 @@ class PickleDataLoader(IDataFileLoader):
     It loads pickle data.
     """
 
-    def load_data(self, file_path: str):
+    @staticmethod
+    def load_data(file_path: str):
         """
         Load pickle data from a file.
         """
 
-        with open(file_path, "rb") as f:
-            file = pickle.load(f)
+        with open(file_path, "rb") as file:
+            data = pickle.load(file)
 
         msg = f"Pickle data file loaded succesfully from file in path: {file_path}"
         logger.info(msg)
-        return file
+        return data

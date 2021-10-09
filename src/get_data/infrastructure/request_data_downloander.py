@@ -2,7 +2,6 @@ import logging
 from json.decoder import JSONDecodeError
 
 import requests
-from requests.exceptions import ConnectionError
 
 from src.get_data.domain.data_downloander import IDataDownloander
 
@@ -29,10 +28,9 @@ class RequestDataDownloander(IDataDownloander):
         :rtype: dict
         """
 
-        logger.info(f"Getting raw data through a request.")
+        logger.info("Getting raw data through a request.")
         # Launch the request to get the data
         try:
-            # ping
             request_response = requests.get(self.data_api_url)
             if request_response.status_code == 200:
                 logger.info("Request to get the dataset done succesfully.")
@@ -44,21 +42,18 @@ class RequestDataDownloander(IDataDownloander):
                 logger.error(msg)
                 raise Exception(msg)
 
-        except ConnectionError as err:
+        except requests.exceptions.ConnectionError as err:
             msg = (
                 "Connection error when request dataset. Check that the API is running "
-                f"or the endpoint is correct. Traceback of error: {err}"
+                "or the endpoint is correct."
             )
             logger.error(msg)
-            raise ConnectionError(msg)
+            raise requests.exceptions.ConnectionError(msg) from err
 
         except Exception as err:
-            msg = (
-                f"Unknown error when request data. Traceback: {err.__class__.__name__}"
-                f": {err}"
-            )
+            msg = "Unknown error when request data."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
 
         # Get the response json of the request
         try:
@@ -68,17 +63,14 @@ class RequestDataDownloander(IDataDownloander):
         except JSONDecodeError as err:
             msg = (
                 "JSON decode error when getting the json from the request response. "
-                f"The request response contains invalid JSON. Traceback: {err}"
+                "The request response contains invalid JSON."
             )
             logger.error(msg)
-            raise JSONDecodeError(msg=msg, doc=err.doc, pos=err.pos)
+            raise JSONDecodeError(msg=msg, doc=err.doc, pos=err.pos) from err
 
         except Exception as err:
-            msg = (
-                "Unknown error getting the JSON from the request response. Traceback: "
-                f"{err.__class__.__name__}: {err}"
-            )
+            msg = "Unknown error getting the JSON from the request response."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
 
         return raw_data

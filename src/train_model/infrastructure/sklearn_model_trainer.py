@@ -56,26 +56,26 @@ class SklearnModelTrainer(IModelTrainer):
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)
-        X = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
-        y = dataset_df[TARGET_VARIABLE_NAME]
+        features = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
+        target = dataset_df[TARGET_VARIABLE_NAME]
 
         # Split the dataset in training and test sets.
         try:
-            X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=self.size_test_split, random_state=self.test_split_seed
+            x_train, _, y_train, _ = train_test_split(
+                features,
+                target,
+                test_size=self.size_test_split,
+                random_state=self.test_split_seed,
             )
         except ValueError as err:
-            msg = (
-                "ValueError splitting the dataset into training and test sets. Error "
-                f"description: {err}."
-            )
-            raise ValueError(msg)
+            msg = "ValueError splitting the dataset into training and test sets."
+            raise ValueError(msg) from err
         # Transform train features
         try:
-            data_columns = X.columns.to_list()
-            X_train_transformed_array = transformer.transform(X_train)
-            X_train_transformed = DataFrame(
-                X_train_transformed_array, columns=data_columns
+            data_columns = features.columns.to_list()
+            x_train_transformed_array = transformer.transform(x_train)
+            x_train_transformed = DataFrame(
+                x_train_transformed_array, columns=data_columns
             )
             logger.info("Training features transformed succesfully.")
         except Exception as err:
@@ -90,7 +90,7 @@ class SklearnModelTrainer(IModelTrainer):
                 alpha=self.alpha, l1_ratio=self.l1_ratio, random_state=self.model_seed
             )
             # Train the model
-            model.fit(X_train_transformed, y_train)
+            model.fit(x_train_transformed, y_train)
             logger.info("Model trained succesfully")
 
             # Build the pipeline (transformations plus model)
@@ -112,17 +112,14 @@ class SklearnModelTrainer(IModelTrainer):
             return information_to_track
 
         except TypeError as err:
-            msg = f"TypeError training the model. Error description: {err}."
+            msg = "TypeError training the model."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
         except ValueError as err:
-            msg = f"ValueError training the model. Error description: {err}."
+            msg = "ValueError training the model."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
         except Exception as err:
-            msg = (
-                "Unknown error training the model. Error description: "
-                f"{err.__class__.__name__}: {err}."
-            )
+            msg = "Unknown error training the model."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err

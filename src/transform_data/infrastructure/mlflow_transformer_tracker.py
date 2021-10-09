@@ -14,9 +14,6 @@ class MlflowTransformerTracker(MlflowPythonTracker):
     :type run_id: str
     """
 
-    def __init__(self, run_id: str):
-        super().__init__(run_id)
-
     def track_transformer_fitting_info(self, transformer: Pipeline):
         """
         Track information of the transformer fitting (transformer pipeline, preprocessing

@@ -40,40 +40,39 @@ class SklearnModelEvaluator(IModelEvaluator):
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)
-        X = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
-        y = dataset_df[TARGET_VARIABLE_NAME]
+        features = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
+        target = dataset_df[TARGET_VARIABLE_NAME]
 
         # Split the dataset in training and test sets.
         try:
-            X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=self.size_test_split, random_state=self.test_split_seed
+            x_train, x_test, y_train, y_test = train_test_split(
+                features,
+                target,
+                test_size=self.size_test_split,
+                random_state=self.test_split_seed,
             )
             logger.info("Dataset split succesfully.")
         except ValueError as err:
-            msg = (
-                "ValueError splitting the dataset in training and test sets. Error "
-                f"description: {err}."
-            )
-            raise ValueError(msg)
+            msg = "ValueError splitting the dataset in training and test sets."
+            raise ValueError(msg) from err
 
         # Make predictions and compute metrics on the test and training sets
         try:
-            y_test_predicted = model.predict(X_test)
+            y_test_predicted = model.predict(x_test)
             (rmse_test, mae_test, r2_test) = get_regression_metrics(
                 y_test, y_test_predicted
             )
-            y_train_predicted = model.predict(X_train)
+            y_train_predicted = model.predict(x_train)
             (rmse_train, mae_train, r2_train) = get_regression_metrics(
                 y_train, y_train_predicted
             )
 
         except Exception as err:
             msg = (
-                "Error making predictions or getting metrics on test and training sets"
-                f". Error description: {err.__class__.__name__}: {err}."
+                "Error making predictions or getting metrics on test and training sets."
             )
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
 
         metrics_to_track = {
             "rmse_train": rmse_train,

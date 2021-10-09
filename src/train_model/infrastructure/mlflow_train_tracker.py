@@ -18,9 +18,6 @@ class MlflowTrainTracker(MlflowPythonTracker):
     :type run_id: str
     """
 
-    def __init__(self, run_id: str):
-        super().__init__(run_id)
-
     def track_training_info(self, information_to_track: dict):
         """
         Track information of the model training (metrics, models,...) to a

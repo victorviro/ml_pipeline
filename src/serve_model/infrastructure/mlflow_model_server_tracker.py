@@ -11,9 +11,6 @@ class MlflowModelServerTracker(MlflowPythonTracker):
     :type run_id: str
     """
 
-    def __init__(self, run_id: str):
-        super().__init__(run_id)
-
     def get_tracked_model_path(self) -> str:
         """
         Get the path of the sklearn model tracked in the MLflow experiment run.

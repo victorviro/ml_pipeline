@@ -10,9 +10,6 @@ class MlflowDataVersioningTracker(MlflowPythonTracker):
     :type run_id: str
     """
 
-    def __init__(self, run_id: str):
-        super().__init__(run_id)
-
     def track_information(self, information_to_track: dict):
         """
         Track information of the data versioning (dataset path in the remote storage,

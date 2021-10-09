@@ -40,9 +40,8 @@ class ValidateModel:
         validate_model = ValidateModel(data_tracker=data_tracker)
         return validate_model
 
-    def validate_model_performance(
-        self, metrics: dict, metrics_threshold: dict
-    ) -> bool:
+    @staticmethod
+    def validate_model_performance(metrics: dict, metrics_threshold: dict) -> bool:
         """
         Validated the model based on its performance metrics in the test set and
         threshold values.
@@ -62,10 +61,10 @@ class ValidateModel:
             )
             logger.warning(f"Model was not validated succesfully: {msg}.")
             return False
-        else:
-            msg = (
-                "Square root of mean squared error smaller that the threshold "
-                f"fixed: {rmse} < thresold fixed = {rmse_threshold}."
-            )
-            logger.info(f"Model validated succesfully in test set: {msg}")
-            return True
+
+        msg = (
+            "Square root of mean squared error smaller that the threshold "
+            f"fixed: {rmse} < thresold fixed = {rmse_threshold}."
+        )
+        logger.info(f"Model validated succesfully in test set: {msg}")
+        return True

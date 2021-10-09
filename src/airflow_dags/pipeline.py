@@ -2,12 +2,13 @@
 from datetime import datetime, timedelta
 from json import dumps, loads
 
+import requests
+
+# pylint: disable=wrong-import-order
 from airflow.operators.python_operator import PythonOperator
 from mlflow import active_run, end_run, start_run
-from requests import post
-from requests.exceptions import ConnectionError
 
-from airflow import DAG
+from airflow import DAG  # pylint: disable=ungrouped-imports
 from src.shared.constants import (
     ALPHA_PARAM_MODEL,
     DATASET_NAME,
@@ -52,28 +53,25 @@ def launch_and_manage_api_request(api_url: str, body: dict, description: str) ->
     :rtype: dict
     """
     try:
-        request = post(api_url, data=dumps(body))
-    except ConnectionError as err:
+        request = requests.post(api_url, data=dumps(body))
+    except requests.exceptions.ConnectionError as err:
         msg = (
-            f"Connection error. Check that the api to {description} is running or that"
-            f" the host and port are specified correctly. Error description: {err}."
+            f"Check that the api to {description} is running or that"
+            f" the host and port are specified correctly."
         )
-        raise ConnectionError(msg)
+        raise requests.exceptions.ConnectionError(msg) from err
     except Exception as err:
-        msg = (
-            f"Unknown error when request the api to {description}. Error: "
-            f"{err.__class__.__name__}:{err}."
-        )
-        raise Exception(msg)
+        msg = f"Unknown error when request the api to {description}."
+        raise Exception(msg) from err
 
     request_content = request.content
     content = loads(request_content.decode("utf-8"))
     content["status_code"] = request.status_code
     if request.status_code == 200:
         return content
-    elif request.status_code == 500:
+    if request.status_code == 500:
         raise Exception(content)
-    elif request.status_code == 404:
+    if request.status_code == 404:
         message = "Endpoint not found. Check that the path of the endpoint is correct"
         content["message"] = message
         raise Exception(content)
@@ -275,6 +273,7 @@ with DAG(
     )
 
 
+# pylint: disable=pointless-statement
 (
     run_creation
     >> data_ingestion

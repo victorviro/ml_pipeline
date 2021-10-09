@@ -12,7 +12,8 @@ class JSONDataSaver(IDataFileSaver):
     It saves JSON data.
     """
 
-    def save_data(self, file_path: str, data: dict):
+    @staticmethod
+    def save_data(file_path: str, data: dict):
         """
         Save the data.
         """

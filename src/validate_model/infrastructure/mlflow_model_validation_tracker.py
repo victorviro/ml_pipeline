@@ -11,9 +11,6 @@ class MlflowModelValidationTracker(MlflowPythonTracker):
     :type run_id: str
     """
 
-    def __init__(self, run_id: str):
-        super().__init__(run_id)
-
     def get_metrics(self) -> dict:
         """
         Get metrics tracked in the MLflow experiment run.

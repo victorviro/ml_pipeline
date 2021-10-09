@@ -32,7 +32,7 @@ async def train_model_endpoint(item: Item):
     )
     metrics_threshold = {"rmse": item.rmse_threshold}
     try:
-        logger.info(f"Validating model...")
+        logger.info("Validating model...")
         validate_model_use_case.execute(metrics_threshold=metrics_threshold)
         message = "Model validated succesfully."
         logger.info(message)

@@ -38,29 +38,26 @@ class SklearnTransformationFitter(ITransformationFitter):
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)
-        X = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
-        y = dataset_df[TARGET_VARIABLE_NAME]
+        features = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)
+        target = dataset_df[TARGET_VARIABLE_NAME]
         # Split the dataset in train and test sets
         try:
-            X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=self.size_test_split, random_state=self.test_split_seed
+            x_train, _, _, _ = train_test_split(
+                features,
+                target,
+                test_size=self.size_test_split,
+                random_state=self.test_split_seed,
             )
         except ValueError as err:
-            msg = (
-                "ValueError splitting the dataset into training and test sets. Error "
-                f"description: {err}"
-            )
-            raise ValueError(msg)
+            msg = "ValueError splitting the dataset into training and test sets."
+            raise ValueError(msg) from err
         # Define and fit the pipeline (standard scaler)
         try:
             pipeline = Pipeline([("standard_scaler", StandardScaler())])
-            transformer_pipeline = pipeline.fit(X_train)
+            transformer_pipeline = pipeline.fit(x_train)
             logger.info("Transformer pipeline fitted succesfully.")
             return transformer_pipeline
         except Exception as err:
-            msg = (
-                "Error fitting transfomer pipeline. Error description: "
-                f"{err.__class__.__name__}: {err}"
-            )
+            msg = "Error fitting transfomer pipeline."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err

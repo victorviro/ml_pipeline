@@ -24,12 +24,12 @@ def get_regression_metrics(actual: ndarray, predictions: ndarray) -> tuple:
     try:
         rmse = np.sqrt(mean_squared_error(actual, predictions))
         mae = mean_absolute_error(actual, predictions)
-        r2 = r2_score(actual, predictions)
+        r_square = r2_score(actual, predictions)
     except Exception as err:
-        msg = f"Error trying to compute regresion metrics.\nMessage: {err}"
+        msg = "Error trying to compute regresion metrics."
         logger.error(msg)
-        raise Exception(msg)
-    return rmse, mae, r2
+        raise Exception(msg) from err
+    return rmse, mae, r_square
 
 
 def get_class_parameters(cls) -> list:
@@ -48,7 +48,7 @@ def get_class_parameters(cls) -> list:
             if is_parameter:
                 parameters.append(attribute)
     except Exception as err:
-        msg = f"Error trying to get parameters of class: {cls}.\nMessage: {err}"
+        msg = f"Error trying to get parameters of class: {cls}."
         logger.error(msg)
-        raise Exception(msg)
+        raise Exception(msg) from err
     return parameters

@@ -26,28 +26,22 @@ class PanderaSchemaValidator(IDataValidator):
         :type dataset_schema_info: list
         """
 
-        logger.info(f"Validating raw dataset...")
+        logger.info("Validating raw dataset...")
 
         # Load dataset in pandas DataFrame format
         try:
             dataset_df = pd.DataFrame.from_dict(dataset)
-            logger.info(f"Converted dataset to pandas DataFrame succesfully.")
+            logger.info("Converted dataset to pandas DataFrame succesfully.")
 
         except ValueError as err:
-            msg = (
-                "Value error converting JSON dataset to pandas DataFrame. "
-                f"Error description: {err}"
-            )
+            msg = "Value error converting JSON dataset to pandas DataFrame."
             logger.error(msg)
-            raise ValueError(msg)
+            raise ValueError(msg) from err
 
         except Exception as err:
-            msg = (
-                "Unknown error converting dataset to pandas DataFrame. "
-                f"Error description: {err.__class__.__name__}: {err}"
-            )
+            msg = "Unknown error converting dataset to pandas DataFrame."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
 
         # Get the valid schema of the dataset (pandera object)
         pandera_dataset_schema = self._get_pandera_dataset_schema(
@@ -67,14 +61,12 @@ class PanderaSchemaValidator(IDataValidator):
             raise err
 
         except Exception as err:
-            msg = (
-                "Unknown error when validating dataset schema. Error description: "
-                f"{err.__class__.__name__}: {err}"
-            )
+            msg = "Unknown error when validating dataset schema."
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
 
-    def _get_pandera_dataset_schema(self, dataset_schema_info: list) -> DataFrameSchema:
+    @staticmethod
+    def _get_pandera_dataset_schema(dataset_schema_info: list) -> DataFrameSchema:
         """
         Get the valid schema of the dataset (pandera object) to validate the dataset.
 
@@ -117,15 +109,15 @@ class PanderaSchemaValidator(IDataValidator):
             except TypeError as err:
                 msg = (
                     "TypeError creating pandera dataset schema of the variable: "
-                    f" {variable_name}. Error description: {err}"
+                    f" {variable_name}."
                 )
-                raise TypeError(msg)
+                raise TypeError(msg) from err
             except KeyError as err:
                 msg = (
                     "Error accessing a value of a dict with an invalid key. Key not :"
-                    f"found {err}. Dict: {variable_info}"
+                    f"found: {err}. Dict: {variable_info}"
                 )
-                raise KeyError(msg)
+                raise KeyError(msg) from err
 
         pandera_dataset_schema = pandera.DataFrameSchema(pandera_dataset_schema_dict)
         return pandera_dataset_schema

@@ -61,7 +61,7 @@ class DVCDataVersioner(IDataVersioner):
                 f"Command: {err.cmd}. Error: {err.stderr}"
             )
             logger.error(msg)
-            raise Exception(msg)
+            raise Exception(msg) from err
 
         # Get git repo object
         try:
@@ -70,10 +70,10 @@ class DVCDataVersioner(IDataVersioner):
         except InvalidGitRepositoryError as err:
             msg = (
                 f"Error getting git repository using GitPython. There is no .git file "
-                f"in the path: {repo_path}. Error: {err}"
+                f"in the path: {repo_path}."
             )
             logger.info(msg)
-            raise InvalidGitRepositoryError(msg)
+            raise InvalidGitRepositoryError(msg) from err
 
         # Check if the dataset has changed
         diff_output = git_repo.git.diff(relative_metadata_file_path)
@@ -95,7 +95,7 @@ class DVCDataVersioner(IDataVersioner):
                     f"{err.stderr}"
                 )
                 logger.error(msg)
-                raise Exception(msg)
+                raise Exception(msg) from err
 
             # Push the DVC metadata of the dataset to the git repository
             try:
@@ -109,11 +109,11 @@ class DVCDataVersioner(IDataVersioner):
 
             except ValueError as err:
                 message = (
-                    f"Error getting remote named {self.git_remote_name} of the git"
-                    f" repo. Error: {err}"
+                    f"Error getting remote named {self.git_remote_name} of "
+                    "the git repo."
                 )
                 logger.error(message)
-                raise ValueError(message)
+                raise ValueError(message) from err
             except GitCommandError as err:
                 msg = (
                     "Error pushing commited metadata files (.dvc) of the dataset in "
@@ -121,7 +121,7 @@ class DVCDataVersioner(IDataVersioner):
                     f"Error: {err.stderr}"
                 )
                 logger.error(msg)
-                raise Exception(msg)
+                raise Exception(msg) from err
 
             # Push the dataset versioned in dvc storage (GCS)
             try:
@@ -140,7 +140,7 @@ class DVCDataVersioner(IDataVersioner):
                     f'credentials :{os.getenv("GOOGLE_APPLICATION_CREDENTIALS")}'
                 )
                 logger.error(msg)
-                raise Exception(msg)
+                raise Exception(msg) from err
         else:
             logger.warning("The dataset has not changed.")
 
@@ -152,9 +152,9 @@ class DVCDataVersioner(IDataVersioner):
             dvc_data_path = get_url(path=relative_data_file_path, repo=os.getcwd())
             logger.info("Dataset path in DVC storage gotten succesfully")
         except OutputNotFoundError as err:
-            message = f"Error getting dataset path in DVC storage. Error: {err}"
+            message = "Error getting dataset path in DVC storage."
             logger.error(message)
-            raise Exception(message)
+            raise Exception(message) from err
 
         information_to_track = {
             "dvc data path": dvc_data_path,
