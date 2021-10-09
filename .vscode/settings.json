@@ -1,35 +1,40 @@
 {
-    "python.pythonPath": "venv/bin/python",
-    "python.linting.pylintPath": "/venv/bin/pylint",
-    "python.envFile": "venv",
+    // Python env
+    "python.pythonPath": "venv/bin/python3",
+    "python.envFile": ".env",
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    // Editor settings
     "explorer.autoReveal": false,
     "workbench.editor.enablePreview": false,
     "autoDocstring.docstringFormat": "sphinx",
-    "editor.rulers": [90],
+    "editor.rulers": [
+        90
+    ],
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#f7e8ed"
     },
-    "python.autoComplete.addBrackets": true, // autocomplete brakets
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true, 
-    "python.languageServer": "Microsoft", //"Microsoft",Jedi, Pylance
+    "python.autoComplete.addBrackets": true,
+    "python.languageServer": "Pylance",
+    "editor.semanticHighlighting.enabled": false,
     "python.analysis.autoSearchPaths": false,
+    "python.analysis.completeFunctionParens": true,
+    // Linters
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.pylintCategorySeverity.refactor": "Warning",
+    "python.linting.pylintCategorySeverity.convention": "Warning",
     "python.linting.pylintArgs": [
-        "--load-plugins",
+        "--rcfile=setup.cfg",
     ],
-    "python.linting.pycodestyleEnabled": true,
-    "python.linting.pycodestyleArgs": [
-        "--max-line-length=90"
-    ],
-    "jupyter.jupyterServerType": "remote",
-    //"python.autoComplete.extraPaths": ["./src"], // to pylint read src imports,
-    //"python.analysis.extraPaths": ["src"],
-    //"python.analysis.completeFunctionParens": true,
-    //"python.terminal.activateEnvironment": true,
-    //"python.terminal.activateEnvInCurrentTerminal": true
-    //"notebook.showCellStatusBar": true
+    "python.linting.flake8Enabled": true,
+    // Autosave formatters
     "editor.codeActionsOnSave": {
         "source.organizeImports": true,
     },
     "python.formatting.provider": "black",
+    // Jupyter
+    "jupyter.jupyterServerType": "remote",
+    "notebook.showCellStatusBar": "hidden"
 }
