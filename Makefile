@@ -48,6 +48,16 @@ install-test:
 test:
 	pytest tests
 
+format:
+	isort src tests
+	black src tests
+
+lint:
+	flake8 src tests 
+	isort src tests --check-only 
+	black src tests --check 
+	find src tests -name "*.py" ! -name '__init__.py' ! -name 'conftest.py' | xargs pylint --exit-zero
+
 clean:
 	rm -rf .pytest_cache
 	rm -f .coverage
