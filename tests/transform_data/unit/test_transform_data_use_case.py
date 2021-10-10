@@ -16,9 +16,11 @@ def test_transform_data_should_complete_process_returning_success():
     mock_data_tracker = Mock(IDataTracker)
     mock_data_tracker.track_transformer_fitting_info = Mock()
 
-    use_case = FitTransformer.build(data_file_loader=mock_data_file_loader,
-                                    transformation_fitter=mock_transformation_fitter,
-                                    data_tracker=mock_data_tracker)
+    use_case = FitTransformer.build(
+        data_file_loader=mock_data_file_loader,
+        transformation_fitter=mock_transformation_fitter,
+        data_tracker=mock_data_tracker,
+    )
     use_case.execute(dataset_file_path=getcwd())
 
     mock_transformation_fitter.fit_transformer.assert_called_once()
@@ -33,9 +35,11 @@ def test_transform_data_use_case_should_raise_exception_due_non_exist_data_file_
     mock_data_tracker = Mock(IDataTracker)
     mock_data_tracker.track_transformer_fitting_info = Mock()
 
-    use_case = FitTransformer.build(data_file_loader=mock_data_file_loader,
-                                    transformation_fitter=mock_transformation_fitter,
-                                    data_tracker=mock_data_tracker)
+    use_case = FitTransformer.build(
+        data_file_loader=mock_data_file_loader,
+        transformation_fitter=mock_transformation_fitter,
+        data_tracker=mock_data_tracker,
+    )
 
     with pytest.raises(Exception):
         use_case.execute(dataset_file_path="no_file")

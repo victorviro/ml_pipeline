@@ -17,8 +17,7 @@ def test_get_data_use_case_should_complete_process_returning_success():
     mock_data_file_saver.save_data = Mock()
 
     use_case = GetData.build(
-        data_downloander=mock_data_downloander,
-        data_file_saver=mock_data_file_saver
+        data_downloander=mock_data_downloander, data_file_saver=mock_data_file_saver
     )
     use_case.execute(file_path=getcwd())
 
@@ -34,8 +33,7 @@ def test_get_data_use_case_should_raise_exception_due_non_exist_data_path():
     mock_data_file_saver = Mock(IDataFileSaver)
 
     use_case = GetData.build(
-        data_downloander=mock_data_downloander,
-        data_file_saver=mock_data_file_saver
+        data_downloander=mock_data_downloander, data_file_saver=mock_data_file_saver
     )
     with pytest.raises(Exception):
         use_case.execute(file_path="no_path/no_file")
@@ -53,8 +51,7 @@ def test_get_data_use_case_should_raise_exception_due_non_exist_data_file_path()
     mock_data_file_saver.save_data = Mock()
 
     use_case = GetData.build(
-        data_downloander=mock_data_downloander,
-        data_file_saver=mock_data_file_saver
+        data_downloander=mock_data_downloander, data_file_saver=mock_data_file_saver
     )
     with pytest.raises(Exception):
         use_case.execute(file_path=f"{getcwd()}/no_file")
