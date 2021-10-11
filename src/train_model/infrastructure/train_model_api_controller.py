@@ -31,8 +31,8 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/train_model")
-async def train_model_endpoint(item: Item):
-    mlflow_sklearn_trainer = SklearnModelTrainer(
+def train_model_endpoint(item: Item):
+    model_trainer = SklearnModelTrainer(
         size_test_split=item.size_test_split,
         test_split_seed=item.test_split_seed,
         alpha=item.alpha,
@@ -40,25 +40,25 @@ async def train_model_endpoint(item: Item):
         model_seed=item.model_seed,
     )
     dataset_file_loader = JSONDataLoader()
-    mlflow_train_tracker = MlflowTrainTracker(run_id=item.mlflow_run_id)
+    data_tracker = MlflowTrainTracker(run_id=item.mlflow_run_id)
 
     train_model_use_case = TrainModel.build(
-        model_trainer=mlflow_sklearn_trainer,
+        model_trainer=model_trainer,
         dataset_file_loader=dataset_file_loader,
-        data_tracker=mlflow_train_tracker,
+        data_tracker=data_tracker,
     )
     dataset_file_path = f"{item.raw_data_path}/{item.data_name}.json"
 
     logger.info("Train the model and track it...")
     try:
         train_model_use_case.execute(dataset_file_path=dataset_file_path)
-        message = "Model trained and info tracked succesfully"
+        message = "Model trained and metadata tracked succesfully"
         logger.info(message)
         return JSONResponse(
             status_code=status.HTTP_200_OK, content={"message": message}
         )
     except Exception as err:
-        message = f"Error training the model or tracking info: {str(err)}"
+        message = f"Error training the model or tracking metadata: {str(err)}"
         logger.error(message)
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

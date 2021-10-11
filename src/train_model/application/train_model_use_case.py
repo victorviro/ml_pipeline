@@ -31,19 +31,17 @@ class TrainModel:
 
     def execute(self, dataset_file_path: str):
         if not os.path.exists(dataset_file_path):
-            raise Exception(
-                "Path of dataset file does not exist: " f'"{dataset_file_path}"'
-            )
+            raise Exception(f"Path of dataset file does not exist: {dataset_file_path}")
         # Load the dataset
         dataset = self.dataset_file_loader.load_data(file_path=dataset_file_path)
-        # Get the transformer tracked
-        transformer = self.data_tracker.get_tracked_transformer()
+        # Get the preprocesser tracked
+        preprocesser = self.data_tracker.get_tracked_preprocesser()
         # Train the model
-        information_to_track = self.model_trainer.train_model(
-            dataset=dataset, transformer=transformer
+        metadata_to_track = self.model_trainer.train_model(
+            dataset=dataset, transformer=preprocesser
         )
         # Track information of the experiment run
-        self.data_tracker.track_training_info(information_to_track)
+        self.data_tracker.track_training_metadata(metadata_to_track)
 
     @staticmethod
     def build(
