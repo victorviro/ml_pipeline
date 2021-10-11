@@ -1,4 +1,5 @@
 import abc
+from typing import Any
 
 
 class IDataFileLoader(metaclass=abc.ABCMeta):
@@ -7,8 +8,13 @@ class IDataFileLoader(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def load_data(self):
+    def load_data(self, file_path: Any) -> Any:
         """
-        This method must load data from a file file
+        This method loads data from a file.
+
+        :param file_path: The path of the data file
+        :type file_path: Any
+        :return: The data
+        :rtype: Any
         """
-        return NotImplementedError
+        raise NotImplementedError()

@@ -12,29 +12,17 @@ logger = logging.getLogger(__name__)
 
 
 class SklearnTransformationFitter(ITransformationFitter):
-    """
-    A class which implements the interface ITransformationFitter to fit a transformer.
-    It fits a Scikit-learn pipeline to transform data.
-
-    :param size_test_split: Percentage of test dataset when splitting the dataset
-    :type size_test_split: float
-    :param test_split_seed: Seed used when splitting the dataset
-    :type test_split_seed: int
-    """
-
     def __init__(self, size_test_split: float, test_split_seed: int):
+        """
+        :param size_test_split: Percentage of test dataset when splitting the dataset
+        :type size_test_split: float
+        :param test_split_seed: Seed used when splitting the dataset
+        :type test_split_seed: int
+        """
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
 
     def fit_transformer(self, dataset: dict) -> Pipeline:
-        """
-        Fit a Scikit-learn pipeline to transform data.
-
-        :param dataset: The dataset used to fit the transformer (after splitting it)
-        :type dataset: dict
-        :return: The transformer pipeline fitted
-        :rtype: Pipeline
-        """
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)

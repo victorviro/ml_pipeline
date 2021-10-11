@@ -7,16 +7,8 @@ logger = logging.getLogger(__name__)
 
 
 class JSONDataLoader(IDataFileLoader):
-    """
-    A class which implements the interface IDataFileLoader to load data from files.
-    It loads JSON data.
-    """
-
     @staticmethod
     def load_data(file_path: str) -> dict:
-        """
-        Load JSON data from a file.
-        """
 
         with open(file_path, "r") as output_file:
             data = json.load(output_file)

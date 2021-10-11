@@ -7,19 +7,11 @@ logger = logging.getLogger(__name__)
 
 
 class JSONDataSaver(IDataFileSaver):
-    """
-    A class which implements the interface IDataFileSaver to save data to a file.
-    It saves JSON data.
-    """
-
     @staticmethod
     def save_data(file_path: str, data: dict):
-        """
-        Save the data.
-        """
 
         with open(file_path, "w") as output_file:
             json.dump(data, output_file, default=str)
 
-        msg = f"Data stored succesfully in path: {file_path}"
+        msg = f"Data file stored succesfully in path: {file_path}"
         logger.info(msg)

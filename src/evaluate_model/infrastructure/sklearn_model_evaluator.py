@@ -12,31 +12,17 @@ logger = logging.getLogger(__name__)
 
 
 class SklearnModelEvaluator(IModelEvaluator):
-    """
-    A class which implements the interface IModelEvaluator to evaluate the model.
-    It evaluate the model using different metrics and track the results.
-
-    :param size_test_split: Percentage of test dataset when splitting the dataset
-    :type size_test_split: float
-    :param test_split_seed: Seed used when splitting the dataset
-    :type test_split_seed: int
-    """
-
     def __init__(self, size_test_split: float, test_split_seed: int):
+        """
+        :param size_test_split: Percentage of test dataset when splitting the dataset
+        :type size_test_split: float
+        :param test_split_seed: Seed used when splitting the dataset
+        :type test_split_seed: int
+        """
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
 
     def evaluate_model(self, dataset: dict, model: Pipeline) -> dict:
-        """
-        Evaluate the model using different metrics and track the results.
-
-        :param dataset: The dataset used to validate the model (before splitting it)
-        :type dataset: dict
-        :param model: The sklearn model fitted (preprocessing + model)
-        :type model: Pipeline
-        :return: Information (metrics) to track
-        :rtype: dict
-        """
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)

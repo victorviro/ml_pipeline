@@ -7,16 +7,8 @@ logger = logging.getLogger(__name__)
 
 
 class PickleDataLoader(IDataFileLoader):
-    """
-    A class which implements the interface IDataFileLoader to load data from files.
-    It loads pickle data.
-    """
-
     @staticmethod
     def load_data(file_path: str):
-        """
-        Load pickle data from a file.
-        """
 
         with open(file_path, "rb") as file:
             data = pickle.load(file)

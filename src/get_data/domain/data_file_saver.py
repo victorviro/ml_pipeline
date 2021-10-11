@@ -1,4 +1,5 @@
 import abc
+from typing import Any
 
 
 class IDataFileSaver(metaclass=abc.ABCMeta):
@@ -7,8 +8,13 @@ class IDataFileSaver(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def save_data(self):
+    def save_data(self, file_path: Any, data: Any):
         """
-        This method must save data in a file
+        This method saves a data file.
+
+        :param file_path: Path where save the data file
+        :type file_path: Any
+        :param data: Data file to be saved
+        :type data: Any
         """
-        return NotImplementedError
+        raise NotImplementedError()

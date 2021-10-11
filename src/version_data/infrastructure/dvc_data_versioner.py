@@ -14,31 +14,17 @@ logger = logging.getLogger(__name__)
 
 
 class DVCDataVersioner(IDataVersioner):
-    """
-    A class which implements the interface IDataVersioner to version the dataset.
-    It versions the dataset using DVC.
-
-    :param git_remote_name: Name of the remote to the git repository
-    :type git_remote_name: str
-    :param git_branch_name: Name of the branch of the git repository
-    :type git_branch_name: str
-    """
-
     def __init__(self, git_remote_name: str, git_branch_name: str):
+        """
+        :param git_remote_name: Name of the remote to the git repository
+        :type git_remote_name: str
+        :param git_branch_name: Name of the branch of the git repository
+        :type git_branch_name: str
+        """
         self.git_remote_name = git_remote_name
         self.git_branch_name = git_branch_name
 
     def version_data(self, data_file_path: str, data_version: float) -> dict:
-        """
-        Version the dataset using DVC, and return information.
-
-        :param data_file_path: Path of the dataset file stored
-        :type data_file_path: str
-        :param data_version: Version of the data
-        :type data_version: float
-        :return Information to track
-        :type dict
-        """
 
         relative_data_file_path = os.path.relpath(
             path=data_file_path, start=os.getcwd()

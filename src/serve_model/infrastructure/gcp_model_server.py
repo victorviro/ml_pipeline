@@ -23,11 +23,6 @@ GCP_MODEL_VERSION_BODY = {
 
 
 class GCPModelServer(IModelServer):
-    """
-    A class which implements the interface IModelServer to serve the model in GCP AI
-    Platform.
-    """
-
     @staticmethod
     def create_model_version(version_name: str, model_gcs_path: str):
         """
