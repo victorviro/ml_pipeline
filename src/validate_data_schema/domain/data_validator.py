@@ -1,4 +1,5 @@
 import abc
+from typing import Any
 
 
 class IDataValidator(metaclass=abc.ABCMeta):
@@ -7,7 +8,13 @@ class IDataValidator(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def validate_data(self):
+    def validate_data(self, dataset: Any, dataset_schema_info: Any):
         """
-        This method must validate the data in some way
+        This method validates the data.
+
+        :param dataset: The dataset to be validated
+        :type dataset: Any
+        :param dataset_schema_info: Information of the valid schema of the dataset
+        :type dataset_schema_info: Any
         """
+        raise NotImplementedError()

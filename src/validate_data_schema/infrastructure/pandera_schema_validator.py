@@ -11,19 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class PanderaSchemaValidator(IDataValidator):
-    """
-    A class which implements the interface IDataValidator to validate the dataset.
-    It validates the schema of the dataset in pandas DataFrame format using Pandera.
-    """
-
     def validate_data(self, dataset: dict, dataset_schema_info: list):
         """
         Validate the schema of the dataset in pandas DataFrame format using Pandera.
-
-        :param dataset: The dataset to be validated
-        :type dataset: dict
-        :param dataset_schema_info: Information of the valid schema of the dataset
-        :type dataset_schema_info: list
         """
 
         logger.info("Validating raw dataset...")
