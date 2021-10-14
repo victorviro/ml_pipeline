@@ -61,6 +61,10 @@ init-airflow:
 ###    LOCAL DEVELOPMENT    ###
 ###############################
 
+install:
+	python3 -m pip install --upgrade pip
+	pip3 install -r requirements/app.txt -r requirements/dev.txt -r requirements/test.txt
+
 install-test:
 	python3 -m pip install --upgrade pip
 	pip install -r requirements/test.txt
