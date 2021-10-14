@@ -1,10 +1,25 @@
-.PHONY: help
+###############################
+###       ENVIRONMENT       ###
+###############################
+
 export PYTHONPATH := $(shell pwd)
 
 -include .env
 
+
+###############################
+###          HELP           ###
+###############################
+
+.PHONY: help
+
 help:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
+
+
+###############################
+###     DOCKER HELPERS      ###
+###############################
 
 ps:
 	docker-compose -f ${DOCKER_COMPOSE_FILE} ps
@@ -41,12 +56,14 @@ init-airflow:
 	make buildup c=postgres 
 	make buildup c=airflow-init 
 
+
+###############################
+###    LOCAL DEVELOPMENT    ###
+###############################
+
 install-test:
 	python3 -m pip install --upgrade pip
 	pip install -r requirements/test.txt
-
-test:
-	pytest tests
 
 format:
 	isort src tests
@@ -62,3 +79,11 @@ clean:
 	rm -rf .pytest_cache
 	rm -f .coverage
 	rm -rf output
+
+
+###############################
+###       CI COMMANDS       ###
+###############################
+
+test:
+	pytest tests

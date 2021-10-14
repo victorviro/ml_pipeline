@@ -1,6 +1,10 @@
+# Formatters
 black==20.8b1
-flake8==3.8.4
-pre-commit==2.11.1
 isort==5.8.0
+
+# Linters
+flake8==3.8.4
 pylint==2.6.0
-pycodestyle==2.5.0
+
+# Hooks
+pre-commit==2.11.1
