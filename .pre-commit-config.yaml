@@ -20,4 +20,7 @@ repos:
     rev: v2.9.6
     hooks:
     - id: pylint
-      args: ["--extension-pkg-whitelist", "pydantic"]
+      args:
+        [
+          "--extension-pkg-whitelist=pydantic",
+        ]
