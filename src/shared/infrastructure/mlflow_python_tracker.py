@@ -33,16 +33,9 @@ class MlflowPythonTracker(IDataTracker):
     def __init__(self, run_id: str):
         self.run_id = run_id
 
-    @staticmethod
-    def track_data():
-        return NotImplementedError
-
     def track_metrics(self, metrics: dict):
         """
         Track metrics in a MLflow experiment run.
-
-        :param metrics: The metrics to track
-        :type metrics: dict
         """
         try:
             with start_run(run_id=self.run_id):

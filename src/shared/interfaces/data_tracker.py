@@ -1,4 +1,5 @@
 import abc
+from typing import Any
 
 
 class IDataTracker(metaclass=abc.ABCMeta):
@@ -7,8 +8,11 @@ class IDataTracker(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def track_data(self):
+    def track_metrics(self, metrics: Any) -> None:
         """
-        This method must track data to an experiment
+        This method track metric values to an experiment.
+
+        :param metrics: The metrics to track
+        :type metrics: dict
         """
-        return NotImplementedError
+        raise NotImplementedError()
