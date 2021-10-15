@@ -1,13 +1,18 @@
 import abc
+from typing import Any
 
 
 class IModelValidator(metaclass=abc.ABCMeta):
-    """
-    An interface used to validate a model.
-    """
-
     @abc.abstractmethod
-    def validate_model(self):
+    def validate_model(self, metrics: Any, metrics_threshold: Any) -> bool:
         """
-        This method must validate the model in some way
+        This method validates a model.
+
+        :param metrics: Metrics of the model's
+        :type metrics: Any
+        :param metrics_threshold: Threshold values of the metrics
+        :type metrics_threshold: Any
+        :return: If the model is validated
+        :rtype: bool
         """
+        raise NotImplementedError()
