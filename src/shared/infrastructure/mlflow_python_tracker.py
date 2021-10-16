@@ -14,7 +14,6 @@ from mlflow import (
 from mlflow.sklearn import load_model
 from mlflow.sklearn import log_model as log_sklearn_model
 from mlflow.tracking import MlflowClient
-from sklearn.pipeline import Pipeline
 
 from src.shared.constants import REGISTRY_MODEL_NAME
 from src.shared.interfaces.data_tracker import IDataTracker
@@ -74,7 +73,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking tags in MLflow experiment."
             raise Exception(message) from err
 
-    def track_sklearn_model(self, model: Pipeline, model_name: str) -> None:
+    def track_sklearn_model(self, model: Any, model_name: str) -> None:
         """
         Track a sklearn model in a MLflow experiment run.
 
@@ -149,7 +148,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error getting artifacts uri from a MLflow run."
             raise Exception(message) from err
 
-    def load_sklearn_model(self, model_uri: str) -> Pipeline:
+    def load_sklearn_model(self, model_uri: str) -> Any:
         """
         Load a sklearn model from a MLflow run.
 
@@ -160,7 +159,7 @@ class MlflowPythonTracker(IDataTracker):
         """
         try:
             with start_run(run_id=self.run_id):
-                model: Pipeline = load_model(model_uri=model_uri)
+                model = load_model(model_uri=model_uri)
                 logger.info(
                     "Sklearn model loaded succesfully from a MLflow run. Model "
                     f"uri: {model_uri}"

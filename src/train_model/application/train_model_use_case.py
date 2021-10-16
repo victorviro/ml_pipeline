@@ -38,7 +38,7 @@ class TrainModel:
         preprocesser = self.data_tracker.get_tracked_preprocesser()
         # Train the model
         metadata_to_track = self.model_trainer.train_model(
-            dataset=dataset, transformer=preprocesser
+            dataset=dataset, preprocesser=preprocesser
         )
         # Track information of the experiment run
         self.data_tracker.track_training_metadata(metadata_to_track)
