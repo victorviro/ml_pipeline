@@ -1,4 +1,5 @@
 import abc
+from typing import Any
 
 
 class IDataDownloander(metaclass=abc.ABCMeta):
@@ -7,8 +8,11 @@ class IDataDownloander(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def download_data(self):
+    def download_data(self) -> Any:
         """
-        This method must download the data in some way
+        This method downloads data.
+
+        :return: The data downloaded
+        :rtype: Any
         """
-        return NotImplementedError
+        raise NotImplementedError()

@@ -11,8 +11,9 @@ from src.shared.logging_config import LOGGING_CONFIG
 from src.validate_data_schema.application.validate_data_schema_use_case import (
     ValidateDataSchema,
 )
-
-from .pandera_schema_validator import PanderaSchemaValidator
+from src.validate_data_schema.infrastructure.pandera_schema_validator import (
+    PanderaSchemaValidator,
+)
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/validate_data_schema")
-async def validate_data_schema_endpoint(item: Item):
+def validate_data_schema_endpoint(item: Item) -> JSONResponse:
     json_data_loader = JSONDataLoader()
     pandera_schema_validator = PanderaSchemaValidator()
     dataset_file_path = f"{item.data_path}/{item.data_name}.json"

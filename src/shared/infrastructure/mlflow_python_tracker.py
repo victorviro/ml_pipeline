@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict
 
 from mlflow import (
     get_artifact_uri,
@@ -13,6 +14,7 @@ from mlflow import (
 from mlflow.sklearn import load_model
 from mlflow.sklearn import log_model as log_sklearn_model
 from mlflow.tracking import MlflowClient
+from sklearn.pipeline import Pipeline
 
 from src.shared.constants import REGISTRY_MODEL_NAME
 from src.shared.interfaces.data_tracker import IDataTracker
@@ -33,7 +35,7 @@ class MlflowPythonTracker(IDataTracker):
     def __init__(self, run_id: str):
         self.run_id = run_id
 
-    def track_metrics(self, metrics: dict):
+    def track_metrics(self, metrics: Dict[str, Any]) -> None:
         """
         Track metrics in a MLflow experiment run.
         """
@@ -44,7 +46,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking metrics in MLflow experiment."
             raise Exception(message) from err
 
-    def track_parameters(self, parameters: dict):
+    def track_parameters(self, parameters: Dict[str, Any]) -> None:
         """
         Track parameters in a MLflow experiment run.
 
@@ -58,7 +60,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking parameters in MLflow experiment."
             raise Exception(message) from err
 
-    def track_tags(self, tags: dict):
+    def track_tags(self, tags: Dict[str, Any]) -> None:
         """
         Track tags in a MLflow experiment run.
 
@@ -72,7 +74,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking tags in MLflow experiment."
             raise Exception(message) from err
 
-    def track_sklearn_model(self, model, model_name: str):
+    def track_sklearn_model(self, model: Pipeline, model_name: str) -> None:
         """
         Track a sklearn model in a MLflow experiment run.
 
@@ -88,7 +90,9 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking sklearn model in MLflow experiment."
             raise Exception(message) from err
 
-    def track_dict(self, dictionary: dict, run_relative_file_path: str):
+    def track_dict(
+        self, dictionary: Dict[Any, Any], run_relative_file_path: str
+    ) -> None:
         """
         Track a dictionary into an MLflow experiment using the MLflow python API.
 
@@ -105,7 +109,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking dictionary in MLflow experiment."
             raise Exception(message) from err
 
-    def register_model(self, model_name: str, name: str):
+    def register_model(self, model_name: str, name: str) -> None:
         """
         Register the model in MLflow registry (staged as None)
 
@@ -138,14 +142,14 @@ class MlflowPythonTracker(IDataTracker):
         try:
             with start_run(run_id=self.run_id):
                 # Get the model artifact uri
-                model_artifact_uri = get_artifact_uri(model_name)
+                model_artifact_uri: str = get_artifact_uri(model_name)
                 logger.info(f"Artifacts uri gotten: {model_artifact_uri}")
                 return model_artifact_uri
         except Exception as err:
             message = "Error getting artifacts uri from a MLflow run."
             raise Exception(message) from err
 
-    def load_sklearn_model(self, model_uri: str):
+    def load_sklearn_model(self, model_uri: str) -> Pipeline:
         """
         Load a sklearn model from a MLflow run.
 
@@ -156,7 +160,7 @@ class MlflowPythonTracker(IDataTracker):
         """
         try:
             with start_run(run_id=self.run_id):
-                model = load_model(model_uri=model_uri)
+                model: Pipeline = load_model(model_uri=model_uri)
                 logger.info(
                     "Sklearn model loaded succesfully from a MLflow run. Model "
                     f"uri: {model_uri}"
@@ -181,14 +185,14 @@ class MlflowPythonTracker(IDataTracker):
             # Get the version of the model filtered by run id
             filter_string = f"run_id='{self.run_id}'"
             results = client.search_model_versions(filter_string=filter_string)
-            version_model_registered = results[0].version
+            version_model_registered: str = results[0].version
             return version_model_registered
         except Exception as err:
             message = "Error getting model version of a run in MLflow Registry."
             logger.error(message)
             raise Exception(message) from err
 
-    def transition_model_version_stage(self, stage: str):
+    def transition_model_version_stage(self, stage: str) -> None:
         """
         Update model version stage in MLflow Registry.
 
@@ -216,7 +220,7 @@ class MlflowPythonTracker(IDataTracker):
             logger.error(message)
             raise Exception(message) from err
 
-    def get_tracked_items(self, item_type: str) -> dict:
+    def get_tracked_items(self, item_type: str) -> Dict[str, Any]:
         """
         Get items (parameters, metrics or tags) tracked in the MLflow experiment run.
 
@@ -227,12 +231,13 @@ class MlflowPythonTracker(IDataTracker):
         """
         try:
             run_info = get_run(run_id=self.run_id)
+            items_info: Dict[str, Any] = {}
             if item_type == "metric":
                 items_info = run_info.data.metrics
             if item_type == "parameter":
                 items_info = run_info.data.params
             if item_type == "tag":
-                items_info = run_info.data.metrics
+                items_info = run_info.data.tags
             if not items_info:
                 logger.warning(
                     f"The are no {item_type}s tracked in the experiment run "

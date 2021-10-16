@@ -8,7 +8,7 @@ class IDataFileSaver(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def save_data(self, file_path: Any, data: Any):
+    def save_data(self, file_path: Any, data: Any) -> None:
         """
         This method saves a data file.
 

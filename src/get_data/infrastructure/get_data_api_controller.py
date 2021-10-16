@@ -6,10 +6,9 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.get_data.application.get_data_use_case import GetData
+from src.get_data.infrastructure.json_data_saver import JSONDataSaver
+from src.get_data.infrastructure.request_data_downloander import RequestDataDownloander
 from src.shared.logging_config import LOGGING_CONFIG
-
-from .json_data_saver import JSONDataSaver
-from .request_data_downloander import RequestDataDownloander
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -25,7 +24,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/get_data")
-async def get_data_endpoint(item: Item):
+def get_data_endpoint(item: Item) -> JSONResponse:
     data_saver = JSONDataSaver()
     data_downloander = RequestDataDownloander(data_api_url=item.data_api_url)
     file_path = f"{item.data_path}/{item.data_name}.json"

@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 
 
@@ -10,7 +12,7 @@ class MlflowDataVersioningTracker(MlflowPythonTracker):
     :type run_id: str
     """
 
-    def track_information(self, information_to_track: dict):
+    def track_information(self, information_to_track: Dict[str, Any]) -> None:
         """
         Track information of the data versioning (dataset path in the remote storage,
         version of the dataset...) to an MLflow experiment run.

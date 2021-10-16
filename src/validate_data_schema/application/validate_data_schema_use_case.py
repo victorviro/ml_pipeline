@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 from src.shared.interfaces.data_file_loader import IDataFileLoader
@@ -28,7 +30,9 @@ class ValidateDataSchema:
         self.dataset_file_loader = dataset_file_loader
         self.dataset_schema_info_file_loader = dataset_schema_info_file_loader
 
-    def execute(self, dataset_file_path: str, dataset_schema_info_file_path: str):
+    def execute(
+        self, dataset_file_path: str, dataset_schema_info_file_path: str
+    ) -> None:
         if not os.path.exists(dataset_file_path):
             raise FileNotFoundError(
                 f'Dataset file in path "{dataset_file_path}" does not' "exist"
@@ -52,7 +56,7 @@ class ValidateDataSchema:
         data_validator: IDataValidator,
         dataset_file_loader: IDataFileLoader,
         dataset_schema_info_file_loader: IDataFileLoader,
-    ):
+    ) -> ValidateDataSchema:
 
         validate_data_schema = ValidateDataSchema(
             data_validator=data_validator,

@@ -1,5 +1,6 @@
 import logging
 from json.decoder import JSONDecodeError
+from typing import Any, Dict
 
 import requests
 
@@ -20,12 +21,9 @@ class RequestDataDownloander(IDataDownloander):
     def __init__(self, data_api_url: str):
         self.data_api_url = data_api_url
 
-    def download_data(self) -> dict:
+    def download_data(self) -> Dict[Any, Any]:
         """
         Download the data through a request.
-
-        :return: The data downloaded
-        :rtype: dict
         """
 
         logger.info("Getting raw data through a request.")
@@ -57,7 +55,7 @@ class RequestDataDownloander(IDataDownloander):
 
         # Get the response json of the request
         try:
-            raw_data = request_response.json()
+            raw_data: Dict[Any, Any] = request_response.json()
             logger.info("Gotten the dataset succesfully from the request response.")
 
         except JSONDecodeError as err:

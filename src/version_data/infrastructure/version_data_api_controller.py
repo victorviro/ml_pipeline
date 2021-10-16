@@ -7,11 +7,10 @@ from pydantic import BaseModel
 
 from src.shared.logging_config import LOGGING_CONFIG
 from src.version_data.application.version_data_use_case import VersionTrackData
+from src.version_data.infrastructure.dvc_data_versioner import DVCDataVersioner
 from src.version_data.infrastructure.mlflow_data_versioning_tracker import (
     MlflowDataVersioningTracker,
 )
-
-from .dvc_data_versioner import DVCDataVersioner
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -30,7 +29,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/version_data")
-async def version_data_endpoint(item: Item):
+def version_data_endpoint(item: Item) -> JSONResponse:
     dvc_data_versioner = DVCDataVersioner(
         git_remote_name=item.git_remote_name, git_branch_name=item.git_branch_name
     )

@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess
 from subprocess import CalledProcessError
+from typing import Dict, List
 
 from dvc.api import get_url
 from dvc.exceptions import OutputNotFoundError
@@ -24,9 +25,9 @@ class DVCDataVersioner(IDataVersioner):
         self.git_remote_name = git_remote_name
         self.git_branch_name = git_branch_name
 
-    def version_data(self, data_file_path: str, data_version: float) -> dict:
+    def version_data(self, data_file_path: str, data_version: float) -> Dict[str, str]:
 
-        relative_data_file_path = os.path.relpath(
+        relative_data_file_path: str = os.path.relpath(
             path=data_file_path, start=os.getcwd()
         )
         # Track the dataset in DVC repository
@@ -35,7 +36,7 @@ class DVCDataVersioner(IDataVersioner):
         relative_metadata_file_path = f"{relative_data_file_path}.dvc"
 
         # Get git repo object
-        git_repository = self._get_git_repository()
+        git_repository: Repo = self._get_git_repository()
 
         # Check if the dataset has changed
         diff_output = git_repository.git.diff(relative_metadata_file_path)
@@ -66,7 +67,7 @@ class DVCDataVersioner(IDataVersioner):
 
         # Get information to track
         dvc_data_path = self._get_data_path_in_dvc_storage(relative_data_file_path)
-        information_to_track = {
+        information_to_track: Dict[str, str] = {
             "dvc data path": dvc_data_path,
             "data version": str(data_version),
             "data file path": data_file_path,
@@ -74,7 +75,7 @@ class DVCDataVersioner(IDataVersioner):
         return information_to_track
 
     @staticmethod
-    def _track_data_to_dvc(relative_data_file_path: str):
+    def _track_data_to_dvc(relative_data_file_path: str) -> None:
         """
         Track data in DVC repository.
 
@@ -105,9 +106,9 @@ class DVCDataVersioner(IDataVersioner):
         :return: Object representing a git repository
         :rtype: Repo
         """
-        repo_path = os.getcwd()
+        repo_path: str = os.getcwd()
         try:
-            git_repository = Repo(path=repo_path)
+            git_repository: Repo = Repo(path=repo_path)
             logger.info(f"Obtained git repository of project in path {repo_path}.")
             return git_repository
         except InvalidGitRepositoryError as err:
@@ -120,8 +121,8 @@ class DVCDataVersioner(IDataVersioner):
 
     @staticmethod
     def _commit_files_to_git_repository(
-        commit_message: str, relative_file_paths: list, git_repository: Repo
-    ):
+        commit_message: str, relative_file_paths: List[str], git_repository: Repo
+    ) -> None:
         """
         Add and commit files to the git repository.
 
@@ -144,7 +145,7 @@ class DVCDataVersioner(IDataVersioner):
             logger.error(msg)
             raise Exception(msg) from err
 
-    def _push_to_git_repository(self, git_repository: Repo):
+    def _push_to_git_repository(self, git_repository: Repo) -> None:
         """
         Push changes to git repository.
 
@@ -175,7 +176,7 @@ class DVCDataVersioner(IDataVersioner):
             raise Exception(msg) from err
 
     @staticmethod
-    def _push_to_dvc_storage():
+    def _push_to_dvc_storage() -> None:
         try:
             # If GCS is the remote storage, env var GOOGLE_APPLICATION_CREDENTIALS needed
             output = subprocess.run(["dvc", "push"], capture_output=True, check=True)
@@ -202,7 +203,7 @@ class DVCDataVersioner(IDataVersioner):
         :rtype: str
         """
         try:
-            dvc_data_path = get_url(path=relative_data_file_path, repo=os.getcwd())
+            dvc_data_path: str = get_url(path=relative_data_file_path, repo=os.getcwd())
             logger.info("Dataset path in DVC storage gotten succesfully")
             return dvc_data_path
         except OutputNotFoundError as err:

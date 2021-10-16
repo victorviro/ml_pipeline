@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict, List
 
 import pandas as pd
 import pandera
@@ -11,7 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 class PanderaSchemaValidator(IDataValidator):
-    def validate_data(self, dataset: dict, dataset_schema_info: list):
+    def validate_data(
+        self, dataset: Dict[str, List[Any]], dataset_schema_info: List[Dict[str, Any]]
+    ) -> None:
         """
         Validate the schema of the dataset in pandas DataFrame format using Pandera.
         """
@@ -20,7 +23,7 @@ class PanderaSchemaValidator(IDataValidator):
 
         # Load dataset in pandas DataFrame format
         try:
-            dataset_df = pd.DataFrame.from_dict(dataset)
+            dataset_df: pd.DataFrame = pd.DataFrame.from_dict(dataset)
             logger.info("Converted dataset to pandas DataFrame succesfully.")
 
         except ValueError as err:
@@ -34,7 +37,7 @@ class PanderaSchemaValidator(IDataValidator):
             raise Exception(msg) from err
 
         # Get the valid schema of the dataset (pandera object)
-        pandera_dataset_schema = self._get_pandera_dataset_schema(
+        pandera_dataset_schema: DataFrameSchema = self._get_pandera_dataset_schema(
             dataset_schema_info=dataset_schema_info
         )
         # Validate the schema of the dataset
@@ -56,7 +59,9 @@ class PanderaSchemaValidator(IDataValidator):
             raise Exception(msg) from err
 
     @staticmethod
-    def _get_pandera_dataset_schema(dataset_schema_info: list) -> DataFrameSchema:
+    def _get_pandera_dataset_schema(
+        dataset_schema_info: List[Dict[str, Any]]
+    ) -> DataFrameSchema:
         """
         Get the valid schema of the dataset (pandera object) to validate the dataset.
 
@@ -65,7 +70,7 @@ class PanderaSchemaValidator(IDataValidator):
         :return: The valid schema of the dataset (pandera object)
         :rtype: DataFrameSchema
         """
-        pandera_dataset_schema_dict = {}
+        pandera_dataset_schema_dict: Dict[str, pandera.Column] = {}
         for variable_info in dataset_schema_info:
             try:
                 variable_name = variable_info["name"]
@@ -109,5 +114,7 @@ class PanderaSchemaValidator(IDataValidator):
                 )
                 raise KeyError(msg) from err
 
-        pandera_dataset_schema = pandera.DataFrameSchema(pandera_dataset_schema_dict)
+        pandera_dataset_schema: DataFrameSchema = pandera.DataFrameSchema(
+            pandera_dataset_schema_dict
+        )
         return pandera_dataset_schema

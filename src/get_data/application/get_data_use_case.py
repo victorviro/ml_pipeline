@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 from src.get_data.domain.data_downloander import IDataDownloander
@@ -22,7 +24,7 @@ class GetData:
         self.data_downloander = data_downloander
         self.data_file_saver = data_file_saver
 
-    def execute(self, file_path: str):
+    def execute(self, file_path: str) -> None:
         if not os.path.exists(os.path.dirname(file_path)):
             raise FileNotFoundError(
                 f'Path "{os.path.dirname(file_path)}" does not exist'
@@ -35,7 +37,9 @@ class GetData:
             raise FileNotFoundError(f'Dataset file path "{file_path}" does not exist')
 
     @staticmethod
-    def build(data_downloander: IDataDownloander, data_file_saver: IDataFileSaver):
+    def build(
+        data_downloander: IDataDownloander, data_file_saver: IDataFileSaver
+    ) -> GetData:
 
         get_data = GetData(
             data_downloander=data_downloander, data_file_saver=data_file_saver

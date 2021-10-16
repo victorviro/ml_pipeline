@@ -8,7 +8,7 @@ class IDataValidator(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def validate_data(self, dataset: Any, dataset_schema_info: Any):
+    def validate_data(self, dataset: Any, dataset_schema_info: Any) -> None:
         """
         This method validates the data.
 
