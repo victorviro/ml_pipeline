@@ -8,3 +8,7 @@ pylint==2.6.0
 
 # Hooks
 pre-commit==2.11.1
+
+# Typing code check
+mypy==0.910
+types-requests==2.25.11
