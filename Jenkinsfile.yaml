@@ -5,7 +5,7 @@ pipeline:
     - "ansiColor('xterm')"
 
   stages:
-    - stage: "Prepare environment"
+    - stage: "🏗️ Prepare environment"
       steps:
         - sh "python3 -m virtualenv venv"
 
@@ -17,14 +17,14 @@ pipeline:
               - sh "python3 -m pip install --upgrade pip"
               - sh "make install-test"
 
-    - stage: "Run tests"
+    - stage: "✅ Run tests"
       steps:
         script:
           - withPythonEnv: "'venv/'"
             script:
               - sh "make test"
 
-    - stage: "Record reports"
+    - stage: "🕵️ Collect test reports"
       steps:
         - "junit(testResults: 'output/tests/tests.xml')"
         - "cobertura(coberturaReportFile: 'output/coverage/coverage.xml')"
