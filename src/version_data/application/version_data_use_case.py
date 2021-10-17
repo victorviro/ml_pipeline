@@ -30,11 +30,13 @@ class VersionTrackData:
                 "Path of data file does not exist: " f'"{data_file_path}"'
             )
         # Version the dataset (return info to track)
-        information_to_track: Dict[str, Any] = self.data_versioner.version_data(
+        information_to_log: Dict[str, Any] = self.data_versioner.version_data(
             data_file_path=data_file_path, data_version=data_version
         )
         # Track info in a experiment run
-        self.data_tracker.track_information(information_to_track=information_to_track)
+        self.data_tracker.log_information_of_data_versioning(
+            information_to_log=information_to_log
+        )
 
     @staticmethod
     def build(
