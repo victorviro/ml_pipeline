@@ -13,25 +13,69 @@ from mlflow import (
 from mlflow.sklearn import load_model
 from mlflow.sklearn import log_model as log_sklearn_model
 
+from src.shared.constants import MODEL_NAME, TRANSFORMER_PIPELINE_NAME
 from src.shared.interfaces.data_tracker import IDataTracker
 
 logger = logging.getLogger(__name__)
 
 
 class MlflowPythonTracker(IDataTracker):
-    """
-    A class which implements the interface IDataTracker to track data to an experiment.
-    It tracks data (metrics, models,...) into an MLflow experiment using the
-    MLflow python API.
-
-    :param run_id: The MLflow run id of the experiment run
-    :type run_id: str
-    """
-
     def __init__(self, run_id: str):
+        """
+        :param run_id: The MLflow run id of the experiment run
+        :type run_id: str
+        """
         self.run_id = run_id
 
-    def track_metrics(self, metrics: Dict[str, Any]) -> None:
+    def log_information_of_data_versioning(
+        self, information_to_log: Dict[str, Any]
+    ) -> None:
+        self._track_tags(tags=information_to_log)
+
+    def log_information_of_data_preprocessor_fitting(
+        self, data_preprocessor: Any
+    ) -> None:
+        self._track_sklearn_model(
+            model=data_preprocessor, model_name=TRANSFORMER_PIPELINE_NAME
+        )
+        # Get dict with information of the preprocessing steps
+        preprocessing_steps = {"preprocessing_steps": [*data_preprocessor.named_steps]}
+        self._track_dict(
+            dictionary=preprocessing_steps,
+            run_relative_file_path=f"{TRANSFORMER_PIPELINE_NAME}.json",
+        )
+
+    def log_information_of_model_training(
+        self, information_to_log: Dict[str, Any]
+    ) -> None:
+        # Track parameters
+        self._track_parameters(parameters=information_to_log["parameters"])
+        # Track the pipeline in the experiment run
+        self._track_sklearn_model(
+            model=information_to_log["pipeline"], model_name=MODEL_NAME
+        )
+
+    def log_information_of_model_evaluation(
+        self, information_to_log: Dict[str, Any]
+    ) -> None:
+        self._track_metrics(metrics=information_to_log["metrics"])
+
+    def load_model_logged(self, model_name: str) -> Any:
+        # Get the artifacts uri of the experiment run
+        artifacts_uri = self._get_artifacts_uri(model_name=model_name)
+        model = self._load_sklearn_model(model_uri=artifacts_uri)
+        return model
+
+    def get_information_logged_for_model_validation(self) -> Dict[str, Any]:
+        metrics: Dict[str, Any] = self._get_tracked_items(item_type="metric")
+        return metrics
+
+    def get_model_path_in_storage(self) -> str:
+        # Get the artifacts uri of the experiment run
+        artifacts_uri = self._get_artifacts_uri(model_name=MODEL_NAME)
+        return f"{artifacts_uri}/"
+
+    def _track_metrics(self, metrics: Dict[str, Any]) -> None:
         """
         Track metrics in a MLflow experiment run.
         """
@@ -42,7 +86,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking metrics in MLflow experiment."
             raise Exception(message) from err
 
-    def track_parameters(self, parameters: Dict[str, Any]) -> None:
+    def _track_parameters(self, parameters: Dict[str, Any]) -> None:
         """
         Track parameters in a MLflow experiment run.
 
@@ -56,7 +100,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking parameters in MLflow experiment."
             raise Exception(message) from err
 
-    def track_tags(self, tags: Dict[str, Any]) -> None:
+    def _track_tags(self, tags: Dict[str, Any]) -> None:
         """
         Track tags in a MLflow experiment run.
 
@@ -70,7 +114,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking tags in MLflow experiment."
             raise Exception(message) from err
 
-    def track_sklearn_model(self, model: Any, model_name: str) -> None:
+    def _track_sklearn_model(self, model: Any, model_name: str) -> None:
         """
         Track a sklearn model in a MLflow experiment run.
 
@@ -86,7 +130,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking sklearn model in MLflow experiment."
             raise Exception(message) from err
 
-    def track_dict(
+    def _track_dict(
         self, dictionary: Dict[Any, Any], run_relative_file_path: str
     ) -> None:
         """
@@ -105,7 +149,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking dictionary in MLflow experiment."
             raise Exception(message) from err
 
-    def get_artifacts_uri(self, model_name: str) -> str:
+    def _get_artifacts_uri(self, model_name: str) -> str:
         """
         Get the artifacts path of the MLflow experiment run.
 
@@ -124,7 +168,7 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error getting artifacts uri from a MLflow run."
             raise Exception(message) from err
 
-    def load_sklearn_model(self, model_uri: str) -> Any:
+    def _load_sklearn_model(self, model_uri: str) -> Any:
         """
         Load a sklearn model from a MLflow run.
 
@@ -148,7 +192,7 @@ class MlflowPythonTracker(IDataTracker):
             )
             raise Exception(message) from err
 
-    def get_tracked_items(self, item_type: str) -> Dict[str, Any]:
+    def _get_tracked_items(self, item_type: str) -> Dict[str, Any]:
         """
         Get items (parameters, metrics or tags) tracked in the MLflow experiment run.
 

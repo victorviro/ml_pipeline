@@ -1,18 +1,88 @@
 import abc
-from typing import Any
+from typing import Any, Dict
 
 
 class IDataTracker(metaclass=abc.ABCMeta):
     """
-    An interface used to track data in an experiment.
+    Interact with an experiment tracking tool (log information, load it, etc).
     """
 
     @abc.abstractmethod
-    def track_metrics(self, metrics: Any) -> None:
+    def log_information_of_data_versioning(
+        self, information_to_log: Dict[str, Any]
+    ) -> None:
         """
-        This method track metric values to an experiment.
+        Log information of the data versioining (data path in cloud storage, etc).
 
-        :param metrics: The metrics to track
-        :type metrics: dict
+        :param information_to_log: The information to log
+        :type information_to_log: Dict[str, Any]
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def log_information_of_data_preprocessor_fitting(
+        self, data_preprocessor: Any
+    ) -> None:
+        """
+        Log information of the data preprocessor fitting (preprocessing steps, etc).
+
+        :param data_preprocessor: The data preprocessor fitted
+        :type data_preprocessor: Any
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def log_information_of_model_training(
+        self, information_to_log: Dict[str, Any]
+    ) -> None:
+        """
+        Log information of the model training (hyperparameters, etc).
+
+        :param information_to_log: The information to log
+        :type information_to_log: Dict[str, Any]
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def log_information_of_model_evaluation(
+        self, information_to_log: Dict[str, Any]
+    ) -> None:
+        """
+        Log information of the model evaluation (performance metrics, etc).
+
+        :param information_to_log: The information to log
+        :type information_to_log: Dict[str, Any]
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def get_information_logged_for_model_validation(self) -> Dict[str, Any]:
+        """
+        Get information logged for model validation (performance metrics, etc).
+
+        :return: The information logged to get
+        :rtype: Dict[str, Any]
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def load_model_logged(self, model_name: str) -> Any:
+        """
+        Load model fitted logged.
+
+        :param model_name: The name of the model logged
+        :type model_name: str
+        :return: The model
+        :rtype: Any
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def get_model_path_in_storage(self) -> str:
+        """
+        Get the path of the model in the storage.
+
+        :return: Path of the model.
+        :rtype: str
         """
         raise NotImplementedError()
