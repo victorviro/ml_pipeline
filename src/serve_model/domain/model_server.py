@@ -7,7 +7,7 @@ class IModelServer(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def serve_model(self, model_path: str, model_version: str):
+    def serve_model(self, model_path: str, model_version: float):
         """
         This method serves a model to make preditions.
 

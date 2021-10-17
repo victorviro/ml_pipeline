@@ -11,23 +11,35 @@ class ServeModel:
     :type model_server: IModelServer
     :param data_tracker: Object with methods to track information
     :type data_tracker: IDataTracker
+    :param model_version: The version numer of the model
+    :type model_version: float
     """
 
-    def __init__(self, model_server: IModelServer, data_tracker: IDataTracker):
+    def __init__(
+        self,
+        model_server: IModelServer,
+        data_tracker: IDataTracker,
+        model_version: float,
+    ):
         self.model_server = model_server
         self.data_tracker = data_tracker
+        self.model_version = model_version
 
     def execute(self):
         # Get path of the model tracked
         model_path = self.data_tracker.get_tracked_model_path()
-        # Get the version of the model tracked in Model Registry
-        model_version_in_registry = self.data_tracker.get_model_version_in_registry()
         # Serve model
         self.model_server.serve_model(
-            model_path=model_path, model_version=model_version_in_registry
+            model_path=model_path, model_version=self.model_version
         )
 
     @staticmethod
-    def build(model_server: IModelServer, data_tracker: IDataTracker):
-        serve_model = ServeModel(model_server=model_server, data_tracker=data_tracker)
+    def build(
+        model_server: IModelServer, data_tracker: IDataTracker, model_version: float
+    ):
+        serve_model = ServeModel(
+            model_server=model_server,
+            data_tracker=data_tracker,
+            model_version=model_version,
+        )
         return serve_model

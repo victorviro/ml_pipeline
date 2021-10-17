@@ -21,13 +21,3 @@ class MlflowModelServerTracker(MlflowPythonTracker):
         # Get the artifacts uri of the experiment run
         artifacts_uri = self.get_artifacts_uri(model_name=MODEL_NAME)
         return f"{artifacts_uri}/"
-
-    def get_model_version_in_registry(self) -> str:
-        """
-        Get the version of the model tracked in MLflow Registry.
-
-        :return: The version of the model
-        :rtype: str
-        """
-        model_version = self.search_model_version()
-        return model_version

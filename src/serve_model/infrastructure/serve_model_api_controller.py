@@ -6,12 +6,12 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.serve_model.application.serve_model_use_case import ServeModel
+from src.serve_model.infrastructure.gcp_model_server import GCPModelServer
 from src.serve_model.infrastructure.mlflow_model_server_tracker import (
     MlflowModelServerTracker,
 )
+from src.shared.constants import MODEL_VERSION
 from src.shared.logging_config import LOGGING_CONFIG
-
-from .gcp_model_server import GCPModelServer
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -30,7 +30,9 @@ async def serve_model_endpoint(item: Item):
     mlflow_model_server_tracker = MlflowModelServerTracker(run_id=item.mlflow_run_id)
 
     serve_model_use_case = ServeModel.build(
-        model_server=gcp_model_server, data_tracker=mlflow_model_server_tracker
+        model_server=gcp_model_server,
+        data_tracker=mlflow_model_server_tracker,
+        model_version=MODEL_VERSION,
     )
 
     try:
