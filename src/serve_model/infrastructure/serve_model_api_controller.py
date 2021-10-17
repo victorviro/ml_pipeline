@@ -7,10 +7,8 @@ from pydantic import BaseModel
 
 from src.serve_model.application.serve_model_use_case import ServeModel
 from src.serve_model.infrastructure.gcp_model_server import GCPModelServer
-from src.serve_model.infrastructure.mlflow_model_server_tracker import (
-    MlflowModelServerTracker,
-)
 from src.shared.constants import MODEL_VERSION
+from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 from src.shared.logging_config import LOGGING_CONFIG
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -26,12 +24,12 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/served_model")
 async def serve_model_endpoint(item: Item):
-    gcp_model_server = GCPModelServer()
-    mlflow_model_server_tracker = MlflowModelServerTracker(run_id=item.mlflow_run_id)
+    model_server = GCPModelServer()
+    data_tracker = MlflowPythonTracker(run_id=item.mlflow_run_id)
 
     serve_model_use_case = ServeModel.build(
-        model_server=gcp_model_server,
-        data_tracker=mlflow_model_server_tracker,
+        model_server=model_server,
+        data_tracker=data_tracker,
         model_version=MODEL_VERSION,
     )
 

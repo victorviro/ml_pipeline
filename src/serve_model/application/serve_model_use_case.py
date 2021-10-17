@@ -27,7 +27,7 @@ class ServeModel:
 
     def execute(self):
         # Get path of the model tracked
-        model_path = self.data_tracker.get_tracked_model_path()
+        model_path = self.data_tracker.get_model_path_in_storage()
         # Serve model
         self.model_server.serve_model(
             model_path=model_path, model_version=self.model_version
