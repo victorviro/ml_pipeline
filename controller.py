@@ -4,9 +4,9 @@ import requests
 
 from src.shared.constants import (
     DATASET_NAME,
+    DATASET_VERSION,
     RMSE_THRESOLD,
     URL_DATA_MCPL_QUOTES_IMAGE_API,
-    VERSION,
 )
 
 RAW_DATA_PATH = "/mcpl_prediction/data/01_raw"
@@ -70,7 +70,7 @@ def test_services():
     body = {
         "data_path": RAW_DATA_PATH,
         "data_name": "data",
-        "data_version": VERSION,
+        "data_version": DATASET_VERSION,
         "git_remote_name": "origin",
         "git_branch_name": "master",
         "mlflow_run_id": MLFLOW_RUN_ID,

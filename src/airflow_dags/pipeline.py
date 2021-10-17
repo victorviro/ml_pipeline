@@ -4,7 +4,7 @@ from json import dumps, loads
 
 import requests
 
-# pylint: disable=wrong-import-order
+# pylint: disable=wrong-import-order,no-name-in-module
 from airflow.operators.python_operator import PythonOperator
 from mlflow import active_run, end_run, start_run
 
@@ -12,6 +12,7 @@ from airflow import DAG  # pylint: disable=ungrouped-imports
 from src.shared.constants import (
     ALPHA_PARAM_MODEL,
     DATASET_NAME,
+    DATASET_VERSION,
     GIT_BRANCH_NAME,
     GIT_REMOTE_NAME,
     L1_RATIO_PARAM_MODEL,
@@ -28,7 +29,6 @@ from src.shared.constants import (
     URL_VALIDATE_DATA_API,
     URL_VALIDATE_MODEL_API,
     URL_VERSION_DATA_API,
-    VERSION,
 )
 
 # Define the general arguments for the DAG (it will apply to any of its operators)
@@ -157,7 +157,7 @@ with DAG(
     DATA_VERSIONING_ARGS = {
         "data_path": RAW_DATA_PATH,
         "data_name": DATASET_NAME,
-        "data_version": VERSION,
+        "data_version": DATASET_VERSION,
         "git_remote_name": GIT_REMOTE_NAME,
         "git_branch_name": GIT_BRANCH_NAME,
     }
