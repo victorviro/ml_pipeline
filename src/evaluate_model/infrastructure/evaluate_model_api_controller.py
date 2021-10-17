@@ -6,11 +6,13 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from src.evaluate_model.application.evaluate_model_use_case import EvaluateModel
+from src.evaluate_model.infrastructure.sklearn_model_evaluator import (
+    SklearnModelEvaluator,
+)
+from src.shared.constants import MODEL_NAME
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
+from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 from src.shared.logging_config import LOGGING_CONFIG
-
-from .mlflow_model_evaluation_tracker import MlflowModelEvaluationTracker
-from .sklearn_model_evaluator import SklearnModelEvaluator
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
@@ -29,18 +31,17 @@ rest_api = FastAPI()
 
 @rest_api.post("/api/evaluate_model")
 async def evaluate_model_endpoint(item: Item):
-    sklearn_model_evaluator = SklearnModelEvaluator(
+    model_evaluator = SklearnModelEvaluator(
         size_test_split=item.size_test_split, test_split_seed=item.test_split_seed
     )
-    json_data_loader = JSONDataLoader()
-    mlflow_model_evaluation_tracker = MlflowModelEvaluationTracker(
-        run_id=item.mlflow_run_id
-    )
+    data_loader = JSONDataLoader()
+    data_tracker = MlflowPythonTracker(run_id=item.mlflow_run_id)
 
     evaluate_model_use_case = EvaluateModel.build(
-        model_evaluator=sklearn_model_evaluator,
-        dataset_file_loader=json_data_loader,
-        data_tracker=mlflow_model_evaluation_tracker,
+        model_evaluator=model_evaluator,
+        dataset_file_loader=data_loader,
+        data_tracker=data_tracker,
+        model_name=MODEL_NAME,
     )
     dataset_file_path = f"{item.raw_data_path}/{item.data_name}.json"
 

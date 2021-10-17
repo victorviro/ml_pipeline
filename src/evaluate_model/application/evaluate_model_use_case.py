@@ -23,10 +23,12 @@ class EvaluateModel:
         model_evaluator: IModelEvaluator,
         dataset_file_loader: IDataFileLoader,
         data_tracker: IDataTracker,
+        model_name: str,
     ):
         self.model_evaluator = model_evaluator
         self.dataset_file_loader = dataset_file_loader
         self.data_tracker = data_tracker
+        self.model_name = model_name
 
     def execute(self, dataset_file_path: str):
         if not os.path.exists(dataset_file_path):
@@ -36,14 +38,14 @@ class EvaluateModel:
 
         # Load the dataset, and the model
         dataset = self.dataset_file_loader.load_data(file_path=dataset_file_path)
-        model = self.data_tracker.get_tracked_model()
+        model = self.data_tracker.load_model_logged(model_name=self.model_name)
         # Evaluate the model
-        information_to_track = self.model_evaluator.evaluate_model(
+        information_to_log = self.model_evaluator.evaluate_model(
             dataset=dataset, model=model
         )
-        # Track information
-        self.data_tracker.track_model_evaluation_info(
-            information_to_track=information_to_track
+        # Log information
+        self.data_tracker.log_information_of_model_evaluation(
+            information_to_log=information_to_log
         )
 
     @staticmethod
@@ -51,10 +53,12 @@ class EvaluateModel:
         model_evaluator: IModelEvaluator,
         dataset_file_loader: IDataFileLoader,
         data_tracker: IDataTracker,
+        model_name: str,
     ):
         evaluate_model = EvaluateModel(
             model_evaluator=model_evaluator,
             dataset_file_loader=dataset_file_loader,
             data_tracker=data_tracker,
+            model_name=model_name,
         )
         return evaluate_model
