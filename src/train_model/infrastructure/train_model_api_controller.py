@@ -5,12 +5,12 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from src.shared.constants import REGISTRY_MODEL_NAME
+from src.shared.constants import REGISTRY_MODEL_NAME, TRANSFORMER_PIPELINE_NAME
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.shared.infrastructure.mlflow_model_register import MlflowModelRegister
+from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 from src.shared.logging_config import LOGGING_CONFIG
 from src.train_model.application.train_model_use_case import TrainModel
-from src.train_model.infrastructure.mlflow_train_tracker import MlflowTrainTracker
 from src.train_model.infrastructure.sklearn_model_trainer import SklearnModelTrainer
 
 logging.config.dictConfig(LOGGING_CONFIG)
@@ -41,7 +41,7 @@ def train_model_endpoint(item: Item):
         model_seed=item.model_seed,
     )
     dataset_file_loader = JSONDataLoader()
-    data_tracker = MlflowTrainTracker(run_id=item.mlflow_run_id)
+    data_tracker = MlflowPythonTracker(run_id=item.mlflow_run_id)
     model_register = MlflowModelRegister(run_id=item.mlflow_run_id)
 
     train_model_use_case = TrainModel.build(
@@ -50,6 +50,7 @@ def train_model_endpoint(item: Item):
         data_tracker=data_tracker,
         model_register=model_register,
         registry_model_name=REGISTRY_MODEL_NAME,
+        data_preprocessor_name=TRANSFORMER_PIPELINE_NAME,
     )
     dataset_file_path = f"{item.raw_data_path}/{item.data_name}.json"
 

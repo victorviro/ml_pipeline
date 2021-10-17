@@ -27,26 +27,32 @@ class TrainModel:
         data_tracker: IDataTracker,
         model_register: IModelRegister,
         registry_model_name: str,
+        data_preprocessor_name: str,
     ):
         self.model_trainer = model_trainer
         self.dataset_file_loader = dataset_file_loader
         self.data_tracker = data_tracker
         self.model_register = model_register
         self.registry_model_name = registry_model_name
+        self.data_preprocessor_name = data_preprocessor_name
 
     def execute(self, dataset_file_path: str):
         if not os.path.exists(dataset_file_path):
             raise Exception(f"Path of dataset file does not exist: {dataset_file_path}")
         # Load the dataset
         dataset = self.dataset_file_loader.load_data(file_path=dataset_file_path)
-        # Get the preprocesser tracked
-        preprocesser = self.data_tracker.get_tracked_preprocesser()
+        # Get the preprocesser logged
+        data_preprocessor = self.data_tracker.load_model_logged(
+            model_name=self.data_preprocessor_name
+        )
         # Train the model
-        metadata_to_track = self.model_trainer.train_model(
-            dataset=dataset, preprocesser=preprocesser
+        information_to_log = self.model_trainer.train_model(
+            dataset=dataset, preprocesser=data_preprocessor
         )
         # Track information of the experiment run
-        self.data_tracker.track_training_metadata(metadata_to_track)
+        self.data_tracker.log_information_of_model_training(
+            information_to_log=information_to_log
+        )
         # Register the model in Model Registry
         self.model_register.register_model(name=self.registry_model_name)
 
@@ -57,6 +63,7 @@ class TrainModel:
         data_tracker: IDataTracker,
         model_register: IModelRegister,
         registry_model_name: str,
+        data_preprocessor_name: str,
     ):
         train_model = TrainModel(
             model_trainer=model_trainer,
@@ -64,5 +71,6 @@ class TrainModel:
             data_tracker=data_tracker,
             model_register=model_register,
             registry_model_name=registry_model_name,
+            data_preprocessor_name=data_preprocessor_name,
         )
         return train_model
