@@ -7,15 +7,12 @@ from mlflow import (
     log_dict,
     log_metrics,
     log_params,
-    register_model,
     set_tags,
     start_run,
 )
 from mlflow.sklearn import load_model
 from mlflow.sklearn import log_model as log_sklearn_model
-from mlflow.tracking import MlflowClient
 
-from src.shared.constants import REGISTRY_MODEL_NAME
 from src.shared.interfaces.data_tracker import IDataTracker
 
 logger = logging.getLogger(__name__)
@@ -108,27 +105,6 @@ class MlflowPythonTracker(IDataTracker):
             message = "Error tracking dictionary in MLflow experiment."
             raise Exception(message) from err
 
-    def register_model(self, model_name: str, name: str) -> None:
-        """
-        Register the model in MLflow registry (staged as None)
-
-        :param model_name: The path inside the artifact uri where the model is stored
-        :type model_name: str
-        :param name: Name of the registered model
-        :type name: str
-        """
-        try:
-            with start_run(run_id=self.run_id):
-                model_uri = f"runs:/{self.run_id}/{model_name}"
-                registered_model_info = register_model(model_uri=model_uri, name=name)
-                logger.info(
-                    f"Model registered in MLflow Registry. Name: {name}. "
-                    f"Version: {registered_model_info.version}"
-                )
-        except Exception as err:
-            message = "Error registering model in MLflow Registry."
-            raise Exception(message) from err
-
     def get_artifacts_uri(self, model_name: str) -> str:
         """
         Get the artifacts path of the MLflow experiment run.
@@ -170,53 +146,6 @@ class MlflowPythonTracker(IDataTracker):
                 "Error loading sklearn model from a MLflow run. Model uri: "
                 f"{model_uri}."
             )
-            raise Exception(message) from err
-
-    def search_model_version(self) -> str:
-        """
-        Get the model version of a run registered in MLFLOW Registry.
-
-        :return: The model version
-        :rtype: str
-        """
-        try:
-            client = MlflowClient()
-            # Get the version of the model filtered by run id
-            filter_string = f"run_id='{self.run_id}'"
-            results = client.search_model_versions(filter_string=filter_string)
-            version_model_registered: str = results[0].version
-            return version_model_registered
-        except Exception as err:
-            message = "Error getting model version of a run in MLflow Registry."
-            logger.error(message)
-            raise Exception(message) from err
-
-    def transition_model_version_stage(self, stage: str) -> None:
-        """
-        Update model version stage in MLflow Registry.
-
-        :param stage: New desired stage for this model version (None/staging/production)
-        :type stage: str
-        """
-        # Get the version of the model registered
-        version_model_registered = self.search_model_version()
-        try:
-            client = MlflowClient()
-            # Update model version stage
-            client.transition_model_version_stage(
-                name=REGISTRY_MODEL_NAME, stage=stage, version=version_model_registered
-            )
-            logger.info(
-                "Updated stage of model registered in MLflow Registry to "
-                f'"{stage}"". Name: {REGISTRY_MODEL_NAME}. '
-                f"Version: {version_model_registered}."
-            )
-        except Exception as err:
-            message = (
-                f'Error updating stage of model "{REGISTRY_MODEL_NAME}" with '
-                f'version "{version_model_registered}" in MLflow Registry. '
-            )
-            logger.error(message)
             raise Exception(message) from err
 
     def get_tracked_items(self, item_type: str) -> Dict[str, Any]:
