@@ -20,9 +20,3 @@ class MlflowModelValidationTracker(MlflowPythonTracker):
         """
         metrics = self.get_tracked_items(item_type="metric")
         return metrics
-
-    def update_validated_model_in_registry(self):
-        """
-        Update the stage of the model to "Staging" in MLflow model registry.
-        """
-        self.transition_model_version_stage(stage="Staging")
