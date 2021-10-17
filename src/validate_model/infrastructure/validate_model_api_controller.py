@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from src.shared.constants import REGISTRY_MODEL_NAME
+from src.shared.infrastructure.mlflow_model_register import MlflowModelRegister
 from src.shared.logging_config import LOGGING_CONFIG
 from src.validate_model.application.validate_model_use_case import ValidateModel
 from src.validate_model.infrastructure.mlflow_model_validation_tracker import (
@@ -30,9 +32,13 @@ rest_api = FastAPI()
 def train_model_endpoint(item: Item):
     model_validator = PerformanceModelValidator()
     model_validation_tracker = MlflowModelValidationTracker(run_id=item.mlflow_run_id)
+    model_register = MlflowModelRegister(run_id=item.mlflow_run_id)
 
     validate_model_use_case = ValidateModel.build(
-        model_validator=model_validator, data_tracker=model_validation_tracker
+        model_validator=model_validator,
+        data_tracker=model_validation_tracker,
+        model_register=model_register,
+        registry_model_name=REGISTRY_MODEL_NAME,
     )
     metrics_threshold = {"rmse": item.rmse_threshold}
     try:

@@ -1,6 +1,7 @@
 import logging
 
 from src.shared.interfaces.data_tracker import IDataTracker
+from src.shared.interfaces.model_register import IModelRegister, ModelStage
 from src.validate_model.domain.model_validator import IModelValidator
 
 logger = logging.getLogger(__name__)
@@ -17,9 +18,17 @@ class ValidateModel:
     :type data_tracker: IDataTracker
     """
 
-    def __init__(self, model_validator: IModelValidator, data_tracker: IDataTracker):
+    def __init__(
+        self,
+        model_validator: IModelValidator,
+        data_tracker: IDataTracker,
+        model_register: IModelRegister,
+        registry_model_name: str,
+    ):
         self.model_validator = model_validator
         self.data_tracker = data_tracker
+        self.model_register = model_register
+        self.registry_model_name = registry_model_name
 
     def execute(self, metrics_threshold: dict):
         metrics = self.data_tracker.get_metrics()
@@ -31,12 +40,23 @@ class ValidateModel:
         )
         if not model_validated:
             raise Exception("Model was not validated succesfully.")
-        # Update model's stage in Model Registry
-        self.data_tracker.update_validated_model_in_registry()
+        # Update model's stage to 'Staging' in Model Registry
+        stage = self.model_register.get_stage_from_enum(ModelStage.STAGING)
+        self.model_register.transition_model_version_stage(
+            name=self.registry_model_name, stage=stage
+        )
 
     @staticmethod
-    def build(model_validator: IModelValidator, data_tracker: IDataTracker):
+    def build(
+        model_validator: IModelValidator,
+        data_tracker: IDataTracker,
+        model_register: IModelRegister,
+        registry_model_name: str,
+    ):
         validate_model = ValidateModel(
-            model_validator=model_validator, data_tracker=data_tracker
+            model_validator=model_validator,
+            data_tracker=data_tracker,
+            model_register=model_register,
+            registry_model_name=registry_model_name,
         )
         return validate_model

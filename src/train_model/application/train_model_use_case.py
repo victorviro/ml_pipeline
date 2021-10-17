@@ -2,6 +2,7 @@ import os
 
 from src.shared.interfaces.data_file_loader import IDataFileLoader
 from src.shared.interfaces.data_tracker import IDataTracker
+from src.shared.interfaces.model_register import IModelRegister
 from src.train_model.domain.model_trainer import IModelTrainer
 
 
@@ -24,10 +25,14 @@ class TrainModel:
         model_trainer: IModelTrainer,
         dataset_file_loader: IDataFileLoader,
         data_tracker: IDataTracker,
+        model_register: IModelRegister,
+        registry_model_name: str,
     ):
         self.model_trainer = model_trainer
         self.dataset_file_loader = dataset_file_loader
         self.data_tracker = data_tracker
+        self.model_register = model_register
+        self.registry_model_name = registry_model_name
 
     def execute(self, dataset_file_path: str):
         if not os.path.exists(dataset_file_path):
@@ -42,16 +47,22 @@ class TrainModel:
         )
         # Track information of the experiment run
         self.data_tracker.track_training_metadata(metadata_to_track)
+        # Register the model in Model Registry
+        self.model_register.register_model(name=self.registry_model_name)
 
     @staticmethod
     def build(
         model_trainer: IModelTrainer,
         dataset_file_loader: IDataFileLoader,
         data_tracker: IDataTracker,
+        model_register: IModelRegister,
+        registry_model_name: str,
     ):
         train_model = TrainModel(
             model_trainer=model_trainer,
             dataset_file_loader=dataset_file_loader,
             data_tracker=data_tracker,
+            model_register=model_register,
+            registry_model_name=registry_model_name,
         )
         return train_model

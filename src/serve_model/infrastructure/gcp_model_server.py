@@ -59,7 +59,7 @@ class GCPModelServer(IModelServer):
             logger.error(msg)
             raise Exception(msg) from err
 
-    def serve_model(self, model_path: str, model_version: str):
+    def serve_model(self, model_path: str, model_version: float):
         """
         Serve a model version in GCP AI Platform (it is assumed a model is already
         created in GCP AI Platform).
