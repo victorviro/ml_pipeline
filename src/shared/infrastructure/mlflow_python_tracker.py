@@ -60,11 +60,13 @@ class MlflowPythonTracker(IDataTracker):
     ) -> None:
         self._track_metrics(metrics=information_to_log["metrics"])
 
-    def load_model_logged(self, model_name: str) -> Any:
-        # Get the artifacts uri of the experiment run
-        artifacts_uri = self._get_artifacts_uri(model_name=model_name)
-        model = self._load_sklearn_model(model_uri=artifacts_uri)
+    def load_model_logged(self) -> Any:
+        model = self._load_artifact(artifact_name=MODEL_NAME)
         return model
+
+    def load_data_preprocessor_logged(self) -> Any:
+        data_preprocessor = self._load_artifact(artifact_name=TRANSFORMER_PIPELINE_NAME)
+        return data_preprocessor
 
     def get_information_logged_for_model_validation(self) -> Dict[str, Any]:
         metrics: Dict[str, Any] = self._get_tracked_items(item_type="metric")
@@ -191,6 +193,19 @@ class MlflowPythonTracker(IDataTracker):
                 f"{model_uri}."
             )
             raise Exception(message) from err
+
+    def _load_artifact(self, artifact_name: str) -> Any:
+        """
+        Load an artifact logged in a experiment run.
+
+        :param artifact_name: Path inside the artifact uri where the artifact is stored
+        :type artifact_name: str
+        :return: The artifact
+        :rtype: Any
+        """
+        artifacts_uri = self._get_artifacts_uri(model_name=artifact_name)
+        artifact = self._load_sklearn_model(model_uri=artifacts_uri)
+        return artifact
 
     def _get_tracked_items(self, item_type: str) -> Dict[str, Any]:
         """

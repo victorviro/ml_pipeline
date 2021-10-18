@@ -9,7 +9,6 @@ from src.evaluate_model.application.evaluate_model_use_case import EvaluateModel
 from src.evaluate_model.infrastructure.sklearn_model_evaluator import (
     SklearnModelEvaluator,
 )
-from src.shared.constants import MODEL_NAME
 from src.shared.infrastructure.json_data_loader import JSONDataLoader
 from src.shared.infrastructure.mlflow_python_tracker import MlflowPythonTracker
 from src.shared.logging_config import LOGGING_CONFIG
@@ -41,7 +40,6 @@ async def evaluate_model_endpoint(item: Item):
         model_evaluator=model_evaluator,
         dataset_file_loader=data_loader,
         data_tracker=data_tracker,
-        model_name=MODEL_NAME,
     )
     dataset_file_path = f"{item.raw_data_path}/{item.data_name}.json"
 

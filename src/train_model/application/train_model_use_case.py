@@ -27,14 +27,12 @@ class TrainModel:
         data_tracker: IDataTracker,
         model_register: IModelRegister,
         registry_model_name: str,
-        data_preprocessor_name: str,
     ):
         self.model_trainer = model_trainer
         self.dataset_file_loader = dataset_file_loader
         self.data_tracker = data_tracker
         self.model_register = model_register
         self.registry_model_name = registry_model_name
-        self.data_preprocessor_name = data_preprocessor_name
 
     def execute(self, dataset_file_path: str):
         if not os.path.exists(dataset_file_path):
@@ -42,9 +40,7 @@ class TrainModel:
         # Load the dataset
         dataset = self.dataset_file_loader.load_data(file_path=dataset_file_path)
         # Get the preprocesser logged
-        data_preprocessor = self.data_tracker.load_model_logged(
-            model_name=self.data_preprocessor_name
-        )
+        data_preprocessor = self.data_tracker.load_data_preprocessor_logged()
         # Train the model
         information_to_log = self.model_trainer.train_model(
             dataset=dataset, preprocesser=data_preprocessor
@@ -63,7 +59,6 @@ class TrainModel:
         data_tracker: IDataTracker,
         model_register: IModelRegister,
         registry_model_name: str,
-        data_preprocessor_name: str,
     ):
         train_model = TrainModel(
             model_trainer=model_trainer,
@@ -71,6 +66,5 @@ class TrainModel:
             data_tracker=data_tracker,
             model_register=model_register,
             registry_model_name=registry_model_name,
-            data_preprocessor_name=data_preprocessor_name,
         )
         return train_model

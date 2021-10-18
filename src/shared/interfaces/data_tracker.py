@@ -66,12 +66,20 @@ class IDataTracker(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def load_model_logged(self, model_name: str) -> Any:
+    def load_model_logged(self) -> Any:
         """
         Load model fitted logged.
 
-        :param model_name: The name of the model logged
-        :type model_name: str
+        :return: The model
+        :rtype: Any
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def load_data_preprocessor_logged(self) -> Any:
+        """
+        Load data preprocessor fitted logged.
+
         :return: The model
         :rtype: Any
         """
