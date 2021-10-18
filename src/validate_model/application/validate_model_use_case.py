@@ -31,7 +31,7 @@ class ValidateModel:
         self.registry_model_name = registry_model_name
 
     def execute(self, metrics_threshold: dict):
-        metrics = self.data_tracker.get_metrics()
+        metrics = self.data_tracker.get_information_logged_for_model_validation()
         if not metrics:
             msg = "There are no metrics tracked from the model evaluation."
             raise Exception(msg)

@@ -39,14 +39,16 @@ class TrainModel:
             raise Exception(f"Path of dataset file does not exist: {dataset_file_path}")
         # Load the dataset
         dataset = self.dataset_file_loader.load_data(file_path=dataset_file_path)
-        # Get the preprocesser tracked
-        preprocesser = self.data_tracker.get_tracked_preprocesser()
+        # Get the preprocesser logged
+        data_preprocessor = self.data_tracker.load_data_preprocessor_logged()
         # Train the model
-        metadata_to_track = self.model_trainer.train_model(
-            dataset=dataset, preprocesser=preprocesser
+        information_to_log = self.model_trainer.train_model(
+            dataset=dataset, preprocesser=data_preprocessor
         )
         # Track information of the experiment run
-        self.data_tracker.track_training_metadata(metadata_to_track)
+        self.data_tracker.log_information_of_model_training(
+            information_to_log=information_to_log
+        )
         # Register the model in Model Registry
         self.model_register.register_model(name=self.registry_model_name)
 

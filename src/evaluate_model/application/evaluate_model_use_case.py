@@ -36,14 +36,14 @@ class EvaluateModel:
 
         # Load the dataset, and the model
         dataset = self.dataset_file_loader.load_data(file_path=dataset_file_path)
-        model = self.data_tracker.get_tracked_model()
+        model = self.data_tracker.load_model_logged()
         # Evaluate the model
-        information_to_track = self.model_evaluator.evaluate_model(
+        information_to_log = self.model_evaluator.evaluate_model(
             dataset=dataset, model=model
         )
-        # Track information
-        self.data_tracker.track_model_evaluation_info(
-            information_to_track=information_to_track
+        # Log information
+        self.data_tracker.log_information_of_model_evaluation(
+            information_to_log=information_to_log
         )
 
     @staticmethod

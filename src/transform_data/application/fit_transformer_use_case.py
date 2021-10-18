@@ -36,11 +36,13 @@ class FitTransformer:
         # Load the dataset
         dataset = self.data_file_loader.load_data(file_path=dataset_file_path)
 
-        # Fit the transformer/prepocessing
-        transformer = self.transformation_fitter.fit_transformer(dataset=dataset)
+        # Fit the data transformer/prepocessing
+        data_preprocessor = self.transformation_fitter.fit_transformer(dataset=dataset)
 
         # Track the transformer and information
-        self.data_tracker.track_transformer_fitting_info(transformer=transformer)
+        self.data_tracker.log_information_of_data_preprocessor_fitting(
+            data_preprocessor=data_preprocessor
+        )
 
     @staticmethod
     def build(
