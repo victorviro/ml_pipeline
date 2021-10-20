@@ -33,25 +33,3 @@ def get_regression_metrics(
         logger.error(msg)
         raise Exception(msg) from err
     return rmse, mae, r_square
-
-
-def get_class_parameters(cls) -> list:
-    """
-    Get the parameters of a class (usually a sklearn class method).
-    It first get al attributes of the class and filter the parameters
-
-    :return: The name of the parameters of the class
-    :rtype: list
-    """
-    parameters = []
-    try:
-        for attribute in cls.__dict__.keys():
-            # Check if the attribute is a parameter
-            is_parameter = attribute[:1] != "_" and attribute[-1:] != "_"
-            if is_parameter:
-                parameters.append(attribute)
-    except Exception as err:
-        msg = f"Error trying to get parameters of class: {cls}."
-        logger.error(msg)
-        raise Exception(msg) from err
-    return parameters
