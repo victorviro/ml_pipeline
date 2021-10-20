@@ -32,7 +32,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/train_model")
-def train_model_endpoint(item: Item):
+def train_model_endpoint(item: Item) -> JSONResponse:
     model_trainer = SklearnModelTrainer(
         size_test_split=item.size_test_split,
         test_split_seed=item.test_split_seed,

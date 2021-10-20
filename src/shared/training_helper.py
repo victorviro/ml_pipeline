@@ -2,6 +2,7 @@
 Utils used for training models
 """
 import logging
+from typing import Tuple
 
 import numpy as np
 from numpy import ndarray
@@ -10,7 +11,9 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 logger = logging.getLogger(__name__)
 
 
-def get_regression_metrics(actual: ndarray, predictions: ndarray) -> tuple:
+def get_regression_metrics(
+    actual: ndarray, predictions: ndarray
+) -> Tuple[float, float, float]:
     """
     Compute metrics for a regression model evaluation.
 

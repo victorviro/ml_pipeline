@@ -29,7 +29,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/fit_transformer_pipeline")
-async def fit_transformer_pipeline_endpoint(item: FitItem):
+async def fit_transformer_pipeline_endpoint(item: FitItem) -> JSONResponse:
     data_loader = JSONDataLoader()
     transformation_fitter = SklearnTransformationFitter(
         size_test_split=item.size_test_split, test_split_seed=item.test_split_seed

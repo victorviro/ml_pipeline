@@ -29,7 +29,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/evaluate_model")
-async def evaluate_model_endpoint(item: Item):
+async def evaluate_model_endpoint(item: Item) -> JSONResponse:
     model_evaluator = SklearnModelEvaluator(
         size_test_split=item.size_test_split, test_split_seed=item.test_split_seed
     )

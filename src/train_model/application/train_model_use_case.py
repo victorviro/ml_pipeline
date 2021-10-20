@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 from src.shared.interfaces.data_file_loader import IDataFileLoader
@@ -34,7 +36,7 @@ class TrainModel:
         self.model_register = model_register
         self.registry_model_name = registry_model_name
 
-    def execute(self, dataset_file_path: str):
+    def execute(self, dataset_file_path: str) -> None:
         if not os.path.exists(dataset_file_path):
             raise Exception(f"Path of dataset file does not exist: {dataset_file_path}")
         # Load the dataset
@@ -59,7 +61,7 @@ class TrainModel:
         data_tracker: IDataTracker,
         model_register: IModelRegister,
         registry_model_name: str,
-    ):
+    ) -> TrainModel:
         train_model = TrainModel(
             model_trainer=model_trainer,
             dataset_file_loader=dataset_file_loader,

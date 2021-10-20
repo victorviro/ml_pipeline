@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict
 
 from src.validate_model.domain.model_validator import IModelValidator
 
@@ -7,7 +8,9 @@ logger = logging.getLogger(__name__)
 
 class PerformanceModelValidator(IModelValidator):
     @staticmethod
-    def validate_model(metrics: dict, metrics_threshold: dict) -> bool:
+    def validate_model(
+        metrics: Dict[str, Any], metrics_threshold: Dict[str, Any]
+    ) -> bool:
         """
         Validate the model based on its performance metrics in the test set and
         threshold values.

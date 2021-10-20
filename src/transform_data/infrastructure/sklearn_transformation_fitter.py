@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict, List
 
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
@@ -22,7 +23,7 @@ class SklearnTransformationFitter(ITransformationFitter):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
 
-    def fit_transformer(self, dataset: dict) -> Pipeline:
+    def fit_transformer(self, dataset: Dict[str, List[Any]]) -> Pipeline:
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)

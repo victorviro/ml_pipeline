@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 from src.shared.interfaces.data_file_loader import IDataFileLoader
@@ -28,7 +30,7 @@ class FitTransformer:
         self.transformation_fitter = transformation_fitter
         self.data_tracker = data_tracker
 
-    def execute(self, dataset_file_path: str):
+    def execute(self, dataset_file_path: str) -> None:
         if not os.path.exists(dataset_file_path):
             raise FileNotFoundError(
                 "Path of the dataset file does not exist: " f'"{dataset_file_path}"'
@@ -49,7 +51,7 @@ class FitTransformer:
         data_file_loader: IDataFileLoader,
         transformation_fitter: ITransformationFitter,
         data_tracker: IDataTracker,
-    ):
+    ) -> FitTransformer:
         fit_transformer = FitTransformer(
             data_file_loader=data_file_loader,
             transformation_fitter=transformation_fitter,

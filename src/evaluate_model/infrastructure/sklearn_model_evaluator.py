@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict, List
 
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
@@ -22,7 +23,9 @@ class SklearnModelEvaluator(IModelEvaluator):
         self.size_test_split = size_test_split
         self.test_split_seed = test_split_seed
 
-    def evaluate_model(self, dataset: dict, model: Pipeline) -> dict:
+    def evaluate_model(
+        self, dataset: Dict[str, List[Any]], model: Pipeline
+    ) -> Dict[str, Any]:
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)

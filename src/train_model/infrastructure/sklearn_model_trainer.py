@@ -1,4 +1,5 @@
 import logging
+from typing import Any, Dict, List
 
 from pandas import DataFrame
 from sklearn.linear_model import ElasticNet
@@ -38,7 +39,9 @@ class SklearnModelTrainer(IModelTrainer):
         self.l1_ratio = l1_ratio
         self.model_seed = model_seed
 
-    def train_model(self, dataset: dict, preprocesser: Pipeline) -> dict:
+    def train_model(
+        self, dataset: Dict[str, List[Any]], preprocesser: Pipeline
+    ) -> Dict[str, Any]:
 
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)

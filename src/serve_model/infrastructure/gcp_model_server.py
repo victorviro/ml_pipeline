@@ -24,7 +24,7 @@ GCP_MODEL_VERSION_BODY = {
 
 class GCPModelServer(IModelServer):
     @staticmethod
-    def create_model_version(version_name: str, model_gcs_path: str):
+    def create_model_version(version_name: str, model_gcs_path: str) -> None:
         """
         Create a new version of a model in GCP AI Platform.
 
@@ -59,7 +59,7 @@ class GCPModelServer(IModelServer):
             logger.error(msg)
             raise Exception(msg) from err
 
-    def serve_model(self, model_path: str, model_version: float):
+    def serve_model(self, model_path: str, model_version: float) -> None:
         """
         Serve a model version in GCP AI Platform (it is assumed a model is already
         created in GCP AI Platform).

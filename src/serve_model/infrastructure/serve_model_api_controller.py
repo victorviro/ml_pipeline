@@ -23,7 +23,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/served_model")
-async def serve_model_endpoint(item: Item):
+async def serve_model_endpoint(item: Item) -> JSONResponse:
     model_server = GCPModelServer()
     data_tracker = MlflowPythonTracker(run_id=item.mlflow_run_id)
 

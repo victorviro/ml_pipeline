@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 
 from src.evaluate_model.domain.model_evaluator import IModelEvaluator
@@ -28,7 +30,7 @@ class EvaluateModel:
         self.dataset_file_loader = dataset_file_loader
         self.data_tracker = data_tracker
 
-    def execute(self, dataset_file_path: str):
+    def execute(self, dataset_file_path: str) -> None:
         if not os.path.exists(dataset_file_path):
             raise FileNotFoundError(
                 "Path of dataset file does not exist: " f'"{dataset_file_path}"'
@@ -51,7 +53,7 @@ class EvaluateModel:
         model_evaluator: IModelEvaluator,
         dataset_file_loader: IDataFileLoader,
         data_tracker: IDataTracker,
-    ):
+    ) -> EvaluateModel:
         evaluate_model = EvaluateModel(
             model_evaluator=model_evaluator,
             dataset_file_loader=dataset_file_loader,

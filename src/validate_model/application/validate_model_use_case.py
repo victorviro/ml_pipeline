@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import logging
+from typing import Any, Dict
 
 from src.shared.interfaces.data_tracker import IDataTracker
 from src.shared.interfaces.model_register import IModelRegister, ModelStage
@@ -30,7 +33,7 @@ class ValidateModel:
         self.model_register = model_register
         self.registry_model_name = registry_model_name
 
-    def execute(self, metrics_threshold: dict):
+    def execute(self, metrics_threshold: Dict[str, Any]) -> None:
         metrics = self.data_tracker.get_information_logged_for_model_validation()
         if not metrics:
             msg = "There are no metrics tracked from the model evaluation."
@@ -52,7 +55,7 @@ class ValidateModel:
         data_tracker: IDataTracker,
         model_register: IModelRegister,
         registry_model_name: str,
-    ):
+    ) -> ValidateModel:
         validate_model = ValidateModel(
             model_validator=model_validator,
             data_tracker=data_tracker,

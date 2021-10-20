@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from src.serve_model.domain.model_server import IModelServer
 from src.shared.interfaces.data_tracker import IDataTracker
 
@@ -25,7 +27,7 @@ class ServeModel:
         self.data_tracker = data_tracker
         self.model_version = model_version
 
-    def execute(self):
+    def execute(self) -> None:
         # Get path of the model tracked
         model_path = self.data_tracker.get_model_path_in_storage()
         # Serve model
@@ -36,7 +38,7 @@ class ServeModel:
     @staticmethod
     def build(
         model_server: IModelServer, data_tracker: IDataTracker, model_version: float
-    ):
+    ) -> ServeModel:
         serve_model = ServeModel(
             model_server=model_server,
             data_tracker=data_tracker,

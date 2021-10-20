@@ -27,7 +27,7 @@ rest_api = FastAPI()
 
 
 @rest_api.post("/api/validate_model")
-def train_model_endpoint(item: Item):
+def train_model_endpoint(item: Item) -> JSONResponse:
     model_validator = PerformanceModelValidator()
     data_tracker = MlflowPythonTracker(run_id=item.mlflow_run_id)
     model_register = MlflowModelRegister(run_id=item.mlflow_run_id)
