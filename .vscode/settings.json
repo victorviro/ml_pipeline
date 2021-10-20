@@ -29,6 +29,10 @@
         "--rcfile=setup.cfg",
     ],
     "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyArgs": [
+        "--exclude 'tests'",
+    ],
     // Autosave formatters
     "editor.codeActionsOnSave": {
         "source.organizeImports": true,
