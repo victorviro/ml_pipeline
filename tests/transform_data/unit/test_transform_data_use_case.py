@@ -10,38 +10,45 @@ from src.transform_data.domain.transformation_fitter import ITransformationFitte
 
 
 @pytest.mark.unit
-def test_transform_data_should_complete_process_returning_success():
-    mock_transformation_fitter = Mock(ITransformationFitter)
-    mock_data_file_loader = Mock(IDataFileLoader)
-    mock_data_tracker = Mock(IDataTracker)
+class TestFitTransformer:
+    mock_transformation_fitter: Mock = Mock(ITransformationFitter)
+    mock_data_file_loader: Mock = Mock(IDataFileLoader)
+    mock_data_tracker: Mock = Mock(IDataTracker)
 
-    use_case = FitTransformer.build(
-        data_file_loader=mock_data_file_loader,
-        transformation_fitter=mock_transformation_fitter,
-        data_tracker=mock_data_tracker,
-    )
-    use_case.execute(dataset_file_path=getcwd())
+    def setup(self) -> None:
+        self.reset_mock()
 
-    mock_transformation_fitter.fit_transformer.assert_called_once()
-    mock_data_file_loader.load_data.assert_called_once()
-    mock_data_tracker.log_information_of_data_preprocessor_fitting.assert_called_once()
+    def reset_mock(self) -> None:
+        self.mock_transformation_fitter = Mock(ITransformationFitter)
+        self.mock_data_file_loader = Mock(IDataFileLoader)
+        self.mock_data_tracker = Mock(IDataTracker)
 
+    def test_should_complete_process_returning_success(self):
 
-@pytest.mark.unit
-def test_transform_data_use_case_should_raise_exception_due_non_exist_data_file_path():
-    mock_transformation_fitter = Mock(ITransformationFitter)
-    mock_data_file_loader = Mock(IDataFileLoader)
-    mock_data_tracker = Mock(IDataTracker)
+        use_case = FitTransformer.build(
+            data_file_loader=self.mock_data_file_loader,
+            transformation_fitter=self.mock_transformation_fitter,
+            data_tracker=self.mock_data_tracker,
+        )
+        use_case.execute(dataset_file_path=getcwd())
 
-    use_case = FitTransformer.build(
-        data_file_loader=mock_data_file_loader,
-        transformation_fitter=mock_transformation_fitter,
-        data_tracker=mock_data_tracker,
-    )
+        self.mock_transformation_fitter.fit_transformer.assert_called_once()
+        self.mock_data_file_loader.load_data.assert_called_once()
+        m_data_tracker = self.mock_data_tracker
+        m_data_tracker.log_information_of_data_preprocessor_fitting.assert_called_once()
 
-    with pytest.raises(Exception):
-        use_case.execute(dataset_file_path="no_file")
+    def test_should_raise_exception_due_non_exist_data_file_path(self):
 
-    mock_transformation_fitter.fit_transformer.assert_not_called()
-    mock_data_file_loader.load_data.assert_not_called()
-    mock_data_tracker.log_information_of_data_preprocessor_fitting.assert_not_called()
+        use_case = FitTransformer.build(
+            data_file_loader=self.mock_data_file_loader,
+            transformation_fitter=self.mock_transformation_fitter,
+            data_tracker=self.mock_data_tracker,
+        )
+
+        with pytest.raises(Exception):
+            use_case.execute(dataset_file_path="no_file")
+
+        self.mock_transformation_fitter.fit_transformer.assert_not_called()
+        self.mock_data_file_loader.load_data.assert_not_called()
+        m_data_tracker = self.mock_data_tracker
+        m_data_tracker.log_information_of_data_preprocessor_fitting.assert_not_called()

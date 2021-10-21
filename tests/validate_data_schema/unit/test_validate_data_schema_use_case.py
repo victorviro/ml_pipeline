@@ -11,64 +11,63 @@ from src.validate_data_schema.domain.data_validator import IDataValidator
 
 
 @pytest.mark.unit
-def test_validate_data_schema_should_complete_process_returning_success():
-    mock_data_validator = Mock(IDataValidator)
-    mock_data_validator.validate_data = Mock()
+class TestValidateDataSchema:
 
-    mock_dataset_file_loader = Mock(IDataFileLoader)
-    mock_dataset_file_loader.load_data = Mock(return_value={})
-    mock_dataset_schema_info_file_loader = Mock(IDataFileLoader)
-    mock_dataset_schema_info_file_loader.load_data = Mock(return_value={})
+    mock_data_validator: Mock = Mock(IDataValidator)
+    mock_dataset_file_loader: Mock = Mock(IDataFileLoader)
+    mock_dataset_schema_info_file_loader: Mock = Mock(IDataFileLoader)
 
-    use_case = ValidateDataSchema.build(
-        data_validator=mock_data_validator,
-        dataset_file_loader=mock_dataset_file_loader,
-        dataset_schema_info_file_loader=mock_dataset_schema_info_file_loader,
-    )
-    use_case.execute(dataset_file_path=getcwd(), dataset_schema_info_file_path=getcwd())
+    def setup(self) -> None:
+        self.reset_mock()
 
-    mock_data_validator.validate_data.assert_called_once()
-    mock_dataset_file_loader.load_data.assert_called_once()
-    mock_dataset_schema_info_file_loader.load_data.assert_called_once()
+    def reset_mock(self) -> None:
+        self.mock_data_validator = Mock(IDataValidator)
+        self.mock_dataset_file_loader = Mock(IDataFileLoader)
+        self.mock_dataset_schema_info_file_loader = Mock(IDataFileLoader)
 
+    def test_should_complete_process_returning_success(self):
 
-@pytest.mark.unit
-def test_validate_data_schema_should_raise_exception_due_non_exist_dataset_file_path():
-    mock_data_validator = Mock(IDataValidator)
-    mock_dataset_file_loader = Mock(IDataFileLoader)
-    mock_dataset_schema_info_file_loader = Mock(IDataFileLoader)
-
-    use_case = ValidateDataSchema.build(
-        data_validator=mock_data_validator,
-        dataset_file_loader=mock_dataset_file_loader,
-        dataset_schema_info_file_loader=mock_dataset_schema_info_file_loader,
-    )
-    with pytest.raises(Exception):
+        use_case = ValidateDataSchema.build(
+            data_validator=self.mock_data_validator,
+            dataset_file_loader=self.mock_dataset_file_loader,
+            dataset_schema_info_file_loader=self.mock_dataset_schema_info_file_loader,
+        )
         use_case.execute(
-            dataset_file_path="no_file", dataset_schema_info_file_path=getcwd()
+            dataset_file_path=getcwd(), dataset_schema_info_file_path=getcwd()
         )
 
-    mock_data_validator.validate_data.assert_not_called()
-    mock_dataset_file_loader.load_data.assert_not_called()
-    mock_dataset_schema_info_file_loader.load_data.assert_not_called()
+        self.mock_data_validator.validate_data.assert_called_once()
+        self.mock_dataset_file_loader.load_data.assert_called_once()
+        self.mock_dataset_schema_info_file_loader.load_data.assert_called_once()
 
+    def test_should_raise_exception_due_non_exist_dataset_file_path(self):
 
-@pytest.mark.unit
-def test_validate_data_schema_should_raise_exception_due_non_exist_data_schema_path():
-    mock_data_validator = Mock(IDataValidator)
-    mock_dataset_file_loader = Mock(IDataFileLoader)
-    mock_dataset_schema_info_file_loader = Mock(IDataFileLoader)
-
-    use_case = ValidateDataSchema.build(
-        data_validator=mock_data_validator,
-        dataset_file_loader=mock_dataset_file_loader,
-        dataset_schema_info_file_loader=mock_dataset_schema_info_file_loader,
-    )
-    with pytest.raises(Exception):
-        use_case.execute(
-            dataset_file_path=getcwd(), dataset_schema_info_file_path="no_file"
+        use_case = ValidateDataSchema.build(
+            data_validator=self.mock_data_validator,
+            dataset_file_loader=self.mock_dataset_file_loader,
+            dataset_schema_info_file_loader=self.mock_dataset_schema_info_file_loader,
         )
+        with pytest.raises(Exception):
+            use_case.execute(
+                dataset_file_path="no_file", dataset_schema_info_file_path=getcwd()
+            )
 
-    mock_data_validator.validate_data.assert_not_called()
-    mock_dataset_file_loader.load_data.assert_not_called()
-    mock_dataset_schema_info_file_loader.load_data.assert_not_called()
+        self.mock_data_validator.validate_data.assert_not_called()
+        self.mock_dataset_file_loader.load_data.assert_not_called()
+        self.mock_dataset_schema_info_file_loader.load_data.assert_not_called()
+
+    def test_should_raise_exception_due_non_exist_data_schema_path(self):
+
+        use_case = ValidateDataSchema.build(
+            data_validator=self.mock_data_validator,
+            dataset_file_loader=self.mock_dataset_file_loader,
+            dataset_schema_info_file_loader=self.mock_dataset_schema_info_file_loader,
+        )
+        with pytest.raises(Exception):
+            use_case.execute(
+                dataset_file_path=getcwd(), dataset_schema_info_file_path="no_file"
+            )
+
+        self.mock_data_validator.validate_data.assert_not_called()
+        self.mock_dataset_file_loader.load_data.assert_not_called()
+        self.mock_dataset_schema_info_file_loader.load_data.assert_not_called()
