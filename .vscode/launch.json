@@ -8,10 +8,20 @@
             "name": "Python: controller.py",
             "type": "python",
             "request": "launch",
-            
             "program": "${file}",
-            //"program": "${workspaceFolder}/controller.py",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: pytest",
+            "type": "python",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "--no-cov",
+                "-k TestValidateModel"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }
