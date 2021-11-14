@@ -30,5 +30,7 @@ pipeline:
         - "cobertura(coberturaReportFile: 'output/coverage/coverage.xml')"
 
   post:
+    failure:
+      - "slackSend(color: 'danger', channel: '#continious-integration', tokenCredentialId: 'slack-token', message: '🔥 Failed build (ml_pipeline)')"
     always:
       - "cleanWs()"
