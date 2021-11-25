@@ -1,5 +1,6 @@
 pipeline:
   agent: any
+  library: "slack-notifier@master"
 
   options:
     - "ansiColor('xterm')"
@@ -31,6 +32,8 @@ pipeline:
 
   post:
     failure:
-      - "slackSend(color: 'danger', channel: '#continious-integration', tokenCredentialId: 'slack-token', message: '🔥 Failed build (ml_pipeline)')"
-    always:
+      - "notifyFailedBuild()"
+    fixed:
+      - "notifyFixedBuild()"
+    cleanup:
       - "cleanWs()"
