@@ -12,18 +12,12 @@ pipeline:
 
     - stage: "Install dependencies"
       steps:
-        script:
-          - withPythonEnv: "'venv/'"
-            script:
-              - sh "python3 -m pip install --upgrade pip"
-              - sh "make install-test"
+        - sh "$PYTHON_ENV_CMD && python3 -m pip install --upgrade pip"
+        - sh "$PYTHON_ENV_CMD && make install-test"
 
     - stage: "✅ Run tests"
       steps:
-        script:
-          - withPythonEnv: "'venv/'"
-            script:
-              - sh "make test"
+        - sh "$PYTHON_ENV_CMD &&  make test"
 
     - stage: "🕵️ Collect test reports"
       steps:
