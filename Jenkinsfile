@@ -8,12 +8,12 @@ pipeline {
   stages {
     stage('🏗️ Prepare environment') {
       steps {
-        sh "python3 -m virtualenv venv"
+        sh "python3.8 -m virtualenv venv"
       }
     }
     stage('Install dependencies') {
       steps {
-        sh "$PYTHON_ENV_CMD && python3 -m pip install --upgrade pip"
+        sh "$PYTHON_ENV_CMD && python3.8 -m pip install --upgrade pip"
         sh "$PYTHON_ENV_CMD && make install-test"
       }
     }
