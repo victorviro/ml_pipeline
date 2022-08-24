@@ -5,14 +5,14 @@ import logging
 from typing import Tuple
 
 import numpy as np
-from numpy import ndarray
+import numpy.typing as npt
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 logger = logging.getLogger(__name__)
 
 
 def get_regression_metrics(
-    actual: ndarray, predictions: ndarray
+    actual: npt.NDArray[np.float32], predictions: npt.NDArray[np.float32]
 ) -> Tuple[float, float, float]:
     """
     Compute metrics for a regression model evaluation.
