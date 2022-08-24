@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 from json import dumps, loads
 
 import requests
+from airflow import DAG
 
 # pylint: disable=wrong-import-order,no-name-in-module
 from airflow.operators.python_operator import PythonOperator
 from mlflow import active_run, end_run, start_run
 
-from airflow import DAG  # pylint: disable=ungrouped-imports
 from src.shared.constants import (
     ALPHA_PARAM_MODEL,
     DATASET_NAME,
