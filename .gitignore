@@ -6,6 +6,7 @@ __pycache__/
 output
 .coverage
 .pytest_cache
+.mypy_cache
 
 # Distribution / packaging
 venv/

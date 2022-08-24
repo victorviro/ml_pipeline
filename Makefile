@@ -77,8 +77,8 @@ lint:
 	flake8 src tests 
 	isort src tests --check-only 
 	black src tests --check 
-	mypy src tests 
-	find src tests -name "*.py" ! -name '__init__.py' ! -name 'conftest.py' | xargs pylint --exit-zero
+	mypy src tests
+	pylint src tests --recursive=y
 
 clean:
 	rm -rf .pytest_cache

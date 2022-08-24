@@ -4,7 +4,8 @@ isort==5.8.0
 
 # Linters
 flake8==3.8.4
-pylint==2.6.0
+pylint==2.14.5
+pylint-airflow==0.1.0a1
 
 # Hooks
 pre-commit==2.11.1
