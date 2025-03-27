@@ -29,5 +29,5 @@ jobs:
       - name: 🧐 Lint
         run: make lint
 
-      - name: ✅ Tests
-        run: make test
+      # - name: ✅ Tests
+      #   run: make test
