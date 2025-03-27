@@ -26,7 +26,6 @@ class SklearnModelEvaluator(IModelEvaluator):
     def evaluate_model(
         self, dataset: Dict[str, List[Any]], model: Pipeline
     ) -> Dict[str, Any]:
-
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)
         features = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)

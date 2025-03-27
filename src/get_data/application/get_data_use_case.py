@@ -40,7 +40,6 @@ class GetData:
     def build(
         data_downloander: IDataDownloander, data_file_saver: IDataFileSaver
     ) -> GetData:
-
         get_data = GetData(
             data_downloander=data_downloander, data_file_saver=data_file_saver
         )

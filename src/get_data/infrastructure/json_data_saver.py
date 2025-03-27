@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 class JSONDataSaver(IDataFileSaver):
     @staticmethod
     def save_data(file_path: str, data: Dict[Any, Any]) -> None:
-
         with open(file_path, "w") as output_file:
             json.dump(data, output_file, default=str)
 

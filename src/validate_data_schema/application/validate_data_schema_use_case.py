@@ -35,7 +35,7 @@ class ValidateDataSchema:
     ) -> None:
         if not os.path.exists(dataset_file_path):
             raise FileNotFoundError(
-                f'Dataset file in path "{dataset_file_path}" does not' "exist"
+                f'Dataset file in path "{dataset_file_path}" does notexist'
             )
         if not os.path.exists(dataset_schema_info_file_path):
             raise FileNotFoundError(
@@ -57,7 +57,6 @@ class ValidateDataSchema:
         dataset_file_loader: IDataFileLoader,
         dataset_schema_info_file_loader: IDataFileLoader,
     ) -> ValidateDataSchema:
-
         validate_data_schema = ValidateDataSchema(
             data_validator=data_validator,
             dataset_file_loader=dataset_file_loader,

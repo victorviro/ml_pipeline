@@ -33,7 +33,7 @@ class EvaluateModel:
     def execute(self, dataset_file_path: str) -> None:
         if not os.path.exists(dataset_file_path):
             raise FileNotFoundError(
-                "Path of dataset file does not exist: " f'"{dataset_file_path}"'
+                f'Path of dataset file does not exist: "{dataset_file_path}"'
             )
 
         # Load the dataset, and the model

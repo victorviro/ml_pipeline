@@ -21,7 +21,6 @@ class TestGetData:
         self.mock_data_file_saver = Mock(IDataFileSaver)
 
     def test_should_complete_process_returning_success(self):
-
         use_case = GetData.build(
             data_downloander=self.mock_data_downloander,
             data_file_saver=self.mock_data_file_saver,
@@ -32,7 +31,6 @@ class TestGetData:
         self.mock_data_file_saver.save_data.assert_called_once()
 
     def test_should_raise_exception_due_non_exist_data_path(self):
-
         use_case = GetData.build(
             data_downloander=self.mock_data_downloander,
             data_file_saver=self.mock_data_file_saver,

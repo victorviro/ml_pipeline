@@ -24,10 +24,9 @@ class VersionTrackData:
         self.data_tracker = data_tracker
 
     def execute(self, data_file_path: str, data_version: float) -> None:
-
         if not os.path.exists(data_file_path):
             raise FileNotFoundError(
-                "Path of data file does not exist: " f'"{data_file_path}"'
+                f'Path of data file does not exist: "{data_file_path}"'
             )
         # Version the dataset (return info to track)
         information_to_log: Dict[str, Any] = self.data_versioner.version_data(

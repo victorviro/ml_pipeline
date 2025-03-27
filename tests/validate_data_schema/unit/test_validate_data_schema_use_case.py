@@ -12,7 +12,6 @@ from src.validate_data_schema.domain.data_validator import IDataValidator
 
 @pytest.mark.unit
 class TestValidateDataSchema:
-
     mock_data_validator: Mock = Mock(IDataValidator)
     mock_dataset_file_loader: Mock = Mock(IDataFileLoader)
     mock_dataset_schema_info_file_loader: Mock = Mock(IDataFileLoader)
@@ -26,7 +25,6 @@ class TestValidateDataSchema:
         self.mock_dataset_schema_info_file_loader = Mock(IDataFileLoader)
 
     def test_should_complete_process_returning_success(self):
-
         use_case = ValidateDataSchema.build(
             data_validator=self.mock_data_validator,
             dataset_file_loader=self.mock_dataset_file_loader,
@@ -41,7 +39,6 @@ class TestValidateDataSchema:
         self.mock_dataset_schema_info_file_loader.load_data.assert_called_once()
 
     def test_should_raise_exception_due_non_exist_dataset_file_path(self):
-
         use_case = ValidateDataSchema.build(
             data_validator=self.mock_data_validator,
             dataset_file_loader=self.mock_dataset_file_loader,
@@ -57,7 +54,6 @@ class TestValidateDataSchema:
         self.mock_dataset_schema_info_file_loader.load_data.assert_not_called()
 
     def test_should_raise_exception_due_non_exist_data_schema_path(self):
-
         use_case = ValidateDataSchema.build(
             data_validator=self.mock_data_validator,
             dataset_file_loader=self.mock_dataset_file_loader,

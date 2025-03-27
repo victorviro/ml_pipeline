@@ -21,7 +21,6 @@ class TestVersionTrackData:
         self.mock_data_tracker = Mock(IDataTracker)
 
     def test_should_complete_process_returning_success(self):
-
         use_case = VersionTrackData.build(
             data_versioner=self.mock_data_versioner, data_tracker=self.mock_data_tracker
         )
@@ -31,7 +30,6 @@ class TestVersionTrackData:
         self.mock_data_tracker.log_information_of_data_versioning.assert_called_once()
 
     def test_should_raise_exception_due_non_exist_data_file_path(self):
-
         use_case = VersionTrackData.build(
             data_versioner=self.mock_data_versioner, data_tracker=self.mock_data_tracker
         )

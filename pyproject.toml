@@ -1,0 +1,60 @@
+[project]
+name = "ml_pipeline"
+requires-python = "<=3.12"
+version = "0.0.1"
+
+#########################
+######### Ruff ##########
+#########################
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+
+select = [ # TODO to update and remove
+    # "E",   # pycodestyle errors
+    # "W",   # pycodestyle warnings
+    # "F",   # pyflakes
+    # "I",   # isort
+    # "C",   # flake8-comprehensions
+    # "B",   # flake8-bugbear
+    # "UP",  # pyupgrade
+    # "PL",  # pylint
+    # "ARG", # flake8-unused-arguments
+]
+
+
+#########################
+######### Mypy ##########
+#########################
+
+[tool.mypy]
+
+strict = true
+
+exclude = ["venv"]
+
+ignore_errors = true # TODO to update and remove
+
+
+#########################
+######## Pytest #########
+#########################
+[tool.pytest.ini_options]
+env = ["D:APPLICATION_MODE=TEST"]
+markers = ["unit", "integration", "acceptance"]
+
+addopts = ["tests", "-v", "--color=yes", "--durations=10"]
+
+python_files = "test_*.py"
+python_functions = "test_* should_*"
+pythonpath = "."
+
+
+#########################
+####### Coverage ########
+#########################
+
+[tool.coverage.report]
+exclude_lines = ["raise NotImplementedError()"]

@@ -60,7 +60,7 @@ class PanderaSchemaValidator(IDataValidator):
 
     @staticmethod
     def _get_pandera_dataset_schema(
-        dataset_schema_info: List[Dict[str, Any]]
+        dataset_schema_info: List[Dict[str, Any]],
     ) -> DataFrameSchema:
         """
         Get the valid schema of the dataset (pandera object) to validate the dataset.

@@ -27,7 +27,6 @@ class TestTrainModel:
         self.mock_model_register = Mock(IModelRegister)
 
     def test_should_complete_process_returning_success(self):
-
         use_case = TrainModel.build(
             model_trainer=self.mock_model_trainer,
             dataset_file_loader=self.mock_dataset_file_loader,
@@ -44,7 +43,6 @@ class TestTrainModel:
         self.mock_model_register.register_model.assert_called_once()
 
     def test_should_raise_exception_due_non_exist_dataset_file_path(self):
-
         use_case = TrainModel.build(
             model_trainer=self.mock_model_trainer,
             dataset_file_loader=self.mock_dataset_file_loader,
