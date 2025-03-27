@@ -1,32 +1,32 @@
 # Data science stack
-jupyter==1.0.0
-pandas==1.2.4
-seaborn==0.11.0
-scikit-learn==0.24.2
+jupyter==1.1.1
+pandas==2.2.3
+seaborn==0.13.2
+scikit-learn==1.6.1
 
 # Dataframe validation
-pandera==0.5.0
+pandera==0.18.3
 
 # Experiment tracking
-mlflow==1.14.1
+mlflow==2.21.2
 
 # Database
-psycopg2-binary==2.8.6
+psycopg2-binary==2.9.10
 
 # Environment
-python-dotenv==0.15.0
+python-dotenv==1.1.0
 
 # Task orchestration
-apache-airflow==2.0.1
+apache-airflow==2.10.5
 
 # Rest apis
-fastapi[all]==0.63.0
-requests==2.24.0
+fastapi[all]==0.115.12
+requests==2.32.3
 
 # Google cloud
-google-cloud-storage==1.37.1
-google-api-python-client==2.2.0
+google-cloud-storage==3.1.0
+google-api-python-client==2.166.0
 
 # Data/code versioning
-dvc==1.10.0
-GitPython==3.1.17
+dvc==3.59.1
+GitPython==3.1.44

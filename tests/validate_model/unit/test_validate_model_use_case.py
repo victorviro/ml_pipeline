@@ -23,7 +23,6 @@ class TestValidateModel:
         self.mock_model_register = Mock(IModelRegister)
 
     def test_should_complete_process_returning_success(self):
-
         use_case = ValidateModel.build(
             model_validator=self.mock_model_validator,
             data_tracker=self.mock_data_tracker,
@@ -38,7 +37,6 @@ class TestValidateModel:
         self.mock_model_register.transition_model_version_stage.assert_called_once()
 
     def test_should_raise_exception_due_to_no_metrics_tracked(self):
-
         self.mock_data_tracker.get_information_logged_for_model_validation = Mock(
             return_value={}
         )
@@ -59,7 +57,6 @@ class TestValidateModel:
         self.mock_model_register.transition_model_version_stage.assert_not_called()
 
     def test_should_raise_exception_due_to_no_model_validated(self):
-
         self.mock_model_validator.validate_model = Mock(return_value=False)
 
         use_case = ValidateModel.build(

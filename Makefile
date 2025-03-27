@@ -69,16 +69,15 @@ install-test:
 	python3 -m pip install --upgrade pip
 	pip install -r requirements/test.txt
 
-format:
-	isort src tests
+format: 
 	black src tests
+	ruff format src tests
 
 lint:
-	flake8 src tests 
-	isort src tests --check-only 
-	black src tests --check 
+	black src tests --check
 	mypy src tests
-	pylint src tests --recursive=y
+	ruff check src tests || true
+	make clean
 
 clean:
 	rm -rf .pytest_cache

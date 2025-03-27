@@ -20,7 +20,6 @@ class TestEvaluateModel:
         self.mock_data_tracker = Mock(IDataTracker)
 
     def test_should_complete_process_returning_success(self):
-
         use_case = ServeModel.build(
             model_server=self.mock_model_server,
             data_tracker=self.mock_data_tracker,

@@ -85,7 +85,6 @@ with DAG(
     description="Max character per line ML pipeline",
     schedule_interval="0 0 * * *",
 ) as dag:
-
     # Step 0: Create experiment run
     def create_run():
         start_run()

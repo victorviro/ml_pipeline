@@ -24,7 +24,6 @@ class SklearnTransformationFitter(ITransformationFitter):
         self.test_split_seed = test_split_seed
 
     def fit_transformer(self, dataset: Dict[str, List[Any]]) -> Pipeline:
-
         # Load the dataset to pandas DataFrame
         dataset_df = DataFrame.from_dict(dataset)
         features = dataset_df.drop(TARGET_VARIABLE_NAME, axis=1)

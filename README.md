@@ -36,7 +36,7 @@ pre-commit install
 🏗️ Create virtual environment (e.g. with virtualenv)
 
 ```bash
-python3 -m virtualenv venv
+python3.12 -m venv venv
 source venv/bin/activate
 ```
 

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 GCP_ENDPOINT = f"https://{GCP_REGION}-ml.googleapis.com"
-GCP_PARENT = f'projects/{getenv("GCP_PROJECT_ID")}/models/{GCP_MODEL_NAME}'
+GCP_PARENT = f"projects/{getenv('GCP_PROJECT_ID')}/models/{GCP_MODEL_NAME}"
 GCP_MODEL_VERSION_BODY = {
     "name": "",
     "deploymentUri": "",

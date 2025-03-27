@@ -1,15 +1,12 @@
 # Formatters
-black==20.8b1
-isort==5.8.0
+black[jupyter]==25.1.0
 
 # Linters
-flake8==3.8.4
-pylint==2.14.5
-pylint-airflow==0.1.0a1
-
-# Hooks
-pre-commit==2.11.1
+ruff==0.11.2
 
 # Typing code check
-mypy==0.910
-types-requests==2.25.11
+mypy==1.15.0
+types-requests==2.32.0.20250306
+
+# Hooks
+pre-commit==4.2.0

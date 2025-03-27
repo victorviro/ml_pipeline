@@ -26,7 +26,6 @@ class DVCDataVersioner(IDataVersioner):
         self.git_branch_name = git_branch_name
 
     def version_data(self, data_file_path: str, data_version: float) -> Dict[str, str]:
-
         relative_data_file_path: str = os.path.relpath(
             path=data_file_path, start=os.getcwd()
         )
@@ -88,7 +87,7 @@ class DVCDataVersioner(IDataVersioner):
             )
             logger.info(
                 "Tracked the dataset in the DVC repository using subprocess. "
-                f'Stdout: {output.stdout.decode("utf-8") }'
+                f"Stdout: {output.stdout.decode('utf-8')}"
             )
         except CalledProcessError as err:
             msg = (
@@ -182,7 +181,7 @@ class DVCDataVersioner(IDataVersioner):
             output = subprocess.run(["dvc", "push"], capture_output=True, check=True)
             logger.info(
                 "Dataset versioned pushed in the DVC storage using subprocess"
-                f'. Stdout: {output.stdout.decode("utf-8")}'
+                f". Stdout: {output.stdout.decode('utf-8')}"
             )
         except CalledProcessError as err:
             msg = (

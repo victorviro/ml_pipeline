@@ -33,7 +33,7 @@ class FitTransformer:
     def execute(self, dataset_file_path: str) -> None:
         if not os.path.exists(dataset_file_path):
             raise FileNotFoundError(
-                "Path of the dataset file does not exist: " f'"{dataset_file_path}"'
+                f'Path of the dataset file does not exist: "{dataset_file_path}"'
             )
         # Load the dataset
         dataset = self.data_file_loader.load_data(file_path=dataset_file_path)

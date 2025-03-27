@@ -1,44 +1,61 @@
 {
+  
     // Python env
-    "python.pythonPath": "venv/bin/python3",
     "python.envFile": ".env",
     "python.terminal.activateEnvironment": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.defaultInterpreterPath": "venv/bin/python3",
+  
     // Editor settings
     "explorer.autoReveal": false,
     "workbench.editor.enablePreview": false,
     "autoDocstring.docstringFormat": "sphinx",
-    "editor.rulers": [
-        90
-    ],
-    "workbench.colorCustomizations": {
-        "editorRuler.foreground": "#f7e8ed"
-    },
-    "python.autoComplete.addBrackets": true,
+    "editor.rulers": [90],
     "python.languageServer": "Pylance",
-    "editor.semanticHighlighting.enabled": false,
-    "python.analysis.autoSearchPaths": false,
+    "python.analysis.autoImportCompletions": true,
     "python.analysis.completeFunctionParens": true,
-    // Linters
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.linting.lintOnSave": true,
-    "python.linting.pylintCategorySeverity.refactor": "Warning",
-    "python.linting.pylintCategorySeverity.convention": "Warning",
-    "python.linting.pylintArgs": [
-        "--rcfile=setup.cfg",
-    ],
-    "python.linting.flake8Enabled": true,
-    "python.linting.mypyEnabled": true,
-    "python.linting.mypyArgs": [
-        "--exclude 'tests'",
-    ],
-    // Autosave formatters
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": true,
+    "editor.semanticHighlighting.enabled": false,
+    "files.exclude": {
+      ".ruff_cache": true,
+      ".mypy_cache": true,
+      "temp": true,
     },
-    "python.formatting.provider": "black",
+  
+    // Linters
+    "mypy.runUsingActiveInterpreter": true,
+    "mypy.configFile": "pyproject.toml",
+  
+    // Auto-save formatters
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit"
+    },
+    "editor.formatOnSave": true,
+  
+    // Project settings
+    "python.autoComplete.extraPaths": ["."],
+    "python.analysis.extraPaths": ["."],
+  
+    // Git
+    "git.inputValidationSubjectLength": 72,
+  
+    // Gitmoji
+    "gitmoji.onlyUseCustomEmoji": true,
+    "gitmoji.addCustomEmoji": [
+        {"emoji": "🐛 fix:", "description": "Bug fix"},
+        {"emoji": "✨ feat:", "description": "New feature"},
+        {"emoji": "🔧 chore:", "description": "No production change"},
+        {"emoji": "👷 ci:", "description": "CI changes"},
+        {"emoji": "📝 docs:", "description": "Documentation changes"},
+        {"emoji": "📦 build:", "description": "Build system or external dependencies changes"},
+        {"emoji": "🧑‍🎨 style:", "description": "Changes that do not affect the meaning of the code"},
+        {"emoji": "♻️ refactor:", "description": "Changes that neither fixes bugs nor add features"},
+        {"emoji": "⚡ perf:", "description": "Changes that improves performance"},
+        {"emoji": "✅ test:", "description": "Changes or test additions"}
+    ],
+    
     // Jupyter
     "jupyter.jupyterServerType": "remote",
-    "notebook.showCellStatusBar": "hidden"
+    "notebook.showCellStatusBar": "hidden",
+
 }

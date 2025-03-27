@@ -24,7 +24,6 @@ class TestEvaluateModel:
         self.mock_data_tracker = Mock(IDataTracker)
 
     def test_should_complete_process_returning_success(self):
-
         use_case = EvaluateModel.build(
             model_evaluator=self.mock_model_evaluator,
             dataset_file_loader=self.mock_dataset_file_loader,
@@ -38,7 +37,6 @@ class TestEvaluateModel:
         self.mock_data_tracker.log_information_of_model_evaluation.assert_called_once()
 
     def test_should_raise_exception_due_non_exist_dataset_file_path(self):
-
         use_case = EvaluateModel.build(
             model_evaluator=self.mock_model_evaluator,
             dataset_file_loader=self.mock_dataset_file_loader,
